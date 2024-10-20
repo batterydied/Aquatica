@@ -27,6 +27,6 @@
 
 ### October 20, 2024:
 - **Task**: Update README.md
-- **Details**: Created the initial README.md for the Aquatica application, providing an overview of the project and its objectives.
+- **Details**: Updated README.md for the Aquatica application, providing an overview of the project and its objectives.
 - **Link to Commit**: https://github.com/batterydied/Aquatica/commit/a0beebac2a1c6827ff828c367b9a443465c3f5df
 
