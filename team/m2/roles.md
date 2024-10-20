@@ -9,4 +9,4 @@
    - Refined the target audience descriptions to ensure the app’s user focus aligns with quality standards.
 
 3. **October 20, 2024**: [Update README.md](https://github.com/batterydied/Aquatica/commit/a0beebac2a1c6827ff828c367b9a443465c3f5df)
-   - Created the initial proper README.md for the Aquatica application, providing an overview of the project and its objectives.
+   - Updated README.md for the Aquatica application, providing an overview of the project and its objectives.
