@@ -25,3 +25,8 @@
 - **Details**: Refined the description of target users, focusing on their specific needs and how the app will address them. Added detailed user personas to ensure the development team has a clear understanding of the intended audience and their challenges.
 - **Link to Commit**: https://github.com/batterydied/Aquatica/commit/b148286321d5930a7b7c9348db42249470693653
 
+### October 20, 2024:
+- **Task**: Update README.md
+- **Details**: Created the initial README.md for the Aquatica application, providing an overview of the project and its objectives.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/a0beebac2a1c6827ff828c367b9a443465c3f5df
+
