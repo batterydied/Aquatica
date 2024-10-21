@@ -14,7 +14,7 @@
 
 ## October 18, 2024
 **Task:** Initialize the Repository  
-**Details:** Completed the initial commit, establishing the foundation for project collaboration, by creating the repository structure (files/folders).
+**Details:** Established the foundation for project collaboration, by creating the repository structure (files/folders).
 **Link to Commit:** [Commit Link](https://github.com/batterydied/Aquatica/commit/e591d4f74208afed247aa3a0a6123fcda9313598)
 
 ---
