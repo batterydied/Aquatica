@@ -14,3 +14,10 @@
    1. Commit 1: Created a Discord server for team communication, establishing roles and channels to organize work.
    2. Commit 2: Scheduled weekly meetings for the team and led the first one, ensuring tasks were distributed to team members.
    3. [Commit 3](https://github.com/batterydied/Aquatica/commit/4f251ab7196517a5618c6a3b8f075fec03dc97ed): Wrote the first draft of the problem.md file, describing the problems our project is intended to fix.
+
+## Nikhil Bahadur - Task Manager
+- **Role**:  Responsible for organizing and tracking team tasks. Nikhil manages the team’s Trello board and ensures that all tasks are properly assigned and completed on time.
+- **Top 3 Commits**:
+   1. [Commit 1](https://github.com/batterydied/Aquatica/commit/a2cd71bf688390092295ac06c2c9b90a4e0ed035): Wrote the first draft of features.md, describing the features of the application.
+   2. [Commit 2](https://trello.com/invite/b/6712bc4a19cea8bb27ce71ad/ATTId8c66601bfac85e79e25b1577dee86d47F38ECCA/project-management): Created the team's Trello Board to manage the team's tasks.
+   3. Commit 3: Brainstormed ideas for features of application
