@@ -24,8 +24,14 @@
  
 ## Devin Bowler - Documentation Lead
 - **Role**: Responsible for overseeing the organization and maintenance of all project documentation. Devin ensures that all documents are up to date, well-organized, and accessible to team members.
-
 - **Top 3 Commits**:
    1. **October 18, 2024**: [Initialize the Repository](https://github.com/batterydied/Aquatica/commit/e591d4f74208afed247aa3a0a6123fcda9313598) Established the foundation for project collaboration, by creating the repository structure (files/folders).
    2. **October 18, 2024**: [Create devin-bowler.md](https://github.com/batterydied/Aquatica/commit/1d0e3a3434ed1932d9cb45c440eb1c1e8732962c) Initial creation of contribution log for self.
    3. **October 21, 2024**: [Update data.md](https://github.com/batterydied/Aquatica/compare/913e87a88901a5289041e08ec2847c4fdef5c66b...c6b2439a2e77fda953a336aa9facd8969e711f17) Refined the description of target users, focusing on their specific needs and how the app will address them. Added detailed user personas to ensure the team has a clear understanding of the intended application and its functionality.
+
+## Haiyi Cai - Communication Lead
+- **Role**: Facilitates communication within the team. Haiyi is responsible for maintaining and managing the team’s Message workspace, ensuring that all members stay informed and engaged; Listening to the members' challenges and reaching out to experts;
+- **Top 3 Commits**:
+  1. [Commit 1](https://github.com/batterydied/Aquatica/commit/b017b82f73ff77ceb859ee9930123520cc09baa4): Brainstorm for project ideas with initial team members. Recorded and distributed project ideas brainstorm.
+  2. [Commit 2](e4cf472ee4a79a5381fc4cc4ba38639166b28007): Set up the team’s Message channel, organized communication threads, and created team’s Collaboration document.
+  3. [Commit 3](https://github.com/batterydied/Aquatica/commit/051851e7df44f80f36d4ba6678309e6130483d2f): Coordinated communication between team members during the second milestone and relayed critical information about deadlines.
