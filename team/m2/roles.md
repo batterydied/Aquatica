@@ -33,5 +33,5 @@
 - **Role**: Facilitates communication within the team. Haiyi is responsible for maintaining and managing the team’s Message workspace, ensuring that all members stay informed and engaged; Listening to the members' challenges and reaching out to experts;
 - **Top 3 Commits**:
   1. [Commit 1](https://github.com/batterydied/Aquatica/commit/b017b82f73ff77ceb859ee9930123520cc09baa4): Brainstorm for project ideas with initial team members. Recorded and distributed project ideas brainstorm.
-  2. [Commit 2](e4cf472ee4a79a5381fc4cc4ba38639166b28007): Set up the team’s Message channel, organized communication threads, and created team’s Collaboration document.
+  2. [Commit 2](https://github.com/batterydied/Aquatica/commit/e4cf472ee4a79a5381fc4cc4ba38639166b28007): Set up the team’s Message channel, organized communication threads, and created team’s Collaboration document.
   3. [Commit 3](https://github.com/batterydied/Aquatica/commit/051851e7df44f80f36d4ba6678309e6130483d2f): Coordinated communication between team members during the second milestone and relayed critical information about deadlines.
