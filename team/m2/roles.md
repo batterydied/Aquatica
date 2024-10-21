@@ -1,4 +1,3 @@
-
 # Team Roles and Commit Contributions
 
 ## Benson Zheng: Quality Control
