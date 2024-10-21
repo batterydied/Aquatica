@@ -25,7 +25,17 @@
 - **Details**: Coordinated communication between team members during the second milestone and relayed critical information about deadlines. After communication, created a team channel on Discord, which people check more regularly and facilitate discussions in smaller groups. 
 - **Link to Commit**: https://github.com/batterydied/Aquatica/commit/051851e7df44f80f36d4ba6678309e6130483d2f
 
-### October 21, 2024
+### October 18, 2024
+- **Task**: Created haiyi-cai.md for contribution log.
+- **Details**: Created haiyi-cai.md and started to record contribution.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/b017b82f73ff77ceb859ee9930123520cc09baa4
+
+### October 20, 2024
 - **Task**: Drafted Low-fi prototype UI design.
-- **Details**: 
-- **Link to Commit**:  
+- **Details**: Wrote basic descriptions for major UI screens. Created workplace on Figma for prototype design.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/beb20f6608c9a41d26e10073b5994d6ced5d93dd
+
+### October 21, 2024
+- **Task**: Updated Low-fi prototype UI design.
+- **Details**: Added descriptions for major UI screens. Updated mid-fi prototype for Home Page.
+- **Link to Commit**: 
