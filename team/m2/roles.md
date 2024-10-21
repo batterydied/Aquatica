@@ -11,8 +11,8 @@
 ## Winifred Nauda - Project Manager
 - **Role**: Oversees the overall project timeline, ensures that milestones are met, and coordinates the team’s efforts. Responsible for setting meeting agendas and ensuring that the team stays focused on project goals.
 - **Top 3 Commits**:
-   1. Commit 1: Created a Discord server for team communication, establishing roles and channels to organize work.
-   2. Commit 2: Scheduled weekly meetings for the team and led the first one, ensuring tasks were distributed to team members.
+   1. [Commit 1](https://github.com/batterydied/Aquatica/commit/8cc270648709af6fb552ffd07330b3081728caab): Created a Discord server for team communication, establishing roles and channels to organize work.
+   2. [Commit 2](https://github.com/batterydied/Aquatica/commit/8cc270648709af6fb552ffd07330b3081728caab): Scheduled weekly meetings for the team and led the first one, ensuring tasks were distributed to team members.
    3. [Commit 3](https://github.com/batterydied/Aquatica/commit/4f251ab7196517a5618c6a3b8f075fec03dc97ed): Wrote the first draft of the problem.md file, describing the problems our project is intended to fix.
 
 ## Nikhil Bahadur - Task Manager
