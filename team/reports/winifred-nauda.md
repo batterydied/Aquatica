@@ -1,5 +1,13 @@
 ## Contribution Log for Winifred Nauda
 
+### October 18, 2024
+- **Task**: Created Discord server.
+- **Details**: Made a Discord server to manage communication between team members.
+- **Link to Commit**: N/A
+- **Task**: Organized team meeting.
+- **Details**: Organized a team meeting to plan for the upcoming week. Also, finalized a weekly meeting time for the future.
+- **Link to Commit**: N/A
+
 ### October 20, 2024
 - **Task**: Wrote the first draft of the problem.md file.
 - **Details**: Described the problem our application seeks to solve and the major features it provides.
