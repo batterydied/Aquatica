@@ -7,3 +7,8 @@
 - **Task**: Update roles.md.
 - **Details**: Adjusted formatting and added a description of my role as project manager as well as my top three contributions to the project.
 - **Link to Commit**: [add my role and commits, update formatting] (https://github.com/batterydied/Aquatica/commit/91b0eebafac5002a37a36858cf5423b13cdb7227)
+
+### October 21, 2024
+- **Task**: Updated problem.md to include more features.
+- **Details**: Added the recommendation and review features, as well as descriptions of them, to problem.md.
+- **Link to Commit**: [update problem.md] (https://github.com/batterydied/Aquatica/commit/2224eaf297e86c0c75ffe6e8ba064efea711efef)

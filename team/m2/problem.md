@@ -14,6 +14,10 @@ Our application, **Aquatica**, would provide a centralized marketplace for aquar
 
 - **Direct Messages**: Buyers can message sellers directly to negotiate or ask questions about their products. Sellers can message buyers directly to ask feedback once buyer received their products. Sellers can also send direct messages about new items and discounted products to the buyers.
 
+- **Personalized Recommendations**: Buyers can receive recommendations of products that are tailored to their experience level, aquarium goals, and price range.
+
+- **Reviews and Ratings**: Buyers can review and rate products and sellers. This will allow users to provide feedback to sellers as well as to inform other buyers as to which products are worth their money.
+
 ## Why This Matters
 
 By creating this app, we would make having a home aquarium more convenient and approachable. We would also allow aquarium lovers to know more about where their components come from, promoting safety and awareness. Additionally, through the price comparison feature and community interaction, we can increase the transparency of the aquarium product market, helping users better understand the origin and quality of the products they choose, thereby enhancing their sense of security and awareness of aquatic ecosystem protection.
