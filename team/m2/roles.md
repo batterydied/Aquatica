@@ -35,3 +35,10 @@
   1. [Commit 1](https://github.com/batterydied/Aquatica/commit/b017b82f73ff77ceb859ee9930123520cc09baa4): Brainstorm for project ideas with initial team members. Recorded and distributed project ideas brainstorm.
   2. [Commit 2](https://github.com/batterydied/Aquatica/commit/e4cf472ee4a79a5381fc4cc4ba38639166b28007): Set up the team’s Message channel, organized communication threads, and created team’s Collaboration document.
   3. [Commit 3](https://github.com/batterydied/Aquatica/commit/051851e7df44f80f36d4ba6678309e6130483d2f): Coordinated communication between team members during the second milestone and relayed critical information about deadlines.
+
+## Yukun Yang - Timekeeper
+- **Role**: Manages the timing of all team activities. Ensures that meetings start and end on time, keeps track of deadlines, and reminds the team of upcoming due dates.
+- **Top 3 Commits**:
+  1. [Commit 1] Brainstorm the project ideas and features with team members.
+  2. [Commit 2](https://github.com/batterydied/Aquatica/commit/5b38b306448e11840188f90ce8ffe7ac55322b3d) Created yukun-yang.md file.
+  3. [Commit 3](https://github.com/batterydied/Aquatica/commit/1484d6c69ed920df8ba4a49561c4827b79db0c67): Updated the problem.md file.
