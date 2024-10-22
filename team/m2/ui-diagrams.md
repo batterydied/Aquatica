@@ -23,7 +23,7 @@ A user who wants to explore aquarium product scroll down to browse the **Fish Ga
 ## Search Screen
 The **Search Screen** provides users with the ability to easily browse through categories and discover specific items. It is designed for users who prefer navigating through a more visual interface rather than entering text in the search bar.
 
-![image](https://github.com/user-attachments/assets/071458c0-ea85-45e9-b9fd-c7341eacd207)
+![image](https://github.com/user-attachments/assets/4159be23-9c5e-406e-9c46-176ded8bc78f)
 
 On this screen, users can interact with three main elements:
 
@@ -42,7 +42,7 @@ The **User Center** is a personal space for users to manage their profiles, inte
 
 ![image](https://github.com/user-attachments/assets/1b5f77c8-2178-44a6-a39b-1db23b9a9b4e)
 
-On this screen, users can interact with three main elements:
+On this screen, users can interact with five main elements:
 
 1. **User Profile**: Allows users to manage their account information, including their username, email, and password. This section may also include preferences for notifications and saved addresses.
 2. **Private Chat**: Users can engage in private chats with sellers or customer support to discuss products, order issues, or general inquiries. This feature enhances communication within the app.
