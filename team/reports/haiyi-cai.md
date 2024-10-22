@@ -36,6 +36,6 @@
 - **Link to Commit**: https://github.com/batterydied/Aquatica/commit/beb20f6608c9a41d26e10073b5994d6ced5d93dd
 
 ### October 21, 2024
-- **Task**: Updated Low-fi prototype UI design.
-- **Details**: Added descriptions for major UI screens. Updated mid-fi prototype for Home Page.
-- **Link to Commit**: 
+- **Task**: Created and updated mid-fi prototype UI design.
+- **Details**: Added descriptions for 3 key UI screens. Updated mid-fi prototype for Home Page, Search Screen, and User Center Screen.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/b24a4ff794d4f5ea22f90509a7dcf2370b8048cb
