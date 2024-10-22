@@ -15,6 +15,7 @@ On this screen, users can interact with five main elements:
 5. **Category Tiles**: Visual buttons representing different categories like Freshwater Fish, Saltwater Fish, Accessories, and Plants. Clicking these tiles takes users to the respective category pages.
 
 **Use Case**: 
+
 A user who wants to explore aquarium product scroll down to browse the **Fish Gallery Slide**, viewing community aquariums and clicking on a featured tank for inspiration. Afterward, the user can check the **Featured Fish Slider** and **Category Tiles** to view categorized products. After interacting with the page, their preferences help refine future personalized recommendations.
 
 ---
