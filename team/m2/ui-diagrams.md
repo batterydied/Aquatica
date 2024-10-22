@@ -22,7 +22,7 @@ A user who wants to explore aquarium product scroll down to browse the **Fish Ga
 ## Search Screen
 The **Search Screen** provides users with the ability to easily browse through categories and discover specific items. It is designed for users who prefer navigating through a more visual interface rather than entering text in the search bar.
 
-![image](https://github.com/user-attachments/assets/1b0475a8-934c-47ca-a986-df07beb484ed)
+![image](https://github.com/user-attachments/assets/071458c0-ea85-45e9-b9fd-c7341eacd207)
 
 On this screen, users can interact with three main elements:
 
