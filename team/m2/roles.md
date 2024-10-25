@@ -47,5 +47,5 @@
 - **Role**: Takes detailed notes during meetings and publishes them to the team in an accessible format. Asritha will also make sure that the Github commit history is up to date in a detailed manner, and all relevant documentation to the project is done properly
 - **Top 3 Commits**: 
    1. [Commit 1] Brainstorm the project ideas and features with team members.
-   2. [Commit 2] (https://github.com/batterydied/Aquatica/commit/c4459765bb2fb5f2b7840b1e495481f8be1a06b8)
-   3. [Commit 3] (https://github.com/batterydied/Aquatica/commit/b4620b061bd48f09ad3eeb19ef48c3fbf009ef7f)
+   2. [Commit 2](https://github.com/batterydied/Aquatica/commit/c4459765bb2fb5f2b7840b1e495481f8be1a06b8) Contributed to ui-diagrams.md 
+   3. [Commit 3](https://github.com/batterydied/Aquatica/commit/b4620b061bd48f09ad3eeb19ef48c3fbf009ef7f) Added .gitignore
