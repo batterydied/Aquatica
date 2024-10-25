@@ -42,3 +42,10 @@
   1. [Commit 1] Brainstorm the project ideas and features with team members.
   2. [Commit 2](https://github.com/batterydied/Aquatica/commit/5b38b306448e11840188f90ce8ffe7ac55322b3d) Created yukun-yang.md file.
   3. [Commit 3](https://github.com/batterydied/Aquatica/commit/1484d6c69ed920df8ba4a49561c4827b79db0c67): Updated the problem.md file.
+
+## Asritha Bodepudi - Note taker 
+- **Role**: Takes detailed notes during meetings and publishes them to the team in an accessible format. Asritha will also make sure that the Github commit history is up to date in a detailed manner, and all relevant documentation to the project is done properly
+- **Top 3 Commits**: 
+   1. [Commit 1] Brainstorm the project ideas and features with team members.
+   2. [Commit 2] (https://github.com/batterydied/Aquatica/commit/c4459765bb2fb5f2b7840b1e495481f8be1a06b8)
+   3. [Commit 3] (https://github.com/batterydied/Aquatica/commit/b4620b061bd48f09ad3eeb19ef48c3fbf009ef7f)
