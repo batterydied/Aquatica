@@ -24,11 +24,26 @@ const prodlist = [
 let start = 0, end = 9;
 
 function renderPage() {
+    // TODO: need to empty the div first!
     for (let i = start; i < end && i < prodlist.length; i++) {
         // create html to display product
         const curProduct = document.createElement('div');
         curProduct.classList.add('product');
         // etc...
+        // TODO: should look something like:
+//           <div class="product">
+//              <div class="prodimg">
+//                  <img src=imgurl></img>
+//              </div>
+//              <div class="proddesc">
+//                  <a href=[link to product page]>name</a>
+//                  <img src=[starratingicon]></img>
+//                  <a href=[link to ratings]>numreviews</a>
+//                  <p>$price</p>
+//              </div>
+//           </div>
+
+//      add to dom
 
         marketplace.appendChild(curProduct);
     }
@@ -59,34 +74,6 @@ prevPage.addEventListener('click', () => {
 renderPage();
 page.appendChild(nextPage);
 page.appendChild(prevPage);
-
-// TODO: implement the following:
-
-// list of objects of the form
-// {prodid, imgurl, name, average rating, numreviews, price}
-// eg. {1, https://gravel.png, "Gravel", 3.5, 10, 10.00}, {2, https://kelp.png, "Kelp", null, 0, 19.99}
-// prodid is not displayed, just an internal way to keep track of products
-
-// a default 0, b default 9
-// for (products a - b in product list)
-//      create html to display the product
-
-//           should look something like:
-//           <div class="product">
-//              <div class="prodimg">
-//                  <img src=imgurl></img>
-//              </div>
-//              <div class="proddesc">
-//                  <a href=[link to product page]>name</a>
-//                  <img src=[starratingicon]></img>
-//                  <a href=[link to ratings]>numreviews</a>
-//                  <p>$price</p>
-//              </div>
-//           </div>
-
-//      add to dom
-
-// button to increase a and b by 10 (next page) or decrease a and b by 10 (previous page)
 
 // sort and filter
 // TODO: future feature
