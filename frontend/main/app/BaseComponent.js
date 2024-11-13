@@ -12,7 +12,7 @@ export class BaseComponent {
    loadCSS(fileName) {
       if (this.cssLoaded) return; // Prevents reloading the same CSS file
       
-      const link = document.createElement('div');
+      const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = '../components/${fileName}/${fileName}.css'; // Assumes the file path
       document.head.appendChild(link);
