@@ -23,7 +23,7 @@ Users will be able to purchase products through secure and convenient payment op
 
 Description: The Product Page provides users with detailed information about a specific product, including its description, images, and integration with breeder contact and ratings and reviews features. It allows users to interact with the product through actions like adding it to the cart, saving it for later, or buying it instantly. The page dynamically displays product details, incorporates user reviews and ratings, and features intuitive UI design for an enhanced user experience.
 
-Point Value: 14 points
+Point Value: 16 - 23 points
 
 Team Member: Benson
 
