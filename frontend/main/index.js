@@ -6,4 +6,3 @@ function App(){
 }
 
 App();
-console.log("heyyy");
