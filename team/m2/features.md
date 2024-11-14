@@ -47,7 +47,6 @@ Reviews (2–3 points): Includes a section for customer feedback and testimonial
 
 UI Design (2–3 points): Focuses on creating a visually appealing and user-friendly interface for seamless navigation and interaction.
 
-**Assigned to**: Benson Zheng
 
 ## Virtual Cart for Customers
 
