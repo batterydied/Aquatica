@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../app/BaseComponent";
+import { BaseComponent } from "../../app/BaseComponent.js";
 
 export class MarketplacePage extends BaseComponent {
     // main product list rendering
@@ -12,7 +12,7 @@ export class MarketplacePage extends BaseComponent {
         this.fullProdList = this.getProdList;
 
         // will be changed with search/filter, need to keep track of full original list :)
-        this.prodlist = this.fullProdList;
+        this.prodlist = this.fullProdList();
 
         this.start = 0, this.end = 5;
     }
@@ -22,7 +22,7 @@ export class MarketplacePage extends BaseComponent {
             {prodid: 1, 
             sellername: "Neuvillette",
             sellerid: 1,
-            imgurl: "../../assets/dummy_600x400_ffffff_cccccc.png", 
+            imgurl: "./assets/dummy_600x400_ffffff_cccccc.png", 
             name: "Water", 
             description: "Water comes in many flavors to the discerning palate. Mondstadt's water is crisp and pure, while water from Liyue has an enduring aftertaste. In Inazuma, the water possesses a depth of flavor unlike any other. Sumeru's water, meanwhile, has a rich and complex flavor profile, but it must be savored patiently to fully appreciate it.",
             average_rating: 3.5, 
@@ -31,7 +31,7 @@ export class MarketplacePage extends BaseComponent {
             {prodid: 2, 
             sellername: "Seller 2",
             sellerid: 2,
-            imgurl: "../../assets/dummy_600x400_ffffff_cccccc.png", 
+            imgurl: "./assets/dummy_600x400_ffffff_cccccc.png", 
             name: "Kelp", 
             description: "Kelp mmm tastey :)",
             average_rating: null, 
@@ -64,18 +64,19 @@ export class MarketplacePage extends BaseComponent {
             curProduct.appendChild(prodDesc);
 
             const prodName = document.createElement("a");
-            prodName.innerText = this.prodlist[i].name;
+            prodName.innerText = this.prodlist[i].name + "\n";
             prodName.href = ""; // will be link to product page
             prodDesc.appendChild(prodName);
 
             const sellName = document.createElement("a");
-            sellName.innerText = this.prodlist[i].sellername;
+            sellName.innerText = this.prodlist[i].sellername + "\n";
             sellName.href = ""; // will be link to product page
             prodDesc.appendChild(sellName);
 
             if (this.prodlist[i].numreviews > 0 && this.prodlist[i].average_rating !== null) {
                 const starIMG = document.createElement("img");
                 starIMG.src = ""; // star image based on rating
+                starIMG.alt = `${this.prodlist[i].average_rating} Stars`;
                 prodDesc.appendChild(starIMG);
                 const numReviews = document.createElement("p");
 
@@ -92,8 +93,14 @@ export class MarketplacePage extends BaseComponent {
             price.innerText = `$${this.prodlist[i].price}`; // make sure it displays with two decimal places
             prodDesc.appendChild(price);
 
+            const desc = document.createElement("p");
+            desc.innerText = this.prodlist[i].description;
+            prodDesc.appendChild(desc);
+
             this.marketplace.appendChild(curProduct);
         }
+
+        this.container.appendChild(this.marketplace);
 
         // render page buttons and page number
         const nextPage = document.createElement('button');
@@ -108,7 +115,7 @@ export class MarketplacePage extends BaseComponent {
         })
 
         const pageNumber = document.createElement('p');
-        pageNumber.innerText = `${this.start + 1} - ${this.end + 1} / ${this.prodlist.length}`;
+        pageNumber.innerText = `${this.start + 1} - ${this.end} / ${this.prodlist.length}`;
 
         const prevPage = document.createElement('button');
         prevPage.classList.add('page-button');
