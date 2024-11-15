@@ -1,5 +1,7 @@
 // This will render all of our apps features.
 
+import { MarketplacePage } from "../components/MarketplacePage/MarketplacePage.js";
+
 // Imports
 // EXAMPLE - import { SecureCheckout } from '../components/SecureCheckout/securecheckout.js';
 
@@ -17,6 +19,10 @@ export class AppController {
 
       // Render and append components
       // EXAMPLE - container.appendChild(this.secureCheckout.render());
+      
+      /* TESTING */
+      const marketplacePage = new MarketplacePage().render();
+      container.appendChild(marketplacePage);
 
       return container; 
    }
