@@ -2,6 +2,7 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
+import { products } from "./Products.js";
 
 export class MarketplacePage extends BaseComponent {
     constructor() {
@@ -22,30 +23,7 @@ export class MarketplacePage extends BaseComponent {
     }
 
     getProdList() { // will be async
-        const list = [
-            {prodid: 1, 
-            sellername: "Neuvillette",
-            sellerid: 1,
-            imgurl: "./assets/dummy_600x400_ffffff_cccccc.png", 
-            name: "Water", 
-            category: Category.Misc,
-            bracket: "",
-            description: "Water comes in many flavors to the discerning palate. Mondstadt's water is crisp and pure, while water from Liyue has an enduring aftertaste. In Inazuma, the water possesses a depth of flavor unlike any other. Sumeru's water, meanwhile, has a rich and complex flavor profile, but it must be savored patiently to fully appreciate it.",
-            average_rating: 3.5, 
-            numreviews: 10, 
-            price: 100.00}, 
-            {prodid: 2, 
-            sellername: "Seller 2",
-            sellerid: 2,
-            imgurl: "./assets/dummy_600x400_ffffff_cccccc.png", 
-            name: "Kelp", 
-            category: Category.Plants,
-            bracket: "",
-            description: "Kelp mmm tastey :)",
-            average_rating: null, 
-            numreviews: 0, 
-            price: 19.99}
-        ]; // will eventually be fetched from server, this is just test data
+        const list = products; // will eventually be fetched from server, this is just test data
 
         for (let i = 0; i < list.length; i++) {
             list[i].bracket = this.calculateBracket(list[i].price);
@@ -155,7 +133,7 @@ export class MarketplacePage extends BaseComponent {
             curProduct.appendChild(prodIMGDiv);
 
             const prodIMG = document.createElement("img");
-            prodIMG.src = this.prodlist[i].imgurl;
+            //prodIMG.src = this.prodlist[i].imgurl;
             prodIMGDiv.appendChild(prodIMG);
 
             const prodDesc = document.createElement("div");
@@ -282,6 +260,8 @@ export class MarketplacePage extends BaseComponent {
             this.applyFilter((e) => e.bracket === this.curBracket);
         }
         this.applyFilter((e) => this.regex.test(e.description) || this.regex.test(e.name) || this.regex.test(e.sellername))
+        this.start = 0;
+        this.end = 5;
     }
 
     applySort() {
@@ -299,6 +279,8 @@ export class MarketplacePage extends BaseComponent {
                 console.log("Unknown sort order, defaulting to ID");
                 this.prodlist.sort((a, b) => a.prodid - b.prodid);
         }
+        this.start = 0;
+        this.end = 5;
     }
 
     // TODO: CSS
