@@ -1,6 +1,7 @@
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
+import { Sorts } from "./Sorts.js";
 
 export class MarketplacePage extends BaseComponent {
     constructor() {
@@ -13,6 +14,9 @@ export class MarketplacePage extends BaseComponent {
         this.curCategory = "All";
         this.curBracket = "All";
         this.regex = /(?:)/gi;
+        
+        this.sort = Sorts.Good;
+        this.applySort();
 
         this.start = 0, this.end = 5;
     }
@@ -92,7 +96,7 @@ export class MarketplacePage extends BaseComponent {
             filters.appendChild(bracketButton);
         }
 
-        // TODO: search bar
+        // search bar
         const searchBar = document.createElement("div");
         searchBar.classList.add("search-bar");
         
@@ -109,6 +113,25 @@ export class MarketplacePage extends BaseComponent {
         });
         searchBar.appendChild(searchInput);
         this.container.appendChild(searchBar);
+
+        // sort
+        const sorter = document.createElement("select");
+        sorter.classList.add("sorter");
+
+        for (let sortType in Sorts) {
+            const option = document.createElement("option");
+            option.innerText = Sorts[sortType];
+            option.value = Sorts[sortType];
+            sorter.appendChild(option);
+        }
+
+        sorter.onchange = () => {
+            this.sort = sorter.value;
+            this.applySort();
+            this.renderMarketplace();
+        }
+
+        this.container.appendChild(sorter);
 
         this.renderMarketplace();
 
@@ -258,7 +281,24 @@ export class MarketplacePage extends BaseComponent {
         if (this.curBracket !== "All") {
             this.applyFilter((e) => e.bracket === this.curBracket);
         }
-        this.applyFilter((e) => regex.test(e.description) || regex.test(e.name) || regex.test(e.sellername))
+        this.applyFilter((e) => this.regex.test(e.description) || this.regex.test(e.name) || this.regex.test(e.sellername))
+    }
+
+    applySort() {
+        switch (this.sort) {
+            case Sorts.Expensive:
+                this.prodlist.sort((a, b) => b.price - a.price);
+                break;
+            case Sorts.Cheap:
+                this.prodlist.sort((a, b) => a.price - b.price);
+                break;
+            case Sorts.Good:
+                this.prodlist.sort((a, b) => b.average_rating - a.average_rating);
+                break;
+            default:
+                console.log("Unknown sort order, defaulting to ID");
+                this.prodlist.sort((a, b) => a.prodid - b.prodid);
+        }
     }
 
     // TODO: CSS
