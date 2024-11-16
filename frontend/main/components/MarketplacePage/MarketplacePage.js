@@ -11,7 +11,7 @@ export class MarketplacePage extends BaseComponent {
         this.fullProdList = this.getProdList();
         this.marketplace = document.createElement("div");
 
-        this.prodlist = this.fullProdList; // to be changed with search/filter
+        this.prodList = this.fullProdList; // to be changed with search/filter
         this.curCategory = "All";
         this.curBracket = "All";
         this.regex = /(?:)/gi;
@@ -22,7 +22,7 @@ export class MarketplacePage extends BaseComponent {
         this.start = 0, this.end = 5;
     }
 
-    getProdList() { // will be async
+    getProdList() { // TODO: will be async
         const list = products; // will eventually be fetched from server, this is just test data
 
         for (let i = 0; i < list.length; i++) {
@@ -122,7 +122,7 @@ export class MarketplacePage extends BaseComponent {
         // empty marketplace
         this.marketplace.innerHTML = "";
         // render products list
-        for (let i = this.start; i < this.end && i < this.prodlist.length; i++) {
+        for (let i = this.start; i < this.end && i < this.prodList.length; i++) {
             // TODO: Classes for CSS integration
             // create html to display product
             const curProduct = document.createElement('div');
@@ -133,7 +133,7 @@ export class MarketplacePage extends BaseComponent {
             curProduct.appendChild(prodIMGDiv);
 
             const prodIMG = document.createElement("img");
-            //prodIMG.src = this.prodlist[i].imgurl;
+            prodIMG.src = this.prodList[i].imgurl;
             prodIMGDiv.appendChild(prodIMG);
 
             const prodDesc = document.createElement("div");
@@ -141,24 +141,28 @@ export class MarketplacePage extends BaseComponent {
             curProduct.appendChild(prodDesc);
 
             const prodName = document.createElement("a");
-            prodName.innerText = this.prodlist[i].name + "\n";
+            prodName.innerText = this.prodList[i].name + "\n";
             prodName.href = ""; // will be link to product page
+            // TODO: needs to tell AppController to open product page and what productid to load
             prodDesc.appendChild(prodName);
 
             const sellName = document.createElement("a");
-            sellName.innerText = this.prodlist[i].sellername + "\n";
-            sellName.href = ""; // will be link to product page
+            sellName.innerText = this.prodList[i].sellername + "\n";
+            sellName.href = ""; // will be link to seller profile page
+            // TODO: tell AppController to open profile page and what sellerid to load
             prodDesc.appendChild(sellName);
 
-            if (this.prodlist[i].numreviews > 0 && this.prodlist[i].average_rating !== null) {
+            if (this.prodList[i].numreviews > 0 && this.prodList[i].average_rating !== null) {
                 const starIMG = document.createElement("img");
                 starIMG.src = ""; // star image based on rating
-                starIMG.alt = `${this.prodlist[i].average_rating} Stars`;
+                starIMG.alt = `${this.prodList[i].average_rating} Stars`;
                 prodDesc.appendChild(starIMG);
-                const numReviews = document.createElement("p");
+                const numReviews = document.createElement("a");
+                numReviews.href = ""
+                // TODO: tell AppController to open ratings page and what productid to load
 
-                const reviews = this.prodlist[i].numreviews === 1 ? "Review" : "Reviews";
-                numReviews.innerText = `${this.prodlist[i].numreviews} ${reviews}`;
+                const reviews = this.prodList[i].numreviews === 1 ? "Review" : "Reviews";
+                numReviews.innerText = `${this.prodList[i].numreviews} ${reviews}`;
                 prodDesc.appendChild(numReviews);
             } else {
                 const noRatingText = document.createElement("p");
@@ -167,24 +171,24 @@ export class MarketplacePage extends BaseComponent {
             }
 
             const price = document.createElement("p");
-            price.innerText = `$${this.prodlist[i].price}`; // make sure it displays with two decimal places
+            price.innerText = `$${this.prodList[i].price}`; // make sure it displays with two decimal places
             prodDesc.appendChild(price);
 
             const desc = document.createElement("p");
-            desc.innerText = this.prodlist[i].description;
+            desc.innerText = this.prodList[i].description;
             prodDesc.appendChild(desc);
 
             this.marketplace.appendChild(curProduct);
         }
 
-        if (this.prodlist.length > 0) {
+        if (this.prodList.length > 0) {
             // render page buttons and page number
             const nextPage = document.createElement('button');
             nextPage.classList.add('page-button');
             nextPage.id = 'next-page-button';
             nextPage.textContent = "Next";
             nextPage.addEventListener('click', () => {
-                if (this.end < this.prodlist.length - 1) {
+                if (this.end < this.prodList.length - 1) {
                     this.start += 5;
                     this.end += 5;
                     this.renderMarketplace();
@@ -192,8 +196,8 @@ export class MarketplacePage extends BaseComponent {
             })
 
             const pageNumber = document.createElement('p');
-            const endItem = Math.min(this.end, this.prodlist.length);
-            pageNumber.innerText = `${this.start + 1} - ${endItem} / ${this.prodlist.length}`;
+            const endItem = Math.min(this.end, this.prodList.length);
+            pageNumber.innerText = `${this.start + 1} - ${endItem} / ${this.prodList.length}`;
 
             const prevPage = document.createElement('button');
             prevPage.classList.add('page-button');
@@ -248,11 +252,11 @@ export class MarketplacePage extends BaseComponent {
     }
 
     applyFilter(cond) {
-        this.prodlist = this.prodlist.filter(cond);
+        this.prodList = this.prodList.filter(cond);
     }
 
     reloadFilters() {
-        this.prodlist = this.fullProdList;
+        this.prodList = this.fullProdList;
         if (this.curCategory !== "All") {
             this.applyFilter((e) => e.category === this.curCategory);
         }
@@ -267,17 +271,17 @@ export class MarketplacePage extends BaseComponent {
     applySort() {
         switch (this.sort) {
             case Sorts.Expensive:
-                this.prodlist.sort((a, b) => b.price - a.price);
+                this.prodList.sort((a, b) => b.price - a.price);
                 break;
             case Sorts.Cheap:
-                this.prodlist.sort((a, b) => a.price - b.price);
+                this.prodList.sort((a, b) => a.price - b.price);
                 break;
             case Sorts.Good:
-                this.prodlist.sort((a, b) => b.average_rating - a.average_rating);
+                this.prodList.sort((a, b) => b.average_rating - a.average_rating);
                 break;
             default:
                 console.log("Unknown sort order, defaulting to ID");
-                this.prodlist.sort((a, b) => a.prodid - b.prodid);
+                this.prodList.sort((a, b) => a.prodid - b.prodid);
         }
         this.start = 0;
         this.end = 5;
