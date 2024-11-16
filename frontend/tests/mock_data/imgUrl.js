@@ -1,0 +1,1 @@
+export const imgUrl = "https://scitechdaily.com/images/Clownfish-Art-Concept-Illustration.jpg"
