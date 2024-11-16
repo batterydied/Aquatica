@@ -9,10 +9,10 @@ export class MarketplacePage extends BaseComponent {
         this.fullProdList = this.getProdList();
         this.marketplace = document.createElement("div");
 
-        // will be changed with search/filter, need to keep track of full original list :)
-        this.prodlist = this.fullProdList;
+        this.prodlist = this.fullProdList; // to be changed with search/filter
         this.curCategory = "All";
         this.curBracket = "All";
+        this.regex = /(?:)/gi;
 
         this.start = 0, this.end = 5;
     }
@@ -67,6 +67,7 @@ export class MarketplacePage extends BaseComponent {
     }
 
     render() {
+        // filtering
         const filters = document.createElement("div");
         filters.classList.add("filters");
         this.container.appendChild(filters);
@@ -92,6 +93,22 @@ export class MarketplacePage extends BaseComponent {
         }
 
         // TODO: search bar
+        const searchBar = document.createElement("div");
+        searchBar.classList.add("search-bar");
+        
+        const searchIcon = document.createElement("img");
+        searchIcon.src = "";
+        searchBar.appendChild(searchIcon);
+
+        const searchInput = document.createElement("input");
+        searchInput.type = "text";
+        searchInput.addEventListener("keyup", () => {
+            this.regex = new RegExp(searchInput.value, "ig");
+            this.reloadFilters();
+            this.renderMarketplace();
+        });
+        searchBar.appendChild(searchInput);
+        this.container.appendChild(searchBar);
 
         this.renderMarketplace();
 
@@ -193,7 +210,7 @@ export class MarketplacePage extends BaseComponent {
             this.marketplace.appendChild(prevPage);
         } else {
             const noItemsFound = document.createElement("p");
-            noItemsFound.innerText = "No Items Found";
+            noItemsFound.innerText = "No items found for current criteria. Try other search terms.";
             this.marketplace.appendChild(noItemsFound);
         }
     }
@@ -214,7 +231,6 @@ export class MarketplacePage extends BaseComponent {
                     this.curBracket = text;
                 }
                 this.reloadFilters();
-                this.applyFilter((e) => e[kind] === text);
                 // TODO: add styling
             } else {
                 // update toggle
@@ -242,6 +258,7 @@ export class MarketplacePage extends BaseComponent {
         if (this.curBracket !== "All") {
             this.applyFilter((e) => e.bracket === this.curBracket);
         }
+        this.applyFilter((e) => regex.test(e.description) || regex.test(e.name) || regex.test(e.sellername))
     }
 
     // TODO: CSS
