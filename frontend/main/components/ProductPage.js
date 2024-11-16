@@ -1,6 +1,11 @@
 import { productData } from '../../tests/mock_data/product_page_mock_data.js';
-
+import StyleSheet from '../../functions/MakeStyleSheetLink.js';
 export default function ProductPage() {
+
+    document.head.appendChild(StyleSheet('./css/ProductPage.css'));
+
+    document.head.appendChild(StyleSheet('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Itim&family=McLaren&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet'));
+
     const container = document.createElement('div');
     container.className = 'product-page';
 
@@ -19,8 +24,8 @@ export default function ProductPage() {
     productData.product.images.forEach((imageUrl) => {
         const img = document.createElement('img');
         img.src = imageUrl;
-        img.alt = `${productData.product.name} image`;
-        img.className = 'product-image';
+        img.alt = `${productData.product.name} thumbnail image`;
+        img.className = 'thumbnail-img';
         imageGallery.appendChild(img);
     });
 

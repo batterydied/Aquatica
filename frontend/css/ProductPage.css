@@ -1,0 +1,23 @@
+div{
+    padding: 0;
+    margin: 0;
+    font-family: "Montserrat", serif;
+}
+.product-page{
+    display: flex;
+    justify-content: center;
+}
+.product-title{
+    color: blue;
+    
+}
+.main-product-img{
+    width: 5rem;
+    height: auto;
+}
+.thumbnail-img{
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    object-fit: cover
+}
