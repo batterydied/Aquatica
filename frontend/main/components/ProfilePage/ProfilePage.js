@@ -6,12 +6,13 @@ export class ProfilePage extends BaseComponent {
         super();
         this.container.classList.add('profile-page');
 
-        this.currentUser = userinfo[0]; 
+        this.currentUser = userinfo[0]; //only shows the first user now
 
         this.profileContainer = document.createElement("div");
         this.profileContainer.classList.add("profile-container");
 
         this.privateInfoVisible = false; 
+        this.loadCSS("ProfilePage");
         this.render();
     }
 
@@ -122,7 +123,7 @@ export class ProfilePage extends BaseComponent {
         const orderList = document.createElement("div");
         orderList.classList.add("order-list");
     
-        if (this.currentUser.orders.length === 0) {
+        if (this.currentUser.order.length === 0) {
             //no order
             const noOrders = document.createElement("p");
             noOrders.innerText = "No orders found.";

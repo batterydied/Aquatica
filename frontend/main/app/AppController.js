@@ -2,7 +2,7 @@
 
 // Imports
 // EXAMPLE - import { SecureCheckout } from '../components/SecureCheckout/securecheckout.js';
-import { ProfilePage } from "../components/ProfilePage/Profile.js";
+import { ProfilePage } from "../components/ProfilePage/ProfilePage.js";
 export class AppController {
    constructor(){
       // Add any states or components here.
