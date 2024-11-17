@@ -1,0 +1,86 @@
+div{
+    padding: 0;
+    margin: 0;
+    font-family: "Montserrat", serif;
+}
+.product-page{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.product-title{
+    color: blue;
+    
+}
+.main-product-img{
+    width: 5rem;
+    height: auto;
+}
+.thumbnail-img{
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    object-fit: cover
+}
+
+.reviewsAndRatings {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 50%; 
+}
+
+.reviewsTitle {
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: inline-block;
+    margin-bottom: -25px;
+}
+
+.stars i {
+    color: gold; 
+    margin-right: 2px; 
+    font-size: 20px;
+}
+
+.stars {
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.reviews {
+    margin-top: 20px;
+}
+
+.review {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-top: 1px solid #ccc;
+    width: 100%; 
+}
+
+.userStarsDate {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.user {
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    display: inline-block;
+}
+
+.date {
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    display: inline-block;
+}
+
+.comment {
+    font-size: 0.9em; 
+}
+
+.review:last-child {
+    border-bottom: 1px solid #ccc;
+}

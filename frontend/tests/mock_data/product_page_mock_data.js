@@ -60,7 +60,7 @@ export const productData =
         {
           "user": "JohnD123",
           "rating": 5,
-          "comment": "The fish arrived healthy and vibrant! Looks amazing in my tank.",
+          "comment": "The fish arrived healthy and vibrant! Looks amazing in my tank The fish arrived healthy and vibrant! Looks amazing in my tank The fish arrived healthy and vibrant! Looks amazing in my tank The fish arrived healthy and vibrant! Looks amazing in my tank The fish arrived healthy and vibrant! Looks amazing in my tank The fish arrived healthy and vibrant! Looks amazing in my tank The fish arrived healthy and vibrant! Looks amazing in my tank.",
           "date": "2024-11-10"
         },
         {
