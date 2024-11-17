@@ -19,11 +19,34 @@ Users will be able to purchase products through secure and convenient payment op
 **Assigned to**: Haiyi Cai
 
 
-## Direct Breeder Contact
+## Product Page
 
-Customers will be able to connect and communicate with aquatic animal breeders and place custom orders. This feature allows customers to easily get the perfect match for their needs. 
+Description: The Product Page provides users with detailed information about a specific product, including its description, images, and integration with breeder contact and ratings and reviews features. It allows users to interact with the product through actions like adding it to the cart, saving it for later, or buying it instantly. The page dynamically displays product details, incorporates user reviews and ratings, and features intuitive UI design for an enhanced user experience.
 
-**Assigned to**: Benson Zheng
+Point Value: 16 - 23 points
+
+Team Member: Benson
+
+Details:
+
+Description (1 point): Displays a detailed overview of the product, highlighting its key features and specifications.
+
+Images (1 point): Provides a gallery of high-quality product images for better visualization.
+
+Breeder Contact (2–3 points): Integrates contact options for breeders, allowing users to connect directly with sellers for inquiries.
+
+Ratings (2–3 points): Shows aggregated ratings to help users assess the quality of the product.
+
+Reviews (2–3 points): Includes a section for customer feedback and testimonials, building trust and credibility.
+
+‘Add to Cart’ Button (2–3 points): Allows users to add the product to their shopping cart for later checkout.
+
+‘Save for Later’ Button (2–3 points): Enables users to save the product for future reference.
+
+‘Buy Now’ Button (2–3 points): Provides a quick purchase option for users ready to buy immediately.
+
+UI Design (2–3 points): Focuses on creating a visually appealing and user-friendly interface for seamless navigation and interaction.
+
 
 ## Virtual Cart for Customers
 
