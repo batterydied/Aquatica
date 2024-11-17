@@ -8,14 +8,14 @@ export class BaseComponent {
       throw new Error('Render method must be implemented in subclasses');
    }
 
-  loadCSS(fileName) {
-    if (this.cssLoaded) return; // Prevents loading the same CSS multiple times
-
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = `./main/components/${fileName}/${fileName}.css`; // Path to CSS file
-    console.log(link.href);
-    document.head.appendChild(link);
-    this.cssLoaded = true; // Marks CSS as loaded
-  }
+   // Loads CSS dynamically, specific to each component
+   loadCSS(fileName) {
+      if (this.cssLoaded) return; // Prevents reloading the same CSS file
+      
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '../components/${fileName}/${fileName}.css'; // Assumes the file path
+      document.head.appendChild(link);
+      this.cssLoaded = true;
+   }
 }
