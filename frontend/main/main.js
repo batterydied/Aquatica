@@ -1,7 +1,7 @@
 import { AppController } from './app/AppController.js';
 
 // Get our root container from the HTML file
-const appContainer = document.getElementByID('app');
+const appContainer = document.getElementById('app');
 
 // Create an instance of the main app controller
 const appController = new AppController();
