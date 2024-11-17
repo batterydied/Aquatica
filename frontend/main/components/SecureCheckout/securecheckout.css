@@ -1,0 +1,150 @@
+/* Import Montserrat font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+/* Global font styling */
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensures the content is vertically centered */
+}
+
+/* Main container styling */
+.checkout-container {
+  display: flex;
+  gap: 50px; /* Increased gap between left and right panels */
+  padding: 40px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px; /* Restricts the total width */
+  width: 100%;
+}
+
+/* Left panel styling */
+.left-panel {
+  width: 600px; /* Fixed width to prevent shrinking */
+  padding-right: 30px; /* Add padding for spacing */
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  min-height: 550px; /* Consistent height */
+  gap: 20px; /* Spacing between elements */
+}
+
+
+/* Right panel styling */
+.right-panel {
+  flex: 1;
+  min-width: 250px;
+  padding-left: 30px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  border: none; 
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 8px;
+}
+
+.tab.active {
+  background-color: #FFA41E; /* Blue background for active tab */
+  color: black; /* White text for better contrast */
+}
+
+/* Form sections */
+/* By default, forms are hidden */
+.form-section {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: visibility 0s, opacity 0.3s ease;
+  min-height: 550px; /* Ensures both forms have the same height */
+}
+
+.form-section.visible {
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+}
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  gap: 8px; /* Spacing between label and input */
+}
+
+.form-group-row {
+  display: flex;
+  gap: 20px; /* Spacing between grouped inputs */
+}
+
+.form-group-row .form-group {
+  flex: 1;
+}
+
+/* Input styling */
+input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.back-link {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  max-height: 25px;
+}
+
+/* Pay Now Button */
+.pay-now {
+  background-color: #FFA41E;
+  color: black;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+  margin-top: 20px; /* Add spacing from summary section */
+}
+
+/* Checkout summary and review styling */
+.review-items {
+  margin-bottom: 20px; /* Add space between review and checkout summary */
+}
+
+.checkout-summary p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
