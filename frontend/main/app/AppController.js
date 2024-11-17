@@ -12,7 +12,7 @@ export class AppController {
   constructor() {
     // Initialize components
     this.#views = {
-      cart: new VirtualCart(this), // Pass AppController instance to VirtualCart
+      cart: new VirtualCart(this), // Pass AppController instance to VirtualCart ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
       checkout: new SecureCheckout(),
     };
 
