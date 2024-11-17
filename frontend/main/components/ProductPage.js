@@ -1,16 +1,18 @@
 import { productData } from '../../tests/mock_data/product_page_mock_data.js';
 import StyleSheet from '../../functions/MakeStyleSheetLink.js';
+import {imgUrl} from '../../tests/mock_data/imgUrl.js'
+import { Popover } from 'bootstrap';
 export default function ProductPage() {
-
+    console.log(imgUrl);
     document.head.appendChild(StyleSheet('./css/ProductPage.css'));
 
     document.head.appendChild(StyleSheet('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Itim&family=McLaren&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet'));
-
     document.head.appendChild(StyleSheet('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'));
 
     const container = document.createElement('div');
     container.className = 'product-page';
-
+    
+    const titles = document.createElement('div');
     // Title
     const title = document.createElement('h1');
     title.innerText = productData.product.name;
@@ -20,12 +22,17 @@ export default function ProductPage() {
     secondaryTitle.innerText = productData.product.scientificName;
     secondaryTitle.className = 'product-secondary-title';
 
+    titles.appendChild(title);
+    titles.appendChild(secondaryTitle);
+
     // Image Gallery
     const imageGallery = document.createElement('div');
     imageGallery.className = 'image-gallery';
     productData.product.images.forEach((imageUrl) => {
         const img = document.createElement('img');
         img.src = imageUrl;
+        img.alt = `${productData.product.name} thumbnail image`;
+        img.className = 'thumbnail-img';
         img.alt = `${productData.product.name} thumbnail image`;
         img.className = 'thumbnail-img';
         imageGallery.appendChild(img);
@@ -35,6 +42,8 @@ export default function ProductPage() {
     const description = document.createElement('p');
     description.innerText = productData.product.description;
     description.className = 'product-description';
+
+    const productSelection = document.createElement('div');
 
     // Price and Product Types
     const productTypes = document.createElement('div');
@@ -61,8 +70,11 @@ export default function ProductPage() {
         priceLabel.innerText = `Price: $${selectedType.price.toFixed(2)} (${selectedType.type})`;
     });
 
+    const btn = document.createElement('button');
     productTypes.appendChild(priceLabel);
     productTypes.appendChild(typeDropdown);
+    productSelection.appendChild(productTypes);
+    productSelection.appendChild(btn);
 
     // Specifications
     const specifications = document.createElement('ul');
@@ -82,6 +94,9 @@ export default function ProductPage() {
     const reviewsAndRatings = document.createElement('div');
     reviewsAndRatings.className = 'reviewsAndRatings';
 
+    const reviewsAndRatingsBar = document.createElement('div');
+    reviewsAndRatingsBar.className = 'reviewsAndRatingsBar';
+
     const reviewsTitle = document.createElement('div');
     reviewsTitle.innerText = `Reviews (${productData.product.reviewsCount}) ${productData.product.rating}`;
     reviewsTitle.className = 'reviewsTitle';
@@ -96,6 +111,16 @@ export default function ProductPage() {
     }
 
     reviewsTitle.appendChild(starsContainer);
+    reviewsAndRatingsBar.appendChild(reviewsTitle);
+
+    const addReviewButton = document.createElement('button');
+    addReviewButton.textContent = ' + Add Review';
+    addReviewButton.className = 'addReviewButton';
+
+    reviewsAndRatingsBar.appendChild(addReviewButton);
+    addReviewButton.addEventListener('click', () => {
+        popup.style.display = "flex";
+    })
 
     const customerReviews = document.createElement('div');
     productData.product.reviews.forEach(review => {
@@ -139,15 +164,14 @@ export default function ProductPage() {
     });
     customerReviews.className = 'reviews';
 
-    reviewsAndRatings.appendChild(reviewsTitle);
+    reviewsAndRatings.appendChild(reviewsAndRatingsBar);
     reviewsAndRatings.appendChild(customerReviews);
 
     // Add elements to container
-    container.appendChild(title);
-    container.appendChild(secondaryTitle);
     container.appendChild(imageGallery);
     container.appendChild(description);
-    container.appendChild(productTypes);
+    container.appendChild(titles);
+    container.appendChild(productSelection);
     container.appendChild(specifications);
     container.appendChild(shippingInfo);
     container.appendChild(reviewsAndRatings);

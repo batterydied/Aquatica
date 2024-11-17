@@ -1,12 +1,11 @@
-div{
-    padding: 0;
-    margin: 0;
+*{
     font-family: "Montserrat", serif;
 }
 .product-page{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin: 5rem;
 }
 .product-title{
     color: blue;
@@ -30,11 +29,27 @@ div{
     width: 50%; 
 }
 
+.reviewsAndRatingsBar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -30px;
+}
+
 .reviewsTitle {
     font-weight: bold;
     font-size: 1.2rem;
     display: inline-block;
-    margin-bottom: -25px;
+}
+
+.addReviewButton {
+    background-color: #FFA41E; 
+    color: white; 
+    border: none; 
+    border-radius: 2px; 
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer; 
+    transition: all 0.3s ease; 
 }
 
 .stars i {
@@ -83,4 +98,9 @@ div{
 
 .review:last-child {
     border-bottom: 1px solid #ccc;
+}
+.selected-img{
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
 }
