@@ -20,6 +20,7 @@ export class MarketplacePage extends BaseComponent {
         this.applySort();
 
         this.start = 0, this.end = 5;
+        this.loadCSS("MarketplacePage");
     }
 
     getProdList() { // TODO: will be async
@@ -49,29 +50,72 @@ export class MarketplacePage extends BaseComponent {
     }
 
     render() {
-        // filtering
-        const filters = document.createElement("div");
-        filters.classList.add("filters");
-        this.container.appendChild(filters);
+        //background image and logo
+        const bg = document.createElement("div");
+        bg.classList.add("background");
+        const bgimg = document.createElement("img");
+        bgimg.classList.add("bgimg");
+        bgimg.src = "../frontend/assets/bg-dummy.png"; // TODO: site main image
+        bg.appendChild(bgimg);
+        const iconContainer = document.createElement("div");
+        iconContainer.classList.add("icon-container");
+        const icon = document.createElement("img");
+        icon.src = "../frontend/assets/logo-dummy.png"; // TODO: icon
+        icon.classList.add("icon");
+        iconContainer.appendChild(icon);
+        bg.appendChild(iconContainer);
+        this.container.appendChild(bg);
 
-        const categoryFilter = document.createElement("div");
+        const mainPage = document.createElement("div");
+        mainPage.classList.add("main-page");
+        this.container.appendChild(mainPage);
+
+        // filtering
+        const categoryBox = document.createElement("div");
+        categoryBox.classList.add("category-box");
+        categoryBox.classList.add("filters");
+        mainPage.appendChild(categoryBox);
+
+        const categoryFilter = document.createElement("button");
         categoryFilter.classList.add("filter-label");
         categoryFilter.innerText = "Categories:";
-        filters.appendChild(categoryFilter);
+        categoryBox.appendChild(categoryFilter);
+
+        const allButton = document.createElement("button");
+        allButton.innerText = "All";
+        allButton.classList.add("filter-button");
+        allButton.classList.add("category-button");
+        allButton.id = "all-button";
+        allButton.addEventListener("click", () => {
+            if (this.curCategory !== "All") {
+                this.curCategory = "All";
+                this.reloadFilters();
+                this.renderMarketplace();
+                this.reStyleButtons("category-button");
+            }
+        });
+        categoryBox.appendChild(allButton);
 
         for (let category in Category) {
             const button = this.createFilterButton("category", Category[category]);
-            filters.appendChild(button);
+            button.id = Category[category];
+            categoryBox.appendChild(button);
         }
 
-        const priceFilter = document.createElement("div");
+        const priceBox = document.createElement("div");
+        priceBox.classList.add("price-box");
+        priceBox.classList.add("filters");
+        mainPage.appendChild(priceBox);
+
+        const priceFilter = document.createElement("button");
         priceFilter.classList.add("filter-label");
         priceFilter.innerText = "Price:";
-        filters.appendChild(priceFilter);
+        priceBox.appendChild(priceFilter);
 
         for (let bracket in PriceBrackets) {
             const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
-            filters.appendChild(bracketButton);
+            bracketButton.id = PriceBrackets[bracket];
+            priceBox.appendChild(bracketButton);
         }
 
         // search bar
@@ -79,18 +123,21 @@ export class MarketplacePage extends BaseComponent {
         searchBar.classList.add("search-bar");
         
         const searchIcon = document.createElement("img");
-        searchIcon.src = "";
+        searchIcon.src = "/frontend/assets/search-icon.png";
+        searchIcon.classList.add("search-icon");
         searchBar.appendChild(searchIcon);
 
         const searchInput = document.createElement("input");
+        searchInput.classList.add("search-input");
         searchInput.type = "text";
+        searchInput.placeholder = "Search_"
         searchInput.addEventListener("keyup", () => {
             this.regex = new RegExp(searchInput.value, "ig");
             this.reloadFilters();
             this.renderMarketplace();
         });
         searchBar.appendChild(searchInput);
-        this.container.appendChild(searchBar);
+        mainPage.appendChild(searchBar);
 
         // sort
         const sorter = document.createElement("select");
@@ -109,11 +156,13 @@ export class MarketplacePage extends BaseComponent {
             this.renderMarketplace();
         }
 
-        this.container.appendChild(sorter);
+        mainPage.appendChild(sorter);
 
         this.renderMarketplace();
 
-        this.container.appendChild(this.marketplace);
+        this.marketplace.classList.add("marketplace");
+
+        mainPage.appendChild(this.marketplace);
 
         return this.container;
     }
@@ -123,58 +172,90 @@ export class MarketplacePage extends BaseComponent {
         this.marketplace.innerHTML = "";
         // render products list
         for (let i = this.start; i < this.end && i < this.prodList.length; i++) {
-            // TODO: Classes for CSS integration
             // create html to display product
             const curProduct = document.createElement('div');
             curProduct.classList.add('product');
 
             const prodIMGDiv = document.createElement("div");
-            prodIMGDiv.classList.add("prodimg");
+            prodIMGDiv.classList.add("prodimg-container");
             curProduct.appendChild(prodIMGDiv);
 
             const prodIMG = document.createElement("img");
-            prodIMG.src = this.prodList[i].imgurl;
+            prodIMG.src = "/frontend/assets/dummy_600x400_ffffff_cccccc.png";
+            prodIMG.classList.add("prodimg");
+            //prodIMG.src = this.prodList[i].imgurl;
             prodIMGDiv.appendChild(prodIMG);
 
             const prodDesc = document.createElement("div");
             prodDesc.classList.add("proddesc");
             curProduct.appendChild(prodDesc);
 
-            const prodName = document.createElement("a");
-            prodName.innerText = this.prodList[i].name + "\n";
-            prodName.href = ""; // will be link to product page
-            // TODO: needs to tell AppController to open product page and what productid to load
-            prodDesc.appendChild(prodName);
+            const prodInfo = document.createElement('div');
+            prodInfo.classList.add("prodinfo");
+            prodDesc.appendChild(prodInfo);
 
-            const sellName = document.createElement("a");
-            sellName.innerText = this.prodList[i].sellername + "\n";
-            sellName.href = ""; // will be link to seller profile page
+            const price = document.createElement("span");
+            price.classList.add("price");
+            price.classList.add("prodtext");
+            price.innerText = `$${this.prodList[i].price}\n`; // make sure it displays with two decimal places
+            prodInfo.appendChild(price);
+
+            const prodName = document.createElement("span");
+            prodName.classList.add("prodname");
+            const prodLink = document.createElement("a");
+            prodLink.classList.add("prodtext");
+            prodLink.classList.add("prodlink");
+            prodLink.innerText = this.prodList[i].name + '\n';
+            prodLink.href = ""; // will be link to seller profile page
+            prodName.appendChild(prodLink);
+            // TODO: needs to tell AppController to open product page and what productid to load
+            prodInfo.appendChild(prodName);
+
+            const sellName = document.createElement("span");
+            sellName.classList.add("sellname");
+            const sellLink = document.createElement("a");
+            sellLink.classList.add("prodtext");
+            sellLink.classList.add("prodlink");
+            sellLink.innerText = this.prodList[i].sellername;
+            sellLink.href = ""; // will be link to seller profile page
+            sellName.appendChild(sellLink);
             // TODO: tell AppController to open profile page and what sellerid to load
-            prodDesc.appendChild(sellName);
+            prodInfo.appendChild(sellName);
 
             if (this.prodList[i].numreviews > 0 && this.prodList[i].average_rating !== null) {
+                const starIMGDiv = document.createElement("div");
+                starIMGDiv.classList.add("stars-container");
+                prodInfo.appendChild(starIMGDiv);
+
                 const starIMG = document.createElement("img");
-                starIMG.src = ""; // star image based on rating
-                starIMG.alt = `${this.prodList[i].average_rating} Stars`;
-                prodDesc.appendChild(starIMG);
+                starIMG.classList.add("stars");
+                starIMG.src = this.getStarIMG(this.prodList[i].average_rating); // star image based on rating
+                starIMG.alt = `${this.prodList[i].average_rating.toPrecision(2)} Stars`;
+                starIMGDiv.appendChild(starIMG);
+
+                const starText = document.createElement("span");
+                starText.classList.add("star-text");
+                starText.innerText = `${this.prodList[i].average_rating} Stars`;
+                starIMGDiv.appendChild(starText);
+
                 const numReviews = document.createElement("a");
+                numReviews.classList.add("reviews-text");
+                numReviews.classList.add("prodlink");
                 numReviews.href = ""
                 // TODO: tell AppController to open ratings page and what productid to load
 
                 const reviews = this.prodList[i].numreviews === 1 ? "Review" : "Reviews";
-                numReviews.innerText = `${this.prodList[i].numreviews} ${reviews}`;
-                prodDesc.appendChild(numReviews);
+                numReviews.innerText = ` ${this.prodList[i].numreviews} ${reviews}\n`;
+                prodInfo.appendChild(numReviews);
             } else {
-                const noRatingText = document.createElement("p");
-                noRatingText.innerText = "No reviews.";
-                prodDesc.appendChild(noRatingText);
+                const noRatingText = document.createElement("span");
+                noRatingText.classList.add("reviews-text");
+                noRatingText.innerText = "No reviews.\n";
+                prodInfo.appendChild(noRatingText);
             }
 
-            const price = document.createElement("p");
-            price.innerText = `$${this.prodList[i].price}`; // make sure it displays with two decimal places
-            prodDesc.appendChild(price);
-
-            const desc = document.createElement("p");
+            const desc = document.createElement("span");
+            desc.classList.add("desc");
             desc.innerText = this.prodList[i].description;
             prodDesc.appendChild(desc);
 
@@ -183,10 +264,17 @@ export class MarketplacePage extends BaseComponent {
 
         if (this.prodList.length > 0) {
             // render page buttons and page number
-            const nextPage = document.createElement('button');
+            const pageBox = document.createElement("div");
+            pageBox.classList.add("page-box");
+
+            const nextPage = document.createElement('div');
+
+            const nextPageIMG = document.createElement('img');
+            nextPageIMG.classList.add("page-img");
+            nextPageIMG.src = "/frontend/assets/next-page.png";
+            nextPage.appendChild(nextPageIMG);
+
             nextPage.classList.add('page-button');
-            nextPage.id = 'next-page-button';
-            nextPage.textContent = "Next";
             nextPage.addEventListener('click', () => {
                 if (this.end < this.prodList.length - 1) {
                     this.start += 5;
@@ -199,10 +287,14 @@ export class MarketplacePage extends BaseComponent {
             const endItem = Math.min(this.end, this.prodList.length);
             pageNumber.innerText = `${this.start + 1} - ${endItem} / ${this.prodList.length}`;
 
-            const prevPage = document.createElement('button');
+            const prevPage = document.createElement('div');
+
+            const prevPageIMG = document.createElement('img');
+            prevPageIMG.classList.add("page-img");
+            prevPageIMG.src = "/frontend/assets/prev-button.png";
+            prevPage.appendChild(prevPageIMG);
+
             prevPage.classList.add('page-button');
-            prevPage.id = 'prev-page-button';
-            prevPage.textContent = "Previous";
             prevPage.addEventListener('click', () => {
                 if (this.start >= 5) {
                     this.start -= 5;
@@ -210,11 +302,13 @@ export class MarketplacePage extends BaseComponent {
                     this.renderMarketplace();
                 }
             })
-            this.marketplace.appendChild(nextPage);
-            this.marketplace.appendChild(pageNumber);
-            this.marketplace.appendChild(prevPage);
+            pageBox.appendChild(prevPage);
+            pageBox.appendChild(pageNumber);
+            pageBox.appendChild(nextPage);
+
+            this.marketplace.appendChild(pageBox);
         } else {
-            const noItemsFound = document.createElement("p");
+            const noItemsFound = document.createElement("span");
             noItemsFound.innerText = "No items found for current criteria. Try other search terms.";
             this.marketplace.appendChild(noItemsFound);
         }
@@ -223,11 +317,12 @@ export class MarketplacePage extends BaseComponent {
     createFilterButton(kind, text) {
         const button = document.createElement("button");
         button.classList.add("filter-button");
+        const buttonClass = `${kind}-button`;
+        button.classList.add(buttonClass);
         button.textContent = text;
 
         button.addEventListener("click", () => {
             const toggle = kind === "category" ? this.curCategory : this.curBracket;
-            console.log("button clicked!")
             if (toggle !== text) {
                 // update toggle
                 if (kind === "category") { // i wish JS had pointers *sad C programmer noises*
@@ -247,6 +342,7 @@ export class MarketplacePage extends BaseComponent {
                 this.reloadFilters();
             }
             this.renderMarketplace();
+            this.reStyleButtons(buttonClass);
         });
         return button;
     }
@@ -287,5 +383,48 @@ export class MarketplacePage extends BaseComponent {
         this.end = 5;
     }
 
-    // TODO: CSS
+    reStyleButtons(buttonClass) {
+        const buttons = document.querySelectorAll(`.${buttonClass}`);
+        console.log(buttonClass);
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].style.backgroundColor = "#FFFFFF";
+            buttons[i].style.color = "#232C3C";
+        }
+        if (this.curCategory === "All") {
+            const allButton = document.getElementById("all-button");
+            allButton.style.backgroundColor = "#43608D";
+            allButton.style.color = "#FFFFFF";
+        } else {
+            const curButton = document.getElementById(this.curCategory);
+            curButton.style.backgroundColor = "#43608D";
+            curButton.style.color = "#FFFFFF";
+        }
+        if (this.curBracket !== "All") {
+            const curButton = document.getElementById(this.curBracket);
+            curButton.style.backgroundColor = "#43608D";
+            curButton.style.color = "#FFFFFF";
+        }
+    }
+
+    getStarIMG(rating) {
+        if (rating < 1.4) {
+            return "/frontend/assets/one-star.png";
+        } else if (rating < 1.9) {
+            return "/frontend/assets/one-point-five-star.png";
+        } else if (rating < 2.4) {
+            return "/frontend/assets/two-star.png";
+        } else if (rating < 2.9) {
+            return "/frontend/assets/two-point-five-star.png";
+        } else if (rating < 3.4) {
+            return "/frontend/assets/three-star.png";
+        } else if (rating < 3.9) {
+            return "/frontend/assets/three-point-five-star.png";
+        } else if (rating < 4.4) {
+            return "/frontend/assets/four-star.png";
+        } else if (rating < 4.9) {
+            return "/frontend/assets/four-point-five-star.png";
+        } else {
+            return "/frontend/assets/five-star.png";
+        }
+    }
 }
