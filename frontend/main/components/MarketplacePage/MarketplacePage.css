@@ -229,6 +229,31 @@
     object-position: 50% 50%;
 }
 
+.add-item {
+    display: flex;
+    background-color: #FFFFFF;
+    border: solid;
+    border-color:#5B91C8;
+    border-radius: 3% / 10%;
+    height: 50px;
+    width: 30%;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.add-item-icon {
+    width: 30px;
+    margin-left:auto;
+}
+
+.edit-button {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin-left:auto;
+}
+
 @media screen and (max-width: 500px){
     .main-page {
         max-width: 250px;
@@ -272,5 +297,10 @@
     }
     .page-button {
         margin: 5px;
+    }
+    .add-item {
+        margin:5px;
+        border-radius: 2%/10%;
+        width: auto;
     }
 }

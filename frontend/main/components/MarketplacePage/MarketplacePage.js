@@ -19,7 +19,8 @@ export class MarketplacePage extends BaseComponent {
         this.sort = Sorts.Good;
         this.applySort();
 
-        this.start = 0, this.end = 5;
+        this.pageLength = 5;
+        this.start = 0, this.end = this.start+this.pageLength;
         this.loadCSS("MarketplacePage");
     }
 
@@ -170,94 +171,13 @@ export class MarketplacePage extends BaseComponent {
     renderMarketplace() {
         // empty marketplace
         this.marketplace.innerHTML = "";
+        // empty div at the top for SellProductsPage to use :)
+        const dontMindMe = document.createElement('div');
+        this.marketplace.appendChild(dontMindMe);
         // render products list
         for (let i = this.start; i < this.end && i < this.prodList.length; i++) {
             // create html to display product
-            const curProduct = document.createElement('div');
-            curProduct.classList.add('product');
-
-            const prodIMGDiv = document.createElement("div");
-            prodIMGDiv.classList.add("prodimg-container");
-            curProduct.appendChild(prodIMGDiv);
-
-            const prodIMG = document.createElement("img");
-            prodIMG.src = "/frontend/assets/dummy_600x400_ffffff_cccccc.png";
-            prodIMG.classList.add("prodimg");
-            //prodIMG.src = this.prodList[i].imgurl;
-            prodIMGDiv.appendChild(prodIMG);
-
-            const prodDesc = document.createElement("div");
-            prodDesc.classList.add("proddesc");
-            curProduct.appendChild(prodDesc);
-
-            const prodInfo = document.createElement('div');
-            prodInfo.classList.add("prodinfo");
-            prodDesc.appendChild(prodInfo);
-
-            const price = document.createElement("span");
-            price.classList.add("price");
-            price.classList.add("prodtext");
-            price.innerText = `$${this.prodList[i].price}\n`; // make sure it displays with two decimal places
-            prodInfo.appendChild(price);
-
-            const prodName = document.createElement("span");
-            prodName.classList.add("prodname");
-            const prodLink = document.createElement("a");
-            prodLink.classList.add("prodtext");
-            prodLink.classList.add("prodlink");
-            prodLink.innerText = this.prodList[i].name + '\n';
-            prodLink.href = ""; // will be link to seller profile page
-            prodName.appendChild(prodLink);
-            // TODO: needs to tell AppController to open product page and what productid to load
-            prodInfo.appendChild(prodName);
-
-            const sellName = document.createElement("span");
-            sellName.classList.add("sellname");
-            const sellLink = document.createElement("a");
-            sellLink.classList.add("prodtext");
-            sellLink.classList.add("prodlink");
-            sellLink.innerText = this.prodList[i].sellername;
-            sellLink.href = ""; // will be link to seller profile page
-            sellName.appendChild(sellLink);
-            // TODO: tell AppController to open profile page and what sellerid to load
-            prodInfo.appendChild(sellName);
-
-            if (this.prodList[i].numreviews > 0 && this.prodList[i].average_rating !== null) {
-                const starIMGDiv = document.createElement("div");
-                starIMGDiv.classList.add("stars-container");
-                prodInfo.appendChild(starIMGDiv);
-
-                const starIMG = document.createElement("img");
-                starIMG.classList.add("stars");
-                starIMG.src = this.getStarIMG(this.prodList[i].average_rating); // star image based on rating
-                starIMG.alt = `${this.prodList[i].average_rating.toPrecision(2)} Stars`;
-                starIMGDiv.appendChild(starIMG);
-
-                const starText = document.createElement("span");
-                starText.classList.add("star-text");
-                starText.innerText = `${this.prodList[i].average_rating} Stars`;
-                starIMGDiv.appendChild(starText);
-
-                const numReviews = document.createElement("a");
-                numReviews.classList.add("reviews-text");
-                numReviews.classList.add("prodlink");
-                numReviews.href = ""
-                // TODO: tell AppController to open ratings page and what productid to load
-
-                const reviews = this.prodList[i].numreviews === 1 ? "Review" : "Reviews";
-                numReviews.innerText = ` ${this.prodList[i].numreviews} ${reviews}\n`;
-                prodInfo.appendChild(numReviews);
-            } else {
-                const noRatingText = document.createElement("span");
-                noRatingText.classList.add("reviews-text");
-                noRatingText.innerText = "No reviews.\n";
-                prodInfo.appendChild(noRatingText);
-            }
-
-            const desc = document.createElement("span");
-            desc.classList.add("desc");
-            desc.innerText = this.prodList[i].description;
-            prodDesc.appendChild(desc);
+            const curProduct = this.createProduct(this.prodList[i]);
 
             this.marketplace.appendChild(curProduct);
         }
@@ -275,13 +195,7 @@ export class MarketplacePage extends BaseComponent {
             nextPage.appendChild(nextPageIMG);
 
             nextPage.classList.add('page-button');
-            nextPage.addEventListener('click', () => {
-                if (this.end < this.prodList.length - 1) {
-                    this.start += 5;
-                    this.end += 5;
-                    this.renderMarketplace();
-                }
-            })
+            nextPage.addEventListener('click', () => this.goToNextPage());
 
             const pageNumber = document.createElement('p');
             const endItem = Math.min(this.end, this.prodList.length);
@@ -295,13 +209,7 @@ export class MarketplacePage extends BaseComponent {
             prevPage.appendChild(prevPageIMG);
 
             prevPage.classList.add('page-button');
-            prevPage.addEventListener('click', () => {
-                if (this.start >= 5) {
-                    this.start -= 5;
-                    this.end -= 5;
-                    this.renderMarketplace();
-                }
-            })
+            prevPage.addEventListener('click', () => this.goToPrevPage());
             pageBox.appendChild(prevPage);
             pageBox.appendChild(pageNumber);
             pageBox.appendChild(nextPage);
@@ -345,6 +253,97 @@ export class MarketplacePage extends BaseComponent {
             this.reStyleButtons(buttonClass);
         });
         return button;
+    }
+
+    createProduct(prodListItem) {
+        // create html to display product
+        const curProduct = document.createElement('div');
+        curProduct.classList.add('product');
+
+        const prodIMGDiv = document.createElement("div");
+        prodIMGDiv.classList.add("prodimg-container");
+        curProduct.appendChild(prodIMGDiv);
+
+        const prodIMG = document.createElement("img");
+        prodIMG.src = "/frontend/assets/dummy_600x400_ffffff_cccccc.png";
+        prodIMG.classList.add("prodimg");
+        //prodIMG.src = this.prodList[i].imgurl;
+        prodIMGDiv.appendChild(prodIMG);
+
+        const prodDesc = document.createElement("div");
+        prodDesc.classList.add("proddesc");
+        curProduct.appendChild(prodDesc);
+
+        const prodInfo = document.createElement('div');
+        prodInfo.classList.add("prodinfo");
+        prodDesc.appendChild(prodInfo);
+
+        const price = document.createElement("span");
+        price.classList.add("price");
+        price.classList.add("prodtext");
+        price.innerText = `$${prodListItem.price}\n`; // make sure it displays with two decimal places
+        prodInfo.appendChild(price);
+
+        const prodName = document.createElement("span");
+        prodName.classList.add("prodname");
+        const prodLink = document.createElement("a");
+        prodLink.classList.add("prodtext");
+        prodLink.classList.add("prodlink");
+        prodLink.innerText = prodListItem.name + '\n';
+        prodLink.href = ""; // will be link to seller profile page
+        prodName.appendChild(prodLink);
+        // TODO: needs to tell AppController to open product page and what productid to load
+        prodInfo.appendChild(prodName);
+
+        const sellName = document.createElement("span");
+        sellName.classList.add("sellname");
+        const sellLink = document.createElement("a");
+        sellLink.classList.add("prodtext");
+        sellLink.classList.add("prodlink");
+        sellLink.innerText = prodListItem.sellername;
+        sellLink.href = ""; // will be link to seller profile page
+        sellName.appendChild(sellLink);
+        // TODO: tell AppController to open profile page and what sellerid to load
+        prodInfo.appendChild(sellName);
+
+        if (prodListItem.numreviews > 0 && prodListItem.average_rating !== null) {
+            const starIMGDiv = document.createElement("div");
+            starIMGDiv.classList.add("stars-container");
+            prodInfo.appendChild(starIMGDiv);
+
+            const starIMG = document.createElement("img");
+            starIMG.classList.add("stars");
+            starIMG.src = this.getStarIMG(prodListItem.average_rating); // star image based on rating
+            starIMG.alt = `${prodListItem.average_rating.toPrecision(2)} Stars`;
+            starIMGDiv.appendChild(starIMG);
+
+            const starText = document.createElement("span");
+            starText.classList.add("star-text");
+            starText.innerText = `${prodListItem.average_rating} Stars`;
+            starIMGDiv.appendChild(starText);
+
+            const numReviews = document.createElement("a");
+            numReviews.classList.add("reviews-text");
+            numReviews.classList.add("prodlink");
+            numReviews.href = ""
+            // TODO: tell AppController to open ratings page and what productid to load
+
+            const reviews = prodListItem.numreviews === 1 ? "Review" : "Reviews";
+            numReviews.innerText = ` ${prodListItem.numreviews} ${reviews}\n`;
+            prodInfo.appendChild(numReviews);
+        } else {
+            const noRatingText = document.createElement("span");
+            noRatingText.classList.add("reviews-text");
+            noRatingText.innerText = "No reviews.\n";
+            prodInfo.appendChild(noRatingText);
+        }
+
+        const desc = document.createElement("span");
+        desc.classList.add("desc");
+        desc.innerText = prodListItem.description;
+        prodDesc.appendChild(desc);
+
+        return curProduct;
     }
 
     applyFilter(cond) {
@@ -425,6 +424,22 @@ export class MarketplacePage extends BaseComponent {
             return "/frontend/assets/four-point-five-star.png";
         } else {
             return "/frontend/assets/five-star.png";
+        }
+    }
+
+    goToNextPage() {
+        if (this.end < this.prodList.length - 1) {
+            this.start += this.pageLength;
+            this.end += this.pageLength;
+            this.renderMarketplace();
+        }
+    }
+
+    goToPrevPage() {
+        if (this.start >= this.pageLength) {
+            this.start -= this.pageLength;
+            this.end -= this.pageLength;
+            this.renderMarketplace();
         }
     }
 }
