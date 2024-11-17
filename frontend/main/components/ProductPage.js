@@ -1,14 +1,16 @@
 import { productData } from '../../tests/mock_data/product_page_mock_data.js';
 import StyleSheet from '../../functions/MakeStyleSheetLink.js';
+import {imgUrl} from '../../tests/mock_data/imgUrl.js'
 export default function ProductPage() {
-
+    console.log(imgUrl);
     document.head.appendChild(StyleSheet('./css/ProductPage.css'));
 
     document.head.appendChild(StyleSheet('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Itim&family=McLaren&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet'));
 
     const container = document.createElement('div');
     container.className = 'product-page';
-
+    
+    const titles = document.createElement('div');
     // Title
     const title = document.createElement('h1');
     title.innerText = productData.product.name;
@@ -17,6 +19,9 @@ export default function ProductPage() {
     const secondaryTitle = document.createElement('h2');
     secondaryTitle.innerText = productData.product.scientificName;
     secondaryTitle.className = 'product-secondary-title';
+
+    titles.appendChild(title);
+    titles.appendChild(secondaryTitle);
 
     // Image Gallery
     const imageGallery = document.createElement('div');
@@ -33,6 +38,8 @@ export default function ProductPage() {
     const description = document.createElement('p');
     description.innerText = productData.product.description;
     description.className = 'product-description';
+
+    const productSelection = document.createElement('div');
 
     // Price and Product Types
     const productTypes = document.createElement('div');
@@ -59,8 +66,11 @@ export default function ProductPage() {
         priceLabel.innerText = `Price: $${selectedType.price.toFixed(2)} (${selectedType.type})`;
     });
 
+    const btn = document.createElement('button');
     productTypes.appendChild(priceLabel);
     productTypes.appendChild(typeDropdown);
+    productSelection.appendChild(productTypes);
+    productSelection.appendChild(btn);
 
     // Specifications
     const specifications = document.createElement('ul');
@@ -77,11 +87,10 @@ export default function ProductPage() {
     shippingInfo.className = 'shipping-info';
 
     // Add elements to container
-    container.appendChild(title);
-    container.appendChild(secondaryTitle);
     container.appendChild(imageGallery);
     container.appendChild(description);
-    container.appendChild(productTypes);
+    container.appendChild(titles);
+    container.appendChild(productSelection);
     container.appendChild(specifications);
     container.appendChild(shippingInfo);
 
