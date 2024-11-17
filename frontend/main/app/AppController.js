@@ -12,11 +12,11 @@ export class AppController {
   constructor() {
     // Initialize components
     this.#views = {
-      cart: new VirtualCart(this), // Pass AppController instance to VirtualCart
+      cart: new VirtualCart(this), // Pass AppController instance to VirtualCart ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
       checkout: new SecureCheckout(),
     };
 
-    // Set the initial view for testing (Cart in this case)
+    // Set the initial view for testing ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
     this.#currentView = this.#views.cart;
   }
 
