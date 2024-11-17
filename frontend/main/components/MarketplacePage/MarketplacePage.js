@@ -444,16 +444,10 @@ export class MarketplacePage extends BaseComponent {
     }
 
     goToProductPage(prodid) {
-        const appController = AppController.getInstance();
-        const productService = ProductService.getInstance();
-        productService.curProdId = prodid;
-        appController.navigate("product");
+        console.log(`going to product page for product ${prodid}`);
     }
 
     goToSellerProfile(sellid) {
-        const appController = AppController.getInstance();
-        const profileService = ProfileService.getInstance();
-        profileService.curSellId = sellid;
-        appController.navigate("profile");
+        console.log(`going to profile page for seller ${sellid}`);
     }
 }

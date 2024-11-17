@@ -13,25 +13,7 @@ export class AppController {
    constructor() {
       // Initialize components
       this.#views = {
-         marketplace: new MarketplacePage(),
-         product: { render: () => { // TEST CODE
-               const productService = ProductService.getInstance();
-               productService.retrieveAllProducts();
-               const product = productService.getCurProduct();
-               const container = document.createElement('div');
-               container.innerText = JSON.stringify(product);
-               return container;
-            }
-         },
-         profile: {
-            render: () => {
-               const profileService = ProfileService.getInstance();
-               const profileData = profileService.retrieveSellerData();
-               const container = document.createElement('div');
-               container.innerText = JSON.stringify(profileData);
-               return container;
-            }
-         }
+         marketplace: new MarketplacePage()
       };
 
       // TESTING FOR MARKETPLACEPAGE
