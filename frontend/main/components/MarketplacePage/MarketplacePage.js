@@ -114,7 +114,7 @@ export class MarketplacePage extends BaseComponent {
 
         for (let bracket in PriceBrackets) {
             const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
-            bracketButton.id = PriceBrackets[bracket];
+            bracketButton.id = bracket;
             priceBox.appendChild(bracketButton);
         }
 

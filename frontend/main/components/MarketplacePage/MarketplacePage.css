@@ -73,6 +73,7 @@
     vertical-align: middle;
     line-height: 10px;
     height: 90%;
+    cursor:pointer;
 }
 
 #all-button {
@@ -121,6 +122,7 @@
     vertical-align: middle;
     line-height: 1px;
     height: 90%;
+    cursor:pointer;
 }
 
 .sorter:focus {
@@ -217,6 +219,7 @@
     margin: 50px;
     width: 40px;
     align-content: center;
+    cursor: pointer;
 }
 
 .page-img {
@@ -243,6 +246,9 @@
     .filter-button {
         font-size: 60%;
         height: 80%;
+    }
+    #all-button, #Rocks, #bracket1, #bracket4 {
+        margin-left:0;
     }
     .product {
         margin: 0px;
