@@ -16,7 +16,7 @@ export class AppController {
       checkout: new SecureCheckout(),
     };
 
-    // Set the initial view for testing (Cart in this case)
+    // Set the initial view for testing ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
     this.#currentView = this.#views.cart;
   }
 
