@@ -186,6 +186,10 @@
     font-size: 150%;
 }
 
+.prodlink {
+    cursor:pointer;
+}
+
 .prodlink:hover {
     color:#232C3C;
 }

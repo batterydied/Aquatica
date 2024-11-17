@@ -3,6 +3,9 @@ import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
 import { products } from "./Products.js";
+import { AppController } from "../../app/AppController.js";
+import { ProductService} from "../../services/ProductService.js";
+import { ProfileService } from "../../services/ProfileService.js";
 
 export class MarketplacePage extends BaseComponent {
     constructor() {
@@ -25,7 +28,8 @@ export class MarketplacePage extends BaseComponent {
     }
 
     getProdList() { // TODO: will be async
-        const list = products; // will eventually be fetched from server, this is just test data
+        const productService = ProductService.getInstance();
+        const list = productService.retrieveAllProducts();
 
         for (let i = 0; i < list.length; i++) {
             list[i].bracket = this.calculateBracket(list[i].price);
@@ -239,7 +243,6 @@ export class MarketplacePage extends BaseComponent {
                     this.curBracket = text;
                 }
                 this.reloadFilters();
-                // TODO: add styling
             } else {
                 // update toggle
                 if (kind === "category") {
@@ -286,24 +289,22 @@ export class MarketplacePage extends BaseComponent {
 
         const prodName = document.createElement("span");
         prodName.classList.add("prodname");
-        const prodLink = document.createElement("a");
+        const prodLink = document.createElement("span");
         prodLink.classList.add("prodtext");
         prodLink.classList.add("prodlink");
         prodLink.innerText = prodListItem.name + '\n';
-        prodLink.href = ""; // will be link to seller profile page
         prodName.appendChild(prodLink);
-        // TODO: needs to tell AppController to open product page and what productid to load
+        prodName.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
         prodInfo.appendChild(prodName);
 
         const sellName = document.createElement("span");
         sellName.classList.add("sellname");
-        const sellLink = document.createElement("a");
+        const sellLink = document.createElement("span");
         sellLink.classList.add("prodtext");
         sellLink.classList.add("prodlink");
         sellLink.innerText = prodListItem.sellername;
-        sellLink.href = ""; // will be link to seller profile page
         sellName.appendChild(sellLink);
-        // TODO: tell AppController to open profile page and what sellerid to load
+        sellName.addEventListener("click", () => this.goToSellerProfile(prodListItem.sellerid));
         prodInfo.appendChild(sellName);
 
         if (prodListItem.numreviews > 0 && prodListItem.average_rating !== null) {
@@ -322,11 +323,10 @@ export class MarketplacePage extends BaseComponent {
             starText.innerText = `${prodListItem.average_rating} Stars`;
             starIMGDiv.appendChild(starText);
 
-            const numReviews = document.createElement("a");
+            const numReviews = document.createElement("span");
             numReviews.classList.add("reviews-text");
             numReviews.classList.add("prodlink");
-            numReviews.href = ""
-            // TODO: tell AppController to open ratings page and what productid to load
+            numReviews.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
 
             const reviews = prodListItem.numreviews === 1 ? "Review" : "Reviews";
             numReviews.innerText = ` ${prodListItem.numreviews} ${reviews}\n`;
@@ -441,5 +441,19 @@ export class MarketplacePage extends BaseComponent {
             this.end -= this.pageLength;
             this.renderMarketplace();
         }
+    }
+
+    goToProductPage(prodid) {
+        const appController = AppController.getInstance();
+        const productService = ProductService.getInstance();
+        productService.curProdId = prodid;
+        appController.navigate("product");
+    }
+
+    goToSellerProfile(sellid) {
+        const appController = AppController.getInstance();
+        const profileService = ProfileService.getInstance();
+        profileService.curSellId = sellid;
+        appController.navigate("profile");
     }
 }
