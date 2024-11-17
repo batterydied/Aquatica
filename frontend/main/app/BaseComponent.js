@@ -14,7 +14,7 @@ export class BaseComponent {
       
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = '../components/${fileName}/${fileName}.css'; // Assumes the file path
+      link.href = `/frontend/main/components/${fileName}/${fileName}.css`; // Assumes the file path
       document.head.appendChild(link);
       this.cssLoaded = true;
    }

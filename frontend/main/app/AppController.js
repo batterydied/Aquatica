@@ -19,7 +19,7 @@ export class AppController {
       // EXAMPLE - container.appendChild(this.secureCheckout.render());
 
       const profilePage = new ProfilePage().render();
-      container.appendChild(ProfilePage);
+      container.appendChild(profilePage);
       return container; 
    }
 }

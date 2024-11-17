@@ -1,7 +1,7 @@
 export const userinfo = [
     {
         name: "Alice Brown",
-        avatar: "https://example.com/1.png",
+        avatar: "./person-circle.svg",
         phone: "+123 456 7890",
         email: "alice@example.com",
         payment: "Visa **** 1234",
@@ -13,7 +13,7 @@ export const userinfo = [
     },
     {
         name: "John Doe",
-        avatar: "https://example.com/avatar3.png",
+        avatar: "./person-circle.svg",
         phone: "+456 789 1230",
         email: "john@example.com",
         payment: "PayPal (john@example.com)",
@@ -25,7 +25,7 @@ export const userinfo = [
     },
     {
         name: "Emily Davis",
-        avatar: "https://example.com/avatar5.png",
+        avatar: "./person-circle.svg",
         phone: "+111 222 3333",
         email: "emily@example.com",
         payment: "Visa **** 6789",
