@@ -1,7 +1,7 @@
 // This will render all of our app's features.
 
 // Imports
-import { ProductPage } from '../components/ProductPage/productpage.js'
+import { ProductPage } from '../components/ProductPage/ProductPage.js'
 
 export class AppController {
   #container = null;

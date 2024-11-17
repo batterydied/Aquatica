@@ -1,7 +1,5 @@
 import { BaseComponent } from '../../app/BaseComponent.js';
 import { productData } from '../../../tests/mock_data/product_page_mock_data.js';
-import StyleSheet from '../../../functions/MakeStyleSheetLink.js';
-import { imgUrl } from '../../../tests/mock_data/imgUrl.js';
 
 export class ProductPage extends BaseComponent {
   #container = null;
