@@ -1,13 +1,26 @@
 import { products } from "../components/MarketplacePage/Products.js";
 
-export class ProductService {
+export class ProductService extends Service {
     constructor() {
+        super();
         this.curProdId = null;
         this.products = [];
+
+        //this.initDB().then(() => this.retrieveAllProducts());
+        this.retrieveAllProducts();
     }
 
-    retrieveAllProducts() { // eventually will call server
-        this.products = products;
+    initDB() {
+        // create db (not implemented yet)
+    }
+
+    saveProduct(product) {
+        console.log(`Saving product ${product.prodid}`);
+        // save product to db (not implemented yet)
+    }
+
+    retrieveAllProducts() {
+        this.products = products; // get products from db (not implemented yeet)
         return this.products;
     }
 
@@ -20,10 +33,9 @@ export class ProductService {
         return null;
     }
 
-    static getInstance() {
-        if (!ProductService.instance) {
-            ProductService.instance = new ProductService;
-        }
-        return ProductService.instance;
+    addSubscriptions() {
+        this.subscribe("saveProduct", (data) => this.saveProduct(data));
+        this.subscribe("getCurProduct", () => this.getCurProduct());
+        this.subscribe("setCurProduct", (prodid) => {this.curProdId = prodid});
     }
 }
