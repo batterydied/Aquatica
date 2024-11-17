@@ -85,11 +85,12 @@
     font-size: 14px;
     margin-left: 10px;
     color: #007bff;
+    position: fixed;
+    top: 23px;
+    left: 350px;
   }
   
-  .edit-icon:hover {
-    color: #0056b3;
-  }
+  
   
   .private-sections .section {
     background: white;

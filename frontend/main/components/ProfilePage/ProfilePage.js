@@ -79,12 +79,48 @@ export class ProfilePage extends BaseComponent {
         const name = document.createElement("h1");
         name.innerText = this.currentUser.name;
         name.classList.add("profile-name");
-
+        //edit button for name
         const editIcon = document.createElement("span");
         editIcon.classList.add("edit-icon");
         editIcon.innerText = "✏️";
-        name.appendChild(editIcon);
-        userDetails.appendChild(name);
+
+        editIcon.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = name.innerText; 
+        input.classList.add("editable-input");
+
+        const saveButton = document.createElement("button");
+        saveButton.innerText = "Save";
+        saveButton.classList.add("save-button");
+
+        const parent = name.parentElement;
+        parent.replaceChild(input, name);
+
+        saveButton.addEventListener("click", () => {
+            const newValue = input.value.trim(); 
+
+            if (newValue === "") {
+                alert("Name cannot be empty!");
+                return;
+            }
+
+            name.innerText = newValue;
+
+            parent.replaceChild(name, input);
+            saveButton.remove(); 
+        });
+
+    
+        parent.appendChild(saveButton);
+    });
+
+        const nameContainer = document.createElement("div");
+        nameContainer.classList.add("name-container");
+        nameContainer.appendChild(name);
+        nameContainer.appendChild(editIcon);
+        userDetails.appendChild(nameContainer);
+
 
         const phone = document.createElement("p");
         phone.innerText = `Phone: ${this.currentUser.phone}`;
