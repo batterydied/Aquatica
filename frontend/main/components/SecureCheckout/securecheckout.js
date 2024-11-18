@@ -141,7 +141,12 @@ export class SecureCheckout extends BaseComponent {
     const backLink = this.#container.querySelector('.back-link');
     backLink.addEventListener('click', (event) => {
       event.preventDefault();
-      this.emit('navigate', 'cart'); // Emit a custom navigate event to switch views
+      console.log("Navigate back to the cart.");
+      // Uncomment this section when integrated with AppController
+      /*
+      const appController = AppController.getInstance();
+      appController.navigate("virtualCart");
+      */
     });
   }
 }
