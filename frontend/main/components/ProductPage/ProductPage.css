@@ -3,7 +3,7 @@
 }
 .product-page{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin: 5rem;
 }
 .product-title{
@@ -24,4 +24,11 @@
     width: 10rem;
     height: 10rem;
     object-fit: cover;
+}
+.quantity-form{
+    width: 10rem;
+    display: flex;
+}
+.quantity-input{
+    width: 5rem;
 }

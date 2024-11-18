@@ -25,33 +25,31 @@ export class ProductPage extends BaseComponent {
   }
 
   #setupContainerContent() {
+    const productInfoPanel = this.#createProductInfoPanel();
     // Titles
     const titles = this.#createTitles();
 
     // Image Gallery
     const imageGallery = this.#createImageGallery();
 
-    // Description
-    const description = this.#createDescription();
-
-    // Product Selection (Price, Types, Add to Cart)
-    const productSelection = this.#createProductSelection();
-
-    // Specifications
-    const specifications = this.#createSpecifications();
-
-    // Shipping Info
-    const shippingInfo = this.#createShippingInfo();
-
     // Append all elements to the container
-    this.#container.appendChild(titles);
     this.#container.appendChild(imageGallery);
-    this.#container.appendChild(description);
-    this.#container.appendChild(productSelection);
-    this.#container.appendChild(specifications);
-    this.#container.appendChild(shippingInfo);
+    this.#container.appendChild(productInfoPanel);
   }
+  #createProductInfoPanel(){
+    const titles = this.#createTitles();
+    const description = this.#createDescription();
+    const productSelection = this.#createProductSelection();
+    const specifications = this.#createSpecifications();
+    const shippingInfo = this.#createShippingInfo();
+    const productInfoPanel = document.createElement('div');
+    productInfoPanel.appendChild(titles);
+    productInfoPanel.appendChild(productSelection);
+    productInfoPanel.appendChild(shippingInfo);
+    productInfoPanel.appendChild(specifications);
+    return productInfoPanel;
 
+  }
   #createTitles() {
     const titles = document.createElement('div');
 
@@ -124,10 +122,32 @@ export class ProductPage extends BaseComponent {
     addToCartBtn.classList.add('add-to-cart');
     addToCartBtn.innerText = 'Add to Cart';
 
+    const quantityForm = document.createElement('div');
+    const quantityIncrease = document.createElement('input');
+    quantityIncrease.value = '+';
+    quantityIncrease.type = 'button';
+    quantityIncrease.classList.add('quantity-increase');
+
+    const quantityDecrease = document.createElement('input');
+    quantityIncrease.classList.add('quantity-decrease');
+    quantityDecrease.value = '-';
+    quantityDecrease.type = 'button';
+
+    const quantityInput = document.createElement('input');
+    quantityInput.type = 'number';
+    quantityInput.value = '1';
+    quantityInput.min = '1';
+    quantityInput.classList.add('quantity-input');
+
+    quantityForm.appendChild(quantityDecrease);
+    quantityForm.appendChild(quantityInput);
+    quantityForm.appendChild(quantityIncrease);
+
     productTypes.appendChild(priceLabel);
     productTypes.appendChild(typeDropdown);
     productSelection.appendChild(productTypes);
     productSelection.appendChild(addToCartBtn);
+    productSelection.appendChild(quantityForm);
 
     return productSelection;
   }
