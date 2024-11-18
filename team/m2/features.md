@@ -91,7 +91,7 @@ The Product Page is a comprehensive interface that provides users with detailed 
 
 ### **Implementation Details**
 
-#### **Point Value: 26 points**
+#### **Point Value: 29 points**
 
 - **Product Information Panel (1 points):** Includes detailed product specifications and shipping information. (Benson)
 - **Images (2 point):** High-quality image gallery with dynamic main image. (Benson)
