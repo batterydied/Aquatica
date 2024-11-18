@@ -32,3 +32,9 @@
 .quantity-input{
     width: 5rem;
 }
+.image-panel{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 3%;
+}

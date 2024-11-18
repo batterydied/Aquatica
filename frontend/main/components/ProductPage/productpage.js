@@ -71,13 +71,24 @@ export class ProductPage extends BaseComponent {
     const imageGallery = document.createElement('div');
     imageGallery.className = 'image-gallery';
 
+    const mainImage = document.createElement('img');
+    mainImage.src = productData.product.images[0]; // Default to the first image
+    mainImage.alt = `${productData.product.name} main image`;
+    mainImage.className = 'main-img';
+
+    const imagePanel = document.createElement('div');
+    imagePanel.classList.add('image-panel');
     productData.product.images.forEach((imageUrl) => {
       const img = document.createElement('img');
       img.src = imageUrl;
       img.alt = `${productData.product.name} thumbnail image`;
       img.className = 'thumbnail-img';
-      imageGallery.appendChild(img);
+      img.addEventListener('mouseover', ()=>{
+        mainImage.src = img.src;
+      });
+      imagePanel.appendChild(img);
     });
+    imageGallery.appendChild(imagePanel);
 
     return imageGallery;
   }
