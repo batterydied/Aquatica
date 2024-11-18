@@ -9,7 +9,6 @@
 
 .product-page{
     display: flex;
-    justify-content: space-between;
     margin: 5rem;
 }
 
@@ -24,20 +23,16 @@
     color: #5B91C8;
     margin: 0;
 }
-.main-product-img{
-    width: 5rem;
-    height: auto;
+.main-img{
+    width: 35rem;
+    height: 35rem;
+    object-fit: cover;
 }
 .thumbnail-img{
     width: 3rem;
     height: 3rem;
     border-radius: 0.5rem;
     object-fit: cover
-}
-.selected-img{
-    width: 10rem;
-    height: 10rem;
-    object-fit: cover;
 }
 .quantity-form{
     width: 10rem;
@@ -93,4 +88,14 @@
     background-color: white;
     border: 3px solid #5B91C8;
     margin-top: 10px;
+    height: auto;
+    gap: 0.5rem;
+}
+.image-gallery{
+    display: flex;
+    justify-content: space-between;
+    width: 55%;
+}
+.product-info-panel{
+    margin-left: 5rem;
 }

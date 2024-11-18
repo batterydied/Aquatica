@@ -1,4 +1,4 @@
-import {imgUrl} from './imgUrl.js'
+import {imgUrls} from './imgUrl.js'
 export const productData = 
 {
     "product": {
@@ -6,9 +6,9 @@ export const productData =
       "name": "Clownfish",
       "scientificName": "Amphiprioninae",
       "images": [
-        imgUrl,
-        imgUrl,
-        imgUrl
+        imgUrls[0],
+        imgUrls[0],
+        imgUrls[1]
       ],
       "description": "Bright and vibrant, the Clownfish is a popular saltwater fish known for its symbiotic relationship with sea anemones. Perfect for marine aquariums.",
       "price": null,
@@ -75,19 +75,19 @@ export const productData =
           "id": "12346",
           "name": "Sea Anemone (Heteractis magnifica)",
           "price": 39.99,
-          "image": imgUrl
+          "image": imgUrls[0]
         },
         {
           "id": "12347",
           "name": "Marine Flake Food",
           "price": 9.99,
-          "image": imgUrl
+          "image": imgUrls[0]
         },
         {
           "id": "12348",
           "name": "20-Gallon Starter Marine Tank",
           "price": 129.99,
-          "image": imgUrl
+          "image": imgUrls[1]
         }
       ]
     }
