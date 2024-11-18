@@ -19,33 +19,103 @@ Users will be able to purchase products through secure and convenient payment op
 **Assigned to**: Haiyi Cai
 
 
-## Product Page
+## Product Page Features
 
-Description: The Product Page provides users with detailed information about a specific product, including its description, images, and integration with breeder contact and ratings and reviews features. It allows users to interact with the product through actions like adding it to the cart, saving it for later, or buying it instantly. The page dynamically displays product details, incorporates user reviews and ratings, and features intuitive UI design for an enhanced user experience.
+The Product Page is a comprehensive interface that provides users with detailed information about a specific product. It incorporates high-quality images, product details, and interactive UI elements to enhance the user experience. This document outlines the key features implemented in the Product Page.
 
-Point Value: 16 - 23 points
+---
 
-Team Member: Benson
+### **Features**
 
-Details:
+#### **1. Description**
+- Displays a detailed overview of the product, highlighting its key features and specifications.
+- Includes:
+  - Product name.
+  - Scientific name.
+  - Description of the product.
 
-Description (1 point): Displays a detailed overview of the product, highlighting its key features and specifications.
+#### **2. Images**
+- Provides a gallery of high-quality product images for better visualization.
+- Includes:
+  - A **main image** that displays the first image by default or updates dynamically when the user hovers over a thumbnail.
+  - **Thumbnails** displayed in a vertical panel, allowing users to preview other images.
 
-Images (1 point): Provides a gallery of high-quality product images for better visualization.
+#### **3. Product Information Panel**
+- Includes detailed information about the product, such as:
+  - **Specifications**: A list of product specifications displayed as a list.
+  - **Shipping Info**: Displays shipping cost and delivery time.
 
-Breeder Contact (2–3 points): Integrates contact options for breeders, allowing users to connect directly with sellers for inquiries.
+#### **4. Quantity Selector**
+- Provides a form to adjust the quantity of the product:
+  - Includes "+" and "-" buttons to increase or decrease the quantity.
+  - A numeric input field to enter the desired quantity manually.
+  - The form ensures that the quantity cannot drop below `1`.
 
-Ratings (2–3 points): Shows aggregated ratings to help users assess the quality of the product.
+#### **5. Pricing and Product Types**
+- Displays the price of the selected product type.
+- Includes a dropdown to select between different product types, dynamically updating the displayed price based on the selection.
 
-Reviews (2–3 points): Includes a section for customer feedback and testimonials, building trust and credibility.
+#### **6. Action Buttons**
+- **Add to Cart Button**:
+  - Allows users to add the product to their shopping cart.
+- **Save for Later Button** (planned):
+  - Will enable users to save the product for future reference.
+- **Buy Now Button** (planned):
+  - Will provide a direct option for purchasing the product instantly.
 
-‘Add to Cart’ Button (2–3 points): Allows users to add the product to their shopping cart for later checkout.
+#### **7. UI Design**
+- Focuses on creating a visually appealing and user-friendly interface:
+  - Titles and descriptions are styled with clear typography.
+  - Thumbnails and the main image follow responsive design principles.
+  - Intuitive layout for product selection and quantity adjustments.
 
-‘Save for Later’ Button (2–3 points): Enables users to save the product for future reference.
+#### **8. CSS Positioning**
 
-‘Buy Now’ Button (2–3 points): Provides a quick purchase option for users ready to buy immediately.
+- Utilizes CSS for precise and responsive element positioning:
+  - Ensures all elements are aligned for consistent visual appeal.
+  - Adapts layout seamlessly across various screen sizes.
+---
 
-UI Design (2–3 points): Focuses on creating a visually appealing and user-friendly interface for seamless navigation and interaction.
+### **Additional Planned Features**
+
+#### **1. Breeder Contact**
+- Will integrate contact options for breeders, allowing users to connect directly with sellers for inquiries.
+
+#### **2. Ratings and Reviews**
+- **Ratings**:
+  - Displays aggregated ratings to help users assess the quality of the product.
+- **Reviews**:
+  - Will include a section for customer feedback and testimonials, building trust and credibility.
+
+---
+
+### **Implementation Details**
+
+#### **Point Value: 26 points**
+
+- **Product Information Panel (1 points):** Includes detailed product specifications and shipping information. (Benson)
+- **Images (2 point):** High-quality image gallery with dynamic main image. (Benson)
+- **Breeder Contact (3 points):** Integration of contact options for breeders. (Future)
+- **Ratings (3 points):** Aggregated product ratings. (Nikhil)
+- **Reviews (3 points):** Customer reviews and feedback section. (Nikhil)
+- **Add to Cart Button (1 points):** Adds product to the shopping cart. (Benson)
+- **Save for Later Button (2 points):** Option to save the product for future reference. (Future)
+- **Buy Now Button (2 points):** Quick purchase option. (Future)
+- **CSS Positioning (2 points):** (Benson)
+- **Pricing and Product Types (2 points):** Displays pricing dynamically based on the selected product type. (Benson)
+- **Quantity Selector (2 points):** Allows users to adjust product quantities with a user-friendly interface. (Benson)
+- **UI Design (6 points):** Visually appealing and user-friendly design. (Asritha)
+
+---
+
+### **Team Member**
+- **Benson: 10 points**
+- **Asritha: 6 points**
+- **Nikhil: 6 points**
+
+---
+
+This Product Page design prioritizes interactivity, responsiveness, and user experience, ensuring an intuitive and visually engaging interface for customers.
 
 
 ## Virtual Cart for Customers
