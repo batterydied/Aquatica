@@ -22,6 +22,13 @@
     object-fit: cover
 }
 
+.reviewsAndRatingsContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 5%;
+}
+
 .reviewsAndRatings {
     display: flex;
     flex-direction: column;
@@ -47,6 +54,7 @@
     border: none; 
     border-radius: 2px; 
     padding: 10px 20px;
+    margin-top: 5%;
     font-size: 16px;
     cursor: pointer; 
     transition: all 0.3s ease; 
@@ -99,6 +107,39 @@
 .review:last-child {
     border-bottom: 1px solid #ccc;
 }
+
+.addReview {
+    display: flex;
+    flex-direction: column;
+}
+
+.addReviewBox {
+    width: 200%;
+    height: 50%;
+}
+
+.addRatingContainer {
+    display: flex;
+    direction: row;
+    cursor: pointer;
+}
+
+.addRatingContainer i {
+    font-size: 2rem;
+    color: #ccc;
+    transition: color 0.3s ease;
+}
+
+.addRatingContainer i.selected {
+    color: gold;
+}
+  
+.ratingValue {
+    font-size: 1rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
 .selected-img{
     width: 10rem;
     height: 10rem;

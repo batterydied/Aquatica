@@ -1,7 +1,7 @@
 import { productData } from '../../tests/mock_data/product_page_mock_data.js';
 import StyleSheet from '../../functions/MakeStyleSheetLink.js';
 import {imgUrl} from '../../tests/mock_data/imgUrl.js'
-import { Popover } from 'bootstrap';
+//import { Popover } from 'bootstrap';
 export default function ProductPage() {
     console.log(imgUrl);
     document.head.appendChild(StyleSheet('./css/ProductPage.css'));
@@ -90,6 +90,8 @@ export default function ProductPage() {
     shippingInfo.innerText = `Shipping: ${productData.product.shippingInfo.shippingCost}, Delivery: ${productData.product.shippingInfo.deliveryTime}`;
     shippingInfo.className = 'shipping-info';
     
+    const  reviewsAndRatingsContainer = document.createElement('div');
+    reviewsAndRatingsContainer.className = 'reviewsAndRatingsContainer';
 
     const reviewsAndRatings = document.createElement('div');
     reviewsAndRatings.className = 'reviewsAndRatings';
@@ -113,15 +115,13 @@ export default function ProductPage() {
     reviewsTitle.appendChild(starsContainer);
     reviewsAndRatingsBar.appendChild(reviewsTitle);
 
-    const addReviewButton = document.createElement('button');
+    /*const addReviewButton = document.createElement('button');
     addReviewButton.textContent = ' + Add Review';
     addReviewButton.className = 'addReviewButton';
 
-    reviewsAndRatingsBar.appendChild(addReviewButton);
-    addReviewButton.addEventListener('click', () => {
-        popup.style.display = "flex";
-    })
 
+    reviewsAndRatingsBar.appendChild(addReviewButton);
+*/
     const customerReviews = document.createElement('div');
     productData.product.reviews.forEach(review => {
         const rev = document.createElement('div');
@@ -167,6 +167,81 @@ export default function ProductPage() {
     reviewsAndRatings.appendChild(reviewsAndRatingsBar);
     reviewsAndRatings.appendChild(customerReviews);
 
+    const addReview = document.createElement('div');
+    addReview.className = 'addReview';
+
+    const addRatingContainer = document.createElement('div')
+    addRatingContainer.className = 'addRatingContainer';
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        star.className = 'far fa-star'; 
+        star.dataset.value = i; 
+        addRatingContainer.appendChild(star);
+      }
+
+    const ratingValueDisplay = document.createElement('p');
+    ratingValueDisplay.className = 'ratingValue';
+    ratingValueDisplay.innerText = 'Rating: 0';
+
+    addReview.appendChild(addRatingContainer);
+    addReview.appendChild(ratingValueDisplay);
+
+    const stars = addRatingContainer.querySelectorAll('i');
+    let currentRating = 0;
+
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            currentRating = index + 1; 
+            updateRatingDisplay();
+        });
+
+        star.addEventListener('mouseover', () => highlightStars(index));
+        star.addEventListener('mouseout', updateRatingDisplay); 
+    });
+
+    function highlightStars(index) {
+        stars.forEach((star, i) => {
+            if (i <= index) {
+                star.classList.replace('far', 'fas'); 
+                star.classList.add('selected');
+            } else {
+                star.classList.replace('fas', 'far'); 
+                star.classList.remove('selected');
+            }
+        });
+    }
+
+    function updateRatingDisplay() {
+        stars.forEach((star, i) => {
+            if (i < currentRating) {
+                star.classList.replace('far', 'fas');
+                star.classList.add('selected');
+            } else {
+                star.classList.replace('fas', 'far'); 
+                star.classList.remove('selected');
+            }
+        });
+    ratingValueDisplay.innerText = `Rating: ${currentRating}`;
+    }
+
+
+    const addReviewBox = document.createElement('input');
+    addReviewBox.className = 'addReviewBox';
+    addReviewBox.type = 'text';
+    addReviewBox.placeholder = 'Add review'
+    addReview.appendChild(addReviewBox);
+
+    const addReviewButton = document.createElement('button');
+    addReviewButton.textContent = ' + Add Review';
+    addReviewButton.className = 'addReviewButton';
+
+
+    addReview.appendChild(addReviewButton);
+
+    reviewsAndRatingsContainer.appendChild(reviewsAndRatings);
+    reviewsAndRatingsContainer.appendChild(addReview);
+
     // Add elements to container
     container.appendChild(imageGallery);
     container.appendChild(description);
@@ -174,7 +249,8 @@ export default function ProductPage() {
     container.appendChild(productSelection);
     container.appendChild(specifications);
     container.appendChild(shippingInfo);
-    container.appendChild(reviewsAndRatings);
+    container.appendChild(reviewsAndRatingsContainer);
+
 
     return container;
 }
