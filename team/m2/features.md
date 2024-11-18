@@ -2,15 +2,17 @@
 
 ## Marketplace
 
-Customers will be able to find products by browsing through categories such as fish, tanks, plants, decorations, food, and equipment, as well as search, filter, and sort items. This allows users to effectively and efficiently find the products that they are looking for. 
-
-**Assigned to**: Nikhil Bahadur
+- **Feature Name**: Marketplace Page
+- **Description**: A marketplace that displays products for sale from categories such as fish, tanks, plants, or rocks. Fetches data about products from indexedDB to display to the user. Has search, filter, and sort functionality, allowing users to effectively and efficiently find the products that they are looking for.
+- **Points: 5**:
+- **Team Member**: Winifred Nauda
 
 ## Sell Products
 
-Sellers will be able to list their own aquarium-related products for sale, manage inventory, and easily track sales through a user-friendly dashboard. 
-
-**Assigned to**: Winifred Nauda
+- **Feature Name**: Sell Products Page
+- **Description**: A display that allows sellers to see all their products. Integrates with pages that allow editing of existing products and adding new products.
+- **Points: 2**:
+- **Team Member**: Winifred Nauda
 
 ## Secure Payments
 
