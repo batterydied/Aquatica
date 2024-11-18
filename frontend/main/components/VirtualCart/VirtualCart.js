@@ -2,49 +2,89 @@ import { BaseComponent } from '../../app/BaseComponent.js';
 
 export class VirtualCart extends BaseComponent {
   #container = null;
-  #cartData = [
-    {
-      id: 1,
-      name: 'Fish Tank',
-      description: 'A durable glass fish tank for your aquatic pets.',
-      price: 50.0,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      name: 'Fish Food',
-      description: 'High-quality fish food for healthy growth.',
-      price: 20.0,
-      quantity: 2,
-    },
-    {
-      id: 3,
-      name: 'Aquatic Plant',
-      description: 'A decorative aquatic plant for your tank.',
-      price: 15.0,
-      quantity: 1,
-    },
-  ];
-
+  #cartData = []; // Dynamic cart data
   #appController; // Reference to the AppController for navigation
+  #dbName = 'CartDatabase';
+  #storeName = 'CartItems';
 
   constructor(appController) {
     super();
     this.loadCSS('VirtualCart'); // Load the associated CSS for the cart
     this.#appController = appController; // Pass in the AppController instance
+    this.#initializeIndexedDB(); // Initialize IndexedDB
   }
 
-  render() {
+  async render() {
     if (this.#container) {
       return this.#container;
     }
 
     this.#container = document.createElement('div');
     this.#container.classList.add('cart-container');
+
+    await this.#loadCartData(); // Load cart data from IndexedDB
     this.#setupContainerContent();
     this.#attachEventListeners();
 
     return this.#container;
+  }
+
+  async #initializeIndexedDB() {
+    const dbRequest = indexedDB.open(this.#dbName, 1);
+
+    dbRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(this.#storeName)) {
+        db.createObjectStore(this.#storeName, { keyPath: 'id' });
+      }
+    };
+
+    dbRequest.onerror = () => {
+      console.error('Failed to open IndexedDB');
+    };
+  }
+
+  async #loadCartData() {
+    const db = await this.#openDatabase();
+    const transaction = db.transaction(this.#storeName, 'readonly');
+    const store = transaction.objectStore(this.#storeName);
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      this.#cartData = request.result;
+    };
+
+    request.onerror = () => {
+      console.error('Failed to fetch cart data from IndexedDB');
+    };
+
+    await transaction.complete;
+  }
+
+  async #saveCartData() {
+    const db = await this.#openDatabase();
+    const transaction = db.transaction(this.#storeName, 'readwrite');
+    const store = transaction.objectStore(this.#storeName);
+
+    this.#cartData.forEach((item) => {
+      store.put(item);
+    });
+
+    await transaction.complete;
+  }
+
+  async #openDatabase() {
+    return new Promise((resolve, reject) => {
+      const dbRequest = indexedDB.open(this.#dbName);
+
+      dbRequest.onsuccess = (event) => {
+        resolve(event.target.result);
+      };
+
+      dbRequest.onerror = () => {
+        reject('Failed to open IndexedDB');
+      };
+    });
   }
 
   #setupContainerContent() {
@@ -118,10 +158,11 @@ export class VirtualCart extends BaseComponent {
   #attachEventListeners() {
     const cartItemsContainer = this.#container.querySelector('#cart-items');
 
-    cartItemsContainer.addEventListener('click', (e) => {
+    cartItemsContainer.addEventListener('click', async (e) => {
       if (e.target.classList.contains('increment')) {
         const index = e.target.dataset.index;
         this.#cartData[index].quantity++;
+        await this.#saveCartData();
         this.#refreshCart();
       }
 
@@ -132,6 +173,7 @@ export class VirtualCart extends BaseComponent {
         } else {
           this.#cartData.splice(index, 1);
         }
+        await this.#saveCartData();
         this.#refreshCart();
       }
     });
@@ -148,7 +190,7 @@ export class VirtualCart extends BaseComponent {
     this.#updateCartTotals();
   }
 
-  addItemToCart(item) {
+  async addItemToCart(item) {
     const existingItemIndex = this.#cartData.findIndex(
       (cartItem) => cartItem.id === item.id
     );
@@ -157,6 +199,7 @@ export class VirtualCart extends BaseComponent {
     } else {
       this.#cartData.push(item);
     }
+    await this.#saveCartData();
     this.#refreshCart();
   }
 }
