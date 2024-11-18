@@ -6,15 +6,28 @@ import { products } from "./Products.js";
 import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
 import { ProfileService } from "../../services/ProfileService.js";
+import { EventHub, hub } from "../../eventhub/EventHub.js";
 
 export class MarketplacePage extends BaseComponent {
     constructor() {
         super();
         this.container.classList.add('marketplace-page');
-        this.fullProdList = this.getProdList();
+        this.fullProdList = [];
+        this.prodList = [];
+        //this.getProdList();
         this.marketplace = document.createElement("div");
 
-        this.prodList = this.fullProdList; // to be changed with search/filter
+        hub.subscribe("retrievedProduct", (data) => {
+            this.fullProdList.push(data);
+            for (let i = 0; i < this.fullProdList.length; i++) {
+                this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+            }
+            this.reloadFilters();
+            this.renderMarketplace();
+        });
+
+        this.getProdList();
+
         this.curCategory = "All";
         this.curBracket = "All";
         this.regex = /(?:)/gi;
@@ -27,15 +40,17 @@ export class MarketplacePage extends BaseComponent {
         this.loadCSS("MarketplacePage");
     }
 
-    getProdList() { // TODO: will be async
-        const productService = ProductService.getInstance();
-        const list = productService.retrieveAllProducts();
+    async getProdList() {
+        const productService = new ProductService();
+        const list = await productService.retrieveAllProducts();
 
-        for (let i = 0; i < list.length; i++) {
+        /*for (let i = 0; i < list.length; i++) {
             list[i].bracket = this.calculateBracket(list[i].price);
         }
 
-        return list;
+        this.fullProdList = list;
+        this.prodList = this.fullProdList;
+        return list;*/
     }
 
     calculateBracket(price) {
@@ -384,7 +399,6 @@ export class MarketplacePage extends BaseComponent {
 
     reStyleButtons(buttonClass) {
         const buttons = document.querySelectorAll(`.${buttonClass}`);
-        console.log(buttonClass);
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].style.backgroundColor = "#FFFFFF";
             buttons[i].style.color = "#232C3C";
@@ -444,16 +458,18 @@ export class MarketplacePage extends BaseComponent {
     }
 
     goToProductPage(prodid) {
-        const appController = AppController.getInstance();
-        const productService = ProductService.getInstance();
-        productService.curProdId = prodid;
-        appController.navigate("product");
+        console.log(`going to product page for product: ${prodid}`);
+        // const appController = AppController.getInstance();
+        // const productService = ProductService.getInstance();
+        // productService.curProdId = prodid;
+        // appController.navigate("product");
     }
 
     goToSellerProfile(sellid) {
-        const appController = AppController.getInstance();
-        const profileService = ProfileService.getInstance();
-        profileService.curSellId = sellid;
-        appController.navigate("profile");
+        console.log(`going to profile page for seller: ${sellid}`);
+        // const appController = AppController.getInstance();
+        // const profileService = ProfileService.getInstance();
+        // profileService.curSellId = sellid;
+        // appController.navigate("profile");
     }
 }

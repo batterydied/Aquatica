@@ -1,4 +1,4 @@
-import { EventHub } from "../eventhub/EventHub";
+import { EventHub, hub } from "../eventhub/EventHub.js";
 
 export class Service {
     constructor() {
