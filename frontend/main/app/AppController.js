@@ -1,6 +1,4 @@
-// This will render all of our app's features.
-
-// Imports
+import { ProfilePage } from "../components/ProfilePage/ProfilePage.js";
 import { SecureCheckout } from '../components/SecureCheckout/securecheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 
@@ -14,6 +12,7 @@ export class AppController {
     this.#views = {
       cart: new VirtualCart(this), // Pass AppController instance to VirtualCart ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
       checkout: new SecureCheckout(),
+      profile: new ProfilePage(),
     };
 
     // Set the initial view for testing ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
@@ -54,4 +53,3 @@ export class AppController {
     this.render();
   }
 }
-
