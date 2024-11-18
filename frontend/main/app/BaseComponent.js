@@ -9,13 +9,14 @@ export class BaseComponent {
    }
 
    // Loads CSS dynamically, specific to each component
-   loadCSS(fileName) {
-      if (this.cssLoaded) return; // Prevents reloading the same CSS file
-      
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = `/frontend/main/components/${fileName}/${fileName}.css`; // Assumes the file path
-      document.head.appendChild(link);
-      this.cssLoaded = true;
-   }
+    loadCSS(fileName, path = 'main/components') {
+        if (this.#cssLoaded) return;
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = `${path}/${fileName}/${fileName}.css`; // Assumes the file path
+        document.head.appendChild(link);
+
+        this.#cssLoaded = true;
+    }
 }
