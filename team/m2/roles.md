@@ -4,9 +4,9 @@
 - **Role**: Reviews team submissions and ensures that all deliverables meet the necessary quality standards. Benson is responsible for proofreading and ensuring the accuracy of all documents before submission.
 
 - **Top 3 Commits**:
-   1. **October 18, 2024**: [Initial Repository Setup](https://github.com/batterydied/Aquatica/commit/48e9c9e28af274d026659d49c735a3daf2118f46) Set up the initial project repository for Aquatica and invited teammates as collaborators.
-   2. **October 19, 2024**: [Update users.md](https://github.com/batterydied/Aquatica/commit/b148286321d5930a7b7c9348db42249470693653) Refined the target audience descriptions to ensure the app’s user focus aligns with quality standards.
-   3. **October 20, 2024**: [Update README.md](https://github.com/batterydied/Aquatica/commit/a0beebac2a1c6827ff828c367b9a443465c3f5df) Updated README.md for the Aquatica application, providing an overview of the project and its objectives.
+   1. **Nov 17, 2024**: [Split Product Page Structure](https://github.com/batterydied/Aquatica/commit/d6478b9f445428b5281a80acac34a3ddda763f4f) Divided the Product Page into distinct sections: the Image Gallery and the Product Information Panel to enhance modularity and maintainability.
+   2. **Nov 17, 2024**: [Refactor Product Page to Use Classes](https://github.com/batterydied/Aquatica/commit/f102bb4dc8596de9ef2e14b658dd8a5982aa2c05) Refactored the Product Page from functional components to class-based components, extending the BaseComponent for better modularity and consistency.
+   3. **Nov 17, 2024**: [Add Main Image to Image Gallery](https://github.com/batterydied/Aquatica/commit/fba53b1867b0941ff797730bf6708aa36cfc5872) Added a main image to the Image Gallery, displaying the first thumbnail by default and dynamically updating on hover over other thumbnails.
 
 ## Winifred Nauda - Project Manager
 - **Role**: Oversees the overall project timeline, ensures that milestones are met, and coordinates the team’s efforts. Responsible for setting meeting agendas and ensuring that the team stays focused on project goals.
