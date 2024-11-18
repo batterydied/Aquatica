@@ -86,4 +86,20 @@ UI Design (1-2 points): Implements a clean and responsive design to enhance usab
 
 Customers will be able to read product reviews and ratings from other customers under each product. This allows customers to make an informed decision on their purchase ensuring they purchase the best possible product and avoid bad products.
 
-**Assigned to**: Asritha Bodepudi
+**Assigned to**: Nikhil Bahadur
+
+Point Value: 9 Points
+
+Details: 
+
+Customer Review Table (2 points): Includes username, rating, review, and date of customers who left a review on a certain product.
+
+Select Star Rating (2 Points): Interactive display of stars that allows you to choose your rating out of 5 stars when leaving a review on a product.
+
+Input Box For Review Comment (1 Point): Allows user to write comment for a review
+
+Add Review Button (1 Point): Allows user to submit review which will be displayed in the customer review table.
+
+Customer Review Bar (1 Point): Displays the total reviews and the average rating of the product
+
+UI Design (2 points): A clean, responsive, and user-friendly UI design that allows interaction from users.
