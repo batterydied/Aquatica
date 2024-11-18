@@ -1,34 +1,38 @@
-// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
-import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
+// This will render all of our app's features.
+
+// Imports
+import { VirtualCart } from '../components/virtualCart/VirtualCart.js';
 
 export class AppController {
-  #container = null;
-  #currentView = null;
-  #views = {};
+   #container = null;
+   #currentView = null; // Track the currently rendered view
+   #views = {}; // Store initialized views
 
-  constructor() {
-    this.#views = {
-      // secureCheckout: new SecureCheckout(),
-      virtualCart: new VirtualCart(this),
-    };
+   constructor() {
+      // Initialize components
+      this.#views = {
+         virtualCart: new VirtualCart(this),
+      };
 
-    // Set default view
-    this.#currentView = this.#views.virtualCart;
-  }
+      // TESTING FOR VIRTUALCART
+      this.#currentView = this.#views.virtualCart;
+   }
+
    /**
    * Render the AppController container and initialize the default view.
    */
-   async render() {
-     if (!this.#container) {
-       this.#container = document.createElement("div");
-       this.#container.classList.add("app-controller");
-     }
+   render() {
+      // Create the main container if not already created
+      if (!this.#container) {
+         this.#container = document.createElement('div');
+         this.#container.classList.add('app-controller');
+      }
 
-     this.#container.innerHTML = ""; // Clear previous content
-     const viewContent = await this.#currentView.render(); // Await render of the view
-     this.#container.appendChild(viewContent); // Append the rendered content
+      // Render the current view (Cart for testing)
+      this.#container.innerHTML = ''; // Clear previous content
+      this.#container.appendChild(this.#currentView.render());
 
-     return this.#container;
+      return this.#container;
    }
 
    /**
@@ -54,4 +58,3 @@ export class AppController {
       return AppController.instance;
    }
 }
-

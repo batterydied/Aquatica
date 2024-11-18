@@ -1,14 +1,10 @@
 import { AppController } from './app/AppController.js';
 
-// Get the root container from the HTML file
+// Get our root container from the HTML file
 const appContainer = document.getElementById('app');
 
 // Create an instance of the main app controller
-const appController = new AppController();
+const appController = AppController.getInstance();
 
-// IIFE to handle the async rendering
-(async function () {
-  const renderedApp = await appController.render(); // Await the async render
-  appContainer.appendChild(renderedApp); // Append the rendered DOM
-})();
-
+// Render the appController and append it to the HTML container
+appContainer.appendChild(appController.render());

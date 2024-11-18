@@ -1,119 +1,32 @@
 export class CartService {
-  constructor() { 
-    this.dbName = "cartDB";
-    this.storeName = "cartItems";
-    this.initDB();
+  constructor() {
+    this.cartItems = []; // In-memory storage for cart items
   }
 
-  async initDB() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1);
-
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName, { keyPath: "id", autoIncrement: true });
-        }
-      };
-
-      request.onsuccess = (event) => {
-        this.db = event.target.result;
-        resolve(this.db);
-      };
-
-      request.onerror = () => {
-        reject("Error initializing IndexedDB for CartService");
-      };
-    });
-  }
-
-  async saveCartItem(item) {
-    if (!this.db) {
-      await this.initDB();
+  saveCartItem(item) {
+    const existingItemIndex = this.cartItems.findIndex((cartItem) => cartItem.id === item.id);
+    if (existingItemIndex !== -1) {
+      // Update quantity if item already exists
+      this.cartItems[existingItemIndex].quantity += item.quantity;
+    } else {
+      // Add new item
+      this.cartItems.push(item);
     }
-
-    return new Promise((resolve, reject) => {
-      const tx = this.db.transaction([this.storeName], "readwrite");
-      const store = tx.objectStore(this.storeName);
-      const request = store.put(item); // `put` ensures upsert behavior
-
-      request.onsuccess = () => {
-        this.publish("saveCartItemSuccess", item);
-        resolve("Successfully saved cart item");
-      };
-
-      request.onerror = () => {
-        this.publish("saveCartItemError", item);
-        reject("Failed to save cart item");
-      };
-    });
+    console.log("Cart items after save:", this.cartItems);
   }
 
-async retrieveCartItems() {
-  if (!this.db) {
-    await this.initDB();
+  retrieveCartItems() {
+    return this.cartItems; // Return in-memory items
   }
 
-  return new Promise((resolve, reject) => {
-    const tx = this.db.transaction([this.storeName], "readonly");
-    const store = tx.objectStore(this.storeName);
-    const request = store.getAll();
-
-    request.onsuccess = (event) => {
-      const items = event.target.result;
-      // Removed `this.publish`
-      console.log("Cart items retrieved:", items);
-      resolve(items);
-    };
-
-    request.onerror = () => {
-      reject("Failed to retrieve cart items");
-    };
-  });
-}
-
-  async deleteCartItem(id) {
-    if (!this.db) {
-      await this.initDB();
-    }
-
-    return new Promise((resolve, reject) => {
-      const tx = this.db.transaction([this.storeName], "readwrite");
-      const store = tx.objectStore(this.storeName);
-      const request = store.delete(id);
-
-      request.onsuccess = () => {
-        this.publish("deleteCartItemSuccess", id);
-        resolve(`Successfully deleted item with id ${id}`);
-      };
-
-      request.onerror = () => {
-        this.publish("deleteCartItemError", id);
-        reject("Failed to delete cart item");
-      };
-    });
+  deleteCartItem(id) {
+    this.cartItems = this.cartItems.filter((item) => item.id !== id);
+    console.log("Cart items after delete:", this.cartItems);
   }
 
-  async clearCart() {
-    if (!this.db) {
-      await this.initDB();
-    }
-
-    return new Promise((resolve, reject) => {
-      const tx = this.db.transaction([this.storeName], "readwrite");
-      const store = tx.objectStore(this.storeName);
-      const request = store.clear();
-
-      request.onsuccess = () => {
-        this.publish("clearCartSuccess");
-        resolve("Cart cleared successfully");
-      };
-
-      request.onerror = () => {
-        this.publish("clearCartError");
-        reject("Failed to clear cart");
-      };
-    });
+  clearCart() {
+    this.cartItems = []; // Clear in-memory cart
+    console.log("Cart cleared");
   }
 }
 

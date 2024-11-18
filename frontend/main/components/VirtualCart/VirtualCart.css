@@ -72,7 +72,9 @@ body {
 }
 
 .item-quantity button {
-  border: none 
+  border: none;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 .item-price {
