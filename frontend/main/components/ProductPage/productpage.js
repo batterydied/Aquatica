@@ -47,6 +47,7 @@ export class ProductPage extends BaseComponent {
     productInfoPanel.appendChild(titles);
     productInfoPanel.appendChild(productSelection);
     productInfoPanel.appendChild(shippingInfo);
+    productInfoPanel.appendChild(description);
     productInfoPanel.appendChild(specifications);
     return productInfoPanel;
 
