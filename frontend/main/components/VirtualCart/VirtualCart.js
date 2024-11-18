@@ -1,17 +1,17 @@
-import { BaseComponent } from '../../app/BaseComponent.js';
+import { BaseComponent } from "../../app/BaseComponent.js";
+import { CartService } from "../../services/CartService.js";
 
 export class VirtualCart extends BaseComponent {
   #container = null;
-  #cartData = []; // Dynamic cart data
-  #appController; // Reference to the AppController for navigation
-  #dbName = 'CartDatabase';
-  #storeName = 'CartItems';
+  #cartData = [];
+  #cartService = null; // Instance of CartService
+  #appController = null; // Reference to AppController
 
   constructor(appController) {
     super();
-    this.loadCSS('VirtualCart'); // Load the associated CSS for the cart
-    this.#appController = appController; // Pass in the AppController instance
-    this.#initializeIndexedDB(); // Initialize IndexedDB
+    this.loadCSS("VirtualCart");
+    this.#cartService = new CartService(); // Initialize CartService
+    this.#appController = appController;
   }
 
   async render() {
@@ -19,72 +19,28 @@ export class VirtualCart extends BaseComponent {
       return this.#container;
     }
 
-    this.#container = document.createElement('div');
-    this.#container.classList.add('cart-container');
+    this.#container = document.createElement("div");
+    this.#container.classList.add("cart-container");
 
-    await this.#loadCartData(); // Load cart data from IndexedDB
+    await this.#loadCartData();
     this.#setupContainerContent();
     this.#attachEventListeners();
 
     return this.#container;
   }
 
-  async #initializeIndexedDB() {
-    const dbRequest = indexedDB.open(this.#dbName, 1);
-
-    dbRequest.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains(this.#storeName)) {
-        db.createObjectStore(this.#storeName, { keyPath: 'id' });
-      }
-    };
-
-    dbRequest.onerror = () => {
-      console.error('Failed to open IndexedDB');
-    };
-  }
-
   async #loadCartData() {
-    const db = await this.#openDatabase();
-    const transaction = db.transaction(this.#storeName, 'readonly');
-    const store = transaction.objectStore(this.#storeName);
-    const request = store.getAll();
-
-    request.onsuccess = () => {
-      this.#cartData = request.result;
-    };
-
-    request.onerror = () => {
-      console.error('Failed to fetch cart data from IndexedDB');
-    };
-
-    await transaction.complete;
+    try {
+      this.#cartData = await this.#cartService.retrieveCartItems();
+    } catch (error) {
+      console.error("Error loading cart data:", error);
+    }
   }
 
   async #saveCartData() {
-    const db = await this.#openDatabase();
-    const transaction = db.transaction(this.#storeName, 'readwrite');
-    const store = transaction.objectStore(this.#storeName);
-
-    this.#cartData.forEach((item) => {
-      store.put(item);
-    });
-
-    await transaction.complete;
-  }
-
-  async #openDatabase() {
-    return new Promise((resolve, reject) => {
-      const dbRequest = indexedDB.open(this.#dbName);
-
-      dbRequest.onsuccess = (event) => {
-        resolve(event.target.result);
-      };
-
-      dbRequest.onerror = () => {
-        reject('Failed to open IndexedDB');
-      };
-    });
+    for (const item of this.#cartData) {
+      await this.#cartService.saveCartItem(item);
+    }
   }
 
   #setupContainerContent() {
@@ -115,6 +71,42 @@ export class VirtualCart extends BaseComponent {
     this.#updateCartTotals();
   }
 
+  async #attachEventListeners() {
+    const cartItemsContainer = this.#container.querySelector("#cart-items");
+
+    cartItemsContainer.addEventListener("click", async (e) => {
+      if (e.target.classList.contains("increment")) {
+        const index = e.target.dataset.index;
+        this.#cartData[index].quantity++;
+        await this.#saveCartData();
+        this.#refreshCart();
+      }
+
+      if (e.target.classList.contains("decrement")) {
+        const index = e.target.dataset.index;
+        if (this.#cartData[index].quantity > 1) {
+          this.#cartData[index].quantity--;
+        } else {
+          const itemId = this.#cartData[index].id;
+          this.#cartData.splice(index, 1);
+          await this.#cartService.deleteCartItem(itemId);
+        }
+        this.#refreshCart();
+      }
+    });
+
+    const checkoutButton = this.#container.querySelector(".checkout-button");
+    checkoutButton.addEventListener("click", () => {
+      this.#appController.navigate("checkout");
+    });
+  }
+
+  #refreshCart() {
+    const cartItemsContainer = this.#container.querySelector("#cart-items");
+    cartItemsContainer.innerHTML = this.#generateCartItems();
+    this.#updateCartTotals();
+  }
+
   #generateCartItems() {
     return this.#cartData
       .map(
@@ -135,72 +127,7 @@ export class VirtualCart extends BaseComponent {
         </div>
       `
       )
-      .join('');
-  }
-
-  #updateCartTotals() {
-    const subtotal = this.#cartData.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-    const shipping = this.#cartData.length > 0 ? 5.99 : 0; // Flat shipping rate
-    const tax = subtotal * 0.1; // 10% tax
-    const total = subtotal + shipping + tax;
-
-    this.#container.querySelector('#subtotal').textContent =
-      subtotal.toFixed(2);
-    this.#container.querySelector('#shipping').textContent =
-      shipping.toFixed(2);
-    this.#container.querySelector('#tax').textContent = tax.toFixed(2);
-    this.#container.querySelector('#total').textContent = total.toFixed(2);
-  }
-
-  #attachEventListeners() {
-    const cartItemsContainer = this.#container.querySelector('#cart-items');
-
-    cartItemsContainer.addEventListener('click', async (e) => {
-      if (e.target.classList.contains('increment')) {
-        const index = e.target.dataset.index;
-        this.#cartData[index].quantity++;
-        await this.#saveCartData();
-        this.#refreshCart();
-      }
-
-      if (e.target.classList.contains('decrement')) {
-        const index = e.target.dataset.index;
-        if (this.#cartData[index].quantity > 1) {
-          this.#cartData[index].quantity--;
-        } else {
-          this.#cartData.splice(index, 1);
-        }
-        await this.#saveCartData();
-        this.#refreshCart();
-      }
-    });
-
-    const checkoutButton = this.#container.querySelector('.checkout-button');
-    checkoutButton.addEventListener('click', () => {
-      this.#appController.navigate('checkout'); // Navigate to the checkout view
-    });
-  }
-
-  #refreshCart() {
-    const cartItemsContainer = this.#container.querySelector('#cart-items');
-    cartItemsContainer.innerHTML = this.#generateCartItems();
-    this.#updateCartTotals();
-  }
-
-  async addItemToCart(item) {
-    const existingItemIndex = this.#cartData.findIndex(
-      (cartItem) => cartItem.id === item.id
-    );
-    if (existingItemIndex >= 0) {
-      this.#cartData[existingItemIndex].quantity += item.quantity;
-    } else {
-      this.#cartData.push(item);
-    }
-    await this.#saveCartData();
-    this.#refreshCart();
+      .join("");
   }
 }
 
