@@ -1,0 +1,253 @@
+.navigation-links,
+.navigation-links * {
+  box-sizing: border-box;
+}
+.navigation-links {
+  padding: 2.294375rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2.294375rem;
+  align-items: center;
+  justify-content: flex-end;
+  height: 19.78rem;
+  position: relative;
+}
+.menu {
+  background: #232c3c;
+  padding: 0rem 5.94375rem 0rem 5.94375rem;
+  display: flex;
+  flex-direction: row;
+  gap: 3.56625rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 311.895625rem;
+  height: 15.19125rem;
+  min-height: 1.04625rem;
+  max-height: 16.738125rem;
+  position: relative;
+}
+.logo-1 {
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.vector {
+  width: 99.8%;
+  height: 99.62%;
+  position: absolute;
+  right: 0.1%;
+  left: 0.11%;
+  bottom: 0.29%;
+  top: 0.09%;
+  overflow: visible;
+}
+.group {
+  width: 85.65%;
+  height: 68.68%;
+  position: absolute;
+  right: 7.13%;
+  left: 7.22%;
+  bottom: 9.22%;
+  top: 22.1%;
+  overflow: visible;
+}
+.sell {
+  padding: 1.105rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.105rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.frame {
+  background: #232c3c;
+  padding: 1.1525rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.1525rem;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.sell2 {
+  background: linear-gradient(to left, #ffffff, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 4.528934001922607rem;
+  line-height: 3.686875rem;
+  letter-spacing: -0.019em;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.navigation-menu {
+  flex-shrink: 0;
+  width: 5.858125rem;
+  height: 5.858125rem;
+  position: relative;
+  overflow: visible;
+}
+.save-list {
+  background: #232c3c;
+  padding: 0.5525rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5525rem;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.frame-2 {
+  padding: 1.105rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.105rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.save-for-later {
+  background: linear-gradient(to left, #ffffff, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 4.528934001922607rem;
+  line-height: 3.686875rem;
+  letter-spacing: -0.019em;
+  font-weight: 500;
+  position: relative;
+  flex: 1;
+  height: 14.835rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.navigation-menu2 {
+  flex-shrink: 0;
+  width: 5.858125rem;
+  height: 5.858125rem;
+  position: relative;
+  overflow: visible;
+}
+.cart {
+  background: #232c3c;
+  padding: 1.105rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.105rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.virtual-cart {
+  background: linear-gradient(to left, #ffffff, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 4.528934001922607rem;
+  line-height: 3.686875rem;
+  letter-spacing: -0.019em;
+  font-weight: 500;
+  position: relative;
+  flex: 1;
+  height: 12.980625rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.navigation-menu3 {
+  flex-shrink: 0;
+  width: 5.858125rem;
+  height: 5.858125rem;
+  position: relative;
+  overflow: visible;
+}
+.profile {
+  padding: 0rem 1.105rem 0rem 1.105rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.105rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.frame-1 {
+  background: #232c3c;
+  padding: 1.1525rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.1525rem;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.user-center {
+  background: linear-gradient(to left, #ffffff, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 4.528934001922607rem;
+  line-height: 3.686875rem;
+  letter-spacing: -0.019em;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.navigation-menu4 {
+  flex-shrink: 0;
+  width: 5.7475rem;
+  height: 5.7475rem;
+  position: relative;
+}
+.person-fill {
+  width: 75%;
+  height: 75%;
+  position: absolute;
+  right: 12.5%;
+  left: 12.5%;
+  bottom: 12.5%;
+  top: 12.5%;
+  overflow: visible;
+}
