@@ -1,8 +1,5 @@
-import { Service } from "./Service.js";
-
-export class CartService extends Service {
-  constructor() {
-    super();
+export class CartService {
+  constructor() { 
     this.dbName = "cartDB";
     this.storeName = "cartItems";
     this.initDB();
@@ -52,28 +49,28 @@ export class CartService extends Service {
     });
   }
 
-  async retrieveCartItems() {
-    if (!this.db) {
-      await this.initDB();
-    }
-
-    return new Promise((resolve, reject) => {
-      const tx = this.db.transaction([this.storeName], "readonly");
-      const store = tx.objectStore(this.storeName);
-      const request = store.getAll();
-
-      request.onsuccess = (event) => {
-        const items = event.target.result;
-        this.publish("retrievedCartItems", items);
-        resolve(items);
-      };
-
-      request.onerror = () => {
-        this.publish("retrieveCartItemsError");
-        reject("Failed to retrieve cart items");
-      };
-    });
+async retrieveCartItems() {
+  if (!this.db) {
+    await this.initDB();
   }
+
+  return new Promise((resolve, reject) => {
+    const tx = this.db.transaction([this.storeName], "readonly");
+    const store = tx.objectStore(this.storeName);
+    const request = store.getAll();
+
+    request.onsuccess = (event) => {
+      const items = event.target.result;
+      // Removed `this.publish`
+      console.log("Cart items retrieved:", items);
+      resolve(items);
+    };
+
+    request.onerror = () => {
+      reject("Failed to retrieve cart items");
+    };
+  });
+}
 
   async deleteCartItem(id) {
     if (!this.db) {

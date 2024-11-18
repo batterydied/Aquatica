@@ -11,7 +11,7 @@ export class VirtualCart extends BaseComponent {
     super();
     this.loadCSS("VirtualCart");
     this.#cartService = new CartService(); // Initialize CartService
-    this.#appController = appController;
+    this.#appController = appController; // Reference to AppController
   }
 
   async render() {
@@ -69,6 +69,23 @@ export class VirtualCart extends BaseComponent {
       </div>
     `;
     this.#updateCartTotals();
+  }
+
+  #updateCartTotals() {
+    const subtotal = this.#cartData.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    const shipping = this.#cartData.length > 0 ? 5.99 : 0; // Flat shipping rate
+    const tax = subtotal * 0.1; // 10% tax
+    const total = subtotal + shipping + tax;
+
+    this.#container.querySelector("#subtotal").textContent =
+      subtotal.toFixed(2);
+    this.#container.querySelector("#shipping").textContent =
+      shipping.toFixed(2);
+    this.#container.querySelector("#tax").textContent = tax.toFixed(2);
+    this.#container.querySelector("#total").textContent = total.toFixed(2);
   }
 
   async #attachEventListeners() {

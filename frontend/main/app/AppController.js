@@ -1,40 +1,34 @@
-// This will render all of our app's features.
-
-// Imports
-import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
-import { ProductService } from '../services/ProductService.js';
-import { ProfileService } from '../services/ProfileService.js';
+// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
+import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 
 export class AppController {
-   #container = null;
-   #currentView = null; // Track the currently rendered view
-   #views = {}; // Store initialized views
+  #container = null;
+  #currentView = null;
+  #views = {};
 
-   constructor() {
-      // Initialize components
-      this.#views = {
-         marketplace: new MarketplacePage()
-      };
+  constructor() {
+    this.#views = {
+      // secureCheckout: new SecureCheckout(),
+      virtualCart: new VirtualCart(this),
+    };
 
-      // TESTING FOR MARKETPLACEPAGE
-      this.#currentView = this.#views.marketplace;
-   }
-
+    // Set default view
+    this.#currentView = this.#views.virtualCart;
+  }
    /**
    * Render the AppController container and initialize the default view.
    */
-   render() {
-      // Create the main container if not already created
-      if (!this.#container) {
-         this.#container = document.createElement('div');
-         this.#container.classList.add('app-controller');
-      }
+   async render() {
+     if (!this.#container) {
+       this.#container = document.createElement("div");
+       this.#container.classList.add("app-controller");
+     }
 
-      // Render the current view (Cart for testing)
-      this.#container.innerHTML = ''; // Clear previous content
-      this.#container.appendChild(this.#currentView.render());
+     this.#container.innerHTML = ""; // Clear previous content
+     const viewContent = await this.#currentView.render(); // Await render of the view
+     this.#container.appendChild(viewContent); // Append the rendered content
 
-      return this.#container;
+     return this.#container;
    }
 
    /**
