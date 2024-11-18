@@ -1,38 +1,74 @@
-.menu,
-.menu * {
+/* Reset box-sizing */
+.navigation-menu,
+.navigation-menu * {
   box-sizing: border-box;
 }
-.menu {
+
+/* main navigation container */
+.navigation-menu {
   background: #232c3c;
-  padding: 0rem 5.94375rem 0rem 5.94375rem;
   display: flex;
-  flex-direction: row;
-  gap: 3.56625rem;
+  /* flex-direction: row;  --> default for desktop */
+  flex-direction: column; 
+    /* TODO need resize for responsive */
+  /* default for small screen */
   align-items: center;
   justify-content: center;
-  height: 15.19125rem;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 10px 0;
+
 }
+
+/* Header container */
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+    /* TODO need resize for responsive */
+  padding: 0px 20;
+}
+
+/* LOGO container */
 .logo-button {
   align-self: stretch;
   flex: 1;
   height: auto;
-  position: relative;
-  overflow: visible;
+  max-width: 120px;
+  /* mouse pointer changes */
+  cursor: pointer; 
+  /* TODOneed resize for responsive */
 }
-.sell-button {
-  padding: 1.105rem;
+
+/* Buttons container */
+.sell-button,
+.cart-button,
+.save-list-button,
+.profile-button {
   display: flex;
-  flex-direction: row;
-  gap: 1.105rem;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  /* justify-content: center; */
+  padding: 10 px;
+  gap: 8 px;
+  margin: 0 10px;
+  cursor: pointer;
+  color: #ffffff;
   flex-wrap: wrap;
   align-content: center;
   align-self: stretch;
   flex: 1;
   position: relative;
+    /* TODO need resize for responsive */
 }
+
+/* Buttons contents */
 .sell {
   background: linear-gradient(to left, #ffffff, #ffffff);
   background-clip: text;
@@ -51,27 +87,16 @@
   align-items: center;
   justify-content: flex-end;
 }
-.navigation-menu {
+
+/* changes here for all icons */
+.icons {
   flex-shrink: 0;
   width: 5.858125rem;
   height: 5.858125rem;
   position: relative;
   overflow: visible;
 }
-.cart-button {
-  background: #232c3c;
-  padding: 1.105rem;
-  display: flex;
-  flex-direction: row;
-  gap: 1.105rem;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  align-content: center;
-  align-self: stretch;
-  flex: 1;
-  position: relative;
-}
+
 .virtual-cart {
   background: linear-gradient(to left, #ffffff, #ffffff);
   background-clip: text;
@@ -90,25 +115,7 @@
   align-items: center;
   justify-content: flex-end;
 }
-.navigation-menu2 {
-  flex-shrink: 0;
-  width: 5.858125rem;
-  height: 5.858125rem;
-  position: relative;
-  overflow: visible;
-}
-.save-list-button {
-  background: #232c3c;
-  padding: 0.5525rem;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5525rem;
-  align-items: center;
-  justify-content: flex-start;
-  align-self: stretch;
-  flex: 1;
-  position: relative;
-}
+
 .save-for-later {
   background: linear-gradient(to left, #ffffff, #ffffff);
   background-clip: text;
@@ -127,26 +134,8 @@
   align-items: center;
   justify-content: flex-end;
 }
-.navigation-menu3 {
-  flex-shrink: 0;
-  width: 5.858125rem;
-  height: 5.858125rem;
-  position: relative;
-  overflow: visible;
-}
-.profile-button {
-  padding: 0rem 1.105rem 0rem 1.105rem;
-  display: flex;
-  flex-direction: row;
-  gap: 1.105rem;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  align-content: center;
-  align-self: stretch;
-  flex: 1;
-  position: relative;
-}
+
+
 .user-center {
   background: linear-gradient(to left, #ffffff, #ffffff);
   background-clip: text;
@@ -165,13 +154,8 @@
   align-items: center;
   justify-content: flex-end;
 }
-.navigation-menu4 {
-  flex-shrink: 0;
-  width: 5.7475rem;
-  height: 5.7475rem;
-  position: relative;
-}
-.person-fill {
+
+/* .person-fill {
   width: 75%;
   height: 75%;
   position: absolute;
@@ -180,4 +164,25 @@
   bottom: 12.5%;
   top: 12.5%;
   overflow: visible;
+} */
+
+/* Responsive Styles Awaiting */
+/* Mobile - Default styles (0em - 47.9em) /
+@media screen and (max-width: 47.9em) { / 0px - 767px /
+    / Mobile-specific styles /
 }
+
+/ Tablet (48em - 63.9em) /
+@media screen and (min-width: 48em) and (max-width: 63.9em) { / 768px - 1023px /
+    / Tablet-specific styles /
+}
+
+/ Desktop (64em - 74.9em) /
+@media screen and (min-width: 64em) and (max-width: 74.9em) { / 1024px - 1199px /
+    / Desktop-specific styles /
+}
+
+/ Large screens (75em and up) /
+@media screen and (min-width: 75em) { / 1200px and up /
+    / Large screen-specific styles }.}
+*/

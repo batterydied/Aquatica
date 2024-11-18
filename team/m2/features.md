@@ -54,14 +54,52 @@ Customers will be able to bookmark items that they are interested in as well as 
 
 **Assigned to**: Devin Bowler
 
-## Personalized Recommendations
+## Personalized Recommendations (Dropped)
 
 Customers will recieve personalized product recommendations based on past purchases, browsing history, and purchases from other customers. This helps customers find related products that they might need without having to search for it.
 
-**Assigned to**: Yukun Yang
+## Profile Page
+
+Description: The Profile Page allows users to view and manage their personal information. It provides dynamic access to private information such as payment methods and addresses, and features an order history section for tracking past purchases. Users can edit their profile details directly from the page, ensuring up-to-date information while maintaining an intuitive and secure user experience.
+
+Team Member: Yukun Yang
+
+Point Value: 9 points
+
+Details:
+
+Profile Picture (1 point): Features an avatar to personalize the user profile.
+
+Contact Details (1 points): Displays to the user's phone number and email address.
+
+Private Information (1-2 points): Enables secure access to sensitive information such as payment methods and addresses, with a toggle to show or hide details.
+
+Order History (2 points): Includes a detailed history of past purchases, with information on order IDs, dates, totals, and items.
+
+Edit Functionality (2 points): Provides an option to edit personal details with dynamic input fields and validation.
+
+Save Changes Button (1 points): Allows users to save updates to their profile seamlessly.
+
+UI Design (1-2 points): Implements a clean and responsive design to enhance usability, with sections organized for easy navigation and interaction.
 
 ## Reviews and Ratings
 
 Customers will be able to read product reviews and ratings from other customers under each product. This allows customers to make an informed decision on their purchase ensuring they purchase the best possible product and avoid bad products.
 
-**Assigned to**: Asritha Bodepudi
+**Assigned to**: Nikhil Bahadur
+
+Point Value: 9 Points
+
+Details: 
+
+Customer Review Table (2 points): Includes username, rating, review, and date of customers who left a review on a certain product.
+
+Select Star Rating (2 Points): Interactive display of stars that allows you to choose your rating out of 5 stars when leaving a review on a product.
+
+Input Box For Review Comment (1 Point): Allows user to write comment for a review
+
+Add Review Button (1 Point): Allows user to submit review which will be displayed in the customer review table.
+
+Customer Review Bar (1 Point): Displays the total reviews and the average rating of the product
+
+UI Design (2 points): A clean, responsive, and user-friendly UI design that allows interaction from users.
