@@ -43,6 +43,7 @@ export class ProductPage extends BaseComponent {
     const specifications = this.#createSpecifications();
     const shippingInfo = this.#createShippingInfo();
     const productInfoPanel = document.createElement('div');
+    productInfoPanel.classList.add('product-info-panel');
     productInfoPanel.appendChild(titles);
     productInfoPanel.appendChild(productSelection);
     productInfoPanel.appendChild(shippingInfo);
@@ -89,6 +90,7 @@ export class ProductPage extends BaseComponent {
       imagePanel.appendChild(img);
     });
     imageGallery.appendChild(imagePanel);
+    imageGallery.appendChild(mainImage);
 
     return imageGallery;
   }
