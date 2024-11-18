@@ -39,8 +39,8 @@ export class ProductPage extends BaseComponent {
   #createProductInfoPanel(){
     const titles = this.#createTitles();
     const description = this.#createDescription();
-    const productSelection = this.#createProductSelection();
     const specifications = this.#createSpecifications();
+    const productSelection = this.#createProductSelection();
     const shippingInfo = this.#createShippingInfo();
     const productInfoPanel = document.createElement('div');
     productInfoPanel.appendChild(titles);
@@ -61,8 +61,9 @@ export class ProductPage extends BaseComponent {
     secondaryTitle.innerText = productData.product.scientificName;
     secondaryTitle.className = 'product-secondary-title';
 
-    titles.appendChild(title);
     titles.appendChild(secondaryTitle);
+    titles.appendChild(title);
+    titles.className = 'titles';
 
     return titles;
   }
@@ -132,17 +133,21 @@ export class ProductPage extends BaseComponent {
     const addToCartBtn = document.createElement('button');
     addToCartBtn.classList.add('add-to-cart');
     addToCartBtn.innerText = 'Add to Cart';
+    addToCartBtn.classList.add('add-to-cart');
+
 
     const quantityForm = document.createElement('div');
     const quantityIncrease = document.createElement('input');
     quantityIncrease.value = '+';
     quantityIncrease.type = 'button';
     quantityIncrease.classList.add('quantity-increase');
+    quantityIncrease.classList.add('quantity-increase');
 
     const quantityDecrease = document.createElement('input');
     quantityIncrease.classList.add('quantity-decrease');
     quantityDecrease.value = '-';
     quantityDecrease.type = 'button';
+    quantityDecrease.classList.add('quantity-decrease');
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'number';
@@ -154,11 +159,20 @@ export class ProductPage extends BaseComponent {
     quantityForm.appendChild(quantityInput);
     quantityForm.appendChild(quantityIncrease);
 
+    const quantityLabel= document.createElement('h1');
+    quantityLabel.innerText = "Quantity";
+    quantityLabel.className = 'product-secondary-title';
+
+
+    priceLabel.className = 'product-secondary-title';
+
     productTypes.appendChild(priceLabel);
     productTypes.appendChild(typeDropdown);
     productSelection.appendChild(productTypes);
-    productSelection.appendChild(addToCartBtn);
+    productSelection.appendChild(quantityLabel);
     productSelection.appendChild(quantityForm);
+    productSelection.appendChild(addToCartBtn);
+    productSelection.classList.add('product-selection');
 
     return productSelection;
   }
