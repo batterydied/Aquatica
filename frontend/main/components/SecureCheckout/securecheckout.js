@@ -11,7 +11,7 @@ export class SecureCheckout extends BaseComponent {
 
   constructor() {
     super();
-    this.loadCSS('SecureCheckout'); // Load the updated CSS
+    this.loadCSS('SecureCheckout'); // Load the associated CSS
   }
 
   render() {
@@ -28,7 +28,6 @@ export class SecureCheckout extends BaseComponent {
   }
 
   #setupContainerContent() {
-    // Dynamically populate the HTML
     this.#container.innerHTML = `
       <a href="#" class="back-link">← Cart</a>
 
@@ -117,26 +116,33 @@ export class SecureCheckout extends BaseComponent {
     `;
   }
 
-   #attachEventListeners() {
-      const shippingTab = this.#container.querySelector('#shipping-tab');
-      const paymentTab = this.#container.querySelector('#payment-tab');
-      const shippingForm = this.#container.querySelector('#shipping-form');
-      const paymentForm = this.#container.querySelector('#payment-form');
+  #attachEventListeners() {
+    const shippingTab = this.#container.querySelector('#shipping-tab');
+    const paymentTab = this.#container.querySelector('#payment-tab');
+    const shippingForm = this.#container.querySelector('#shipping-form');
+    const paymentForm = this.#container.querySelector('#payment-form');
 
-      shippingTab.addEventListener('click', () => {
-         // Show shipping form, hide payment form
-         shippingForm.classList.add('visible');
-         paymentForm.classList.remove('visible');
-         shippingTab.classList.add('active');
-         paymentTab.classList.remove('active');
-      });
+    shippingTab.addEventListener('click', () => {
+      // Show shipping form, hide payment form
+      shippingForm.classList.add('visible');
+      paymentForm.classList.remove('visible');
+      shippingTab.classList.add('active');
+      paymentTab.classList.remove('active');
+    });
 
-      paymentTab.addEventListener('click', () => {
-         // Show payment form, hide shipping form
-         paymentForm.classList.add('visible');
-         shippingForm.classList.remove('visible');
-         paymentTab.classList.add('active');
-         shippingTab.classList.remove('active');
-      });
-   }
+    paymentTab.addEventListener('click', () => {
+      // Show payment form, hide shipping form
+      paymentForm.classList.add('visible');
+      shippingForm.classList.remove('visible');
+      paymentTab.classList.add('active');
+      shippingTab.classList.remove('active');
+    });
+
+    const backLink = this.#container.querySelector('.back-link');
+    backLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.emit('navigate', 'cart'); // Emit a custom navigate event to switch views
+    });
+  }
 }
+
