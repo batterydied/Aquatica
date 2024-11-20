@@ -1,5 +1,6 @@
-import { BaseComponent } from '../../app/BaseComponent.js';
+import { BaseComponent } from "../../app/BaseComponent.js";
 import { AppController } from "../../app/AppController.js";
+import { hub } from "../../eventhub/EventHub.js";
 
 export class SecureCheckout extends BaseComponent {
   #container = null;
@@ -8,11 +9,15 @@ export class SecureCheckout extends BaseComponent {
     shipping: 0,
     discount: 0,
     total: 0,
-  }; // Dynamic pricing
+  };
 
   constructor() {
     super();
-    this.loadCSS('SecureCheckout'); // Load the associated CSS
+    this.loadCSS("SecureCheckout");
+
+    hub.subscribe("cartData", (data) => {
+      this.#updateCartReview(data.cartItems, data.totals);
+    });
   }
 
   render() {
@@ -20,8 +25,8 @@ export class SecureCheckout extends BaseComponent {
       return this.#container;
     }
 
-    this.#container = document.createElement('div');
-    this.#container.classList.add('checkout-container');
+    this.#container = document.createElement("div");
+    this.#container.classList.add("checkout-container");
     this.#setupContainerContent();
     this.#attachEventListeners();
 
@@ -31,8 +36,6 @@ export class SecureCheckout extends BaseComponent {
   #setupContainerContent() {
     this.#container.innerHTML = `
       <a href="#" class="back-link">← Cart</a>
-
-      <!-- Left Panel -->
       <div class="left-panel">
         <div class="tabs">
           <button id="shipping-tab" class="tab active">Shipping</button>
@@ -41,12 +44,12 @@ export class SecureCheckout extends BaseComponent {
         <form id="shipping-form" class="form-section visible">
           <div class="form-group">
             <label for="full-name">Full Name</label>
-            <input type="text" id="full-name" />
+            <input type="text" id="full-name" required />
           </div>
           <div class="form-group-row">
             <div class="form-group">
               <label for="street-address">Street Address</label>
-              <input type="text" id="street-address" />
+              <input type="text" id="street-address" required />
             </div>
             <div class="form-group">
               <label for="apt-suite">Apt/Suite</label>
@@ -56,54 +59,50 @@ export class SecureCheckout extends BaseComponent {
           <div class="form-group-row">
             <div class="form-group">
               <label for="city">City</label>
-              <input type="text" id="city" />
+              <input type="text" id="city" required />
             </div>
             <div class="form-group">
               <label for="state">State</label>
-              <input type="text" id="state" />
+              <input type="text" id="state" required />
             </div>
             <div class="form-group">
               <label for="zip-code">Zip Code</label>
-              <input type="text" id="zip-code" />
+              <input type="text" id="zip-code" required />
             </div>
           </div>
           <div class="form-group">
             <label for="country">Country</label>
-            <input type="text" id="country" />
+            <input type="text" id="country" required />
           </div>
           <div class="form-group">
             <label for="email-address">Email Address</label>
-            <input type="text" id="email-address" />
+            <input type="email" id="email-address" required />
           </div>
         </form>
-
         <form id="payment-form" class="form-section">
           <div class="form-group">
             <label for="credit-card">Credit Card Number</label>
-            <input type="text" id="credit-card" />
+            <input type="text" id="credit-card" maxlength="16" minlength="16" required />
           </div>
           <div class="form-group-row">
             <div class="form-group">
-              <label for="expiration-date">Expiration Date</label>
-              <input type="text" id="expiration-date" />
+              <label for="expiration-date">Expiration Date (MM/YY)</label>
+              <input type="text" id="expiration-date" maxlength="5" required />
             </div>
             <div class="form-group">
               <label for="cvv">CVV</label>
-              <input type="text" id="cvv" />
+              <input type="text" id="cvv" maxlength="3" minlength="3" required />
             </div>
           </div>
           <div class="form-group">
             <label for="billing-address">Billing Address</label>
-            <input type="text" id="billing-address" />
+            <input type="text" id="billing-address" required />
           </div>
         </form>
       </div>
-
-      <!-- Right Panel -->
       <div class="right-panel">
         <h3>Review</h3>
         <div class="review-items">
-          <!-- These will be dynamically generated later -->
           <p>No items in the cart yet.</p>
         </div>
         <div class="checkout-summary">
@@ -118,34 +117,103 @@ export class SecureCheckout extends BaseComponent {
   }
 
   #attachEventListeners() {
-    const shippingTab = this.#container.querySelector('#shipping-tab');
-    const paymentTab = this.#container.querySelector('#payment-tab');
-    const shippingForm = this.#container.querySelector('#shipping-form');
-    const paymentForm = this.#container.querySelector('#payment-form');
+    const shippingTab = this.#container.querySelector("#shipping-tab");
+    const paymentTab = this.#container.querySelector("#payment-tab");
+    const shippingForm = this.#container.querySelector("#shipping-form");
+    const paymentForm = this.#container.querySelector("#payment-form");
+    const payNowButton = this.#container.querySelector(".pay-now");
 
-    shippingTab.addEventListener('click', () => {
-      // Show shipping form, hide payment form
-      shippingForm.classList.add('visible');
-      paymentForm.classList.remove('visible');
-      shippingTab.classList.add('active');
-      paymentTab.classList.remove('active');
+    shippingTab.addEventListener("click", () => {
+      shippingForm.classList.add("visible");
+      paymentForm.classList.remove("visible");
+      shippingTab.classList.add("active");
+      paymentTab.classList.remove("active");
     });
 
-    paymentTab.addEventListener('click', () => {
-      // Show payment form, hide shipping form
-      paymentForm.classList.add('visible');
-      shippingForm.classList.remove('visible');
-      paymentTab.classList.add('active');
-      shippingTab.classList.remove('active');
+    paymentTab.addEventListener("click", () => {
+      paymentForm.classList.add("visible");
+      shippingForm.classList.remove("visible");
+      paymentTab.classList.add("active");
+      shippingTab.classList.remove("active");
     });
 
-    const backLink = this.#container.querySelector('.back-link');
-    backLink.addEventListener('click', (event) => {
+    payNowButton.addEventListener("click", (event) => {
       event.preventDefault();
-      console.log("Navigate back to the cart.");
+      this.#validateAndSubmit();
+    });
+
+    const backLink = this.#container.querySelector(".back-link");
+    backLink.addEventListener("click", (event) => {
+      event.preventDefault();
       const appController = AppController.getInstance();
       appController.navigate("virtualCart");
     });
   }
-}
 
+  #validateAndSubmit() {
+    const requiredFields = [
+      "#full-name",
+      "#street-address",
+      "#city",
+      "#state",
+      "#zip-code",
+      "#country",
+      "#email-address",
+      "#credit-card",
+      "#expiration-date",
+      "#cvv",
+      "#billing-address",
+    ];
+
+    const errors = [];
+
+    requiredFields.forEach((selector) => {
+      const field = this.#container.querySelector(selector);
+      if (!field.value || (field.hasAttribute("required") && field.value.trim() === "")) {
+        errors.push(`${field.previousElementSibling.textContent} is required.`);
+      } else if (
+        field.hasAttribute("maxlength") &&
+        field.value.length !== parseInt(field.getAttribute("maxlength"))
+      ) {
+        errors.push(
+          `${field.previousElementSibling.textContent} must be ${field.getAttribute(
+            "maxlength"
+          )} characters long.`
+        );
+      }
+    });
+
+    const expirationDate = this.#container.querySelector("#expiration-date").value;
+    if (expirationDate && !/^\d{2}\/\d{2}$/.test(expirationDate)) {
+      errors.push("Expiration Date must be in the format MM/YY.");
+    }
+
+    if (errors.length > 0) {
+      alert(`Please fix the following errors:\n\n${errors.join("\n")}`);
+    } else {
+      alert("Purchase Successful");
+    }
+  }
+
+  #updateCartReview(cartItems, totals) {
+    const reviewItemsContainer = this.#container.querySelector(".review-items");
+    const subtotalEl = this.#container.querySelector("#subtotal");
+    const shippingEl = this.#container.querySelector("#shipping");
+    const totalEl = this.#container.querySelector("#total");
+
+    reviewItemsContainer.innerHTML = cartItems
+      .map(
+        (item) => `
+        <div class="review-item">
+          <p><strong>${item.name}</strong> x ${item.quantity}</p>
+          <p>$${(item.price * item.quantity).toFixed(2)}</p>
+        </div>
+      `
+      )
+      .join("");
+
+    subtotalEl.textContent = totals.subtotal.toFixed(2);
+    shippingEl.textContent = totals.shipping.toFixed(2);
+    totalEl.textContent = totals.total.toFixed(2);
+  }
+}
