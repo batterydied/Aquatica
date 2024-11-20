@@ -161,7 +161,7 @@ export class ProductPage extends BaseComponent {
     quantityForm.appendChild(quantityDecrease);
     quantityForm.appendChild(quantityInput);
     quantityForm.appendChild(quantityIncrease);
-
+    quantityForm.classList.add('quantity-form');
     const quantityLabel= document.createElement('h1');
     quantityLabel.innerText = "Quantity";
     quantityLabel.className = 'product-secondary-title';
