@@ -5,12 +5,13 @@ import { AppController } from "../../app/AppController.js";
 export class VirtualCart extends BaseComponent {
   #container = null;
   #cartItems = [];
+  #savedForLater = [];
 
   constructor() {
     super();
     this.loadCSS("VirtualCart");
 
-    // Temporary placeholder data
+    // Temporary placeholder data for the cart
     this.#cartItems = [
       {
         id: 1,
@@ -26,11 +27,14 @@ export class VirtualCart extends BaseComponent {
         quantity: 1,
         price: 39.99,
       },
+    ];
+
+    // Temporary placeholder data for Save for Later
+    this.#savedForLater = [
       {
         id: 3,
         name: "Sample Product 3",
-        description: "A third placeholder product.",
-        quantity: 3,
+        description: "This product is saved for later.",
         price: 9.99,
       },
     ];
@@ -41,7 +45,6 @@ export class VirtualCart extends BaseComponent {
       this.#container = document.createElement("div");
       this.#container.classList.add("cart-container");
 
-      // Define the cart's structure
       this.#container.innerHTML = `
         <div class="cart-left">
           <a href="#" class="back-link">← Marketplace</a>
@@ -53,15 +56,23 @@ export class VirtualCart extends BaseComponent {
                 : '<p class="empty-cart">Your cart is empty.</p>'
             }
           </div>
+          <h3>Save for Later</h3>
+          <div id="saved-items">
+            ${
+              this.#savedForLater.length > 0
+                ? this.#generateSavedItems()
+                : '<p class="empty-saved">No items saved for later.</p>'
+            }
+          </div>
         </div>
         <div class="cart-right">
           <h3>Cart Totals</h3>
           <div class="cart-totals">
-            <p class="totals-row"><span class="text">Shipping:</span> <span id="shipping" class="price">$5.99</span></p>
-            <p class="totals-row"><span class="text">Tax:</span> <span id="tax" class="price">$0.00</span></p>
-            <p class="totals-row subtotal"><span class="text">Subtotal:</span> <span id="subtotal" class="price">$0.00</span></p>
+            <p class="totals-row"><span class="text">Shipping:</span> <span id="shipping" class="prices">$5.99</span></p>
+            <p class="totals-row"><span class="text">Tax:</span> <span id="tax" class="prices">$0.00</span></p>
+            <p class="totals-row subtotal"><span class="text">Subtotal:</span> <span id="subtotal" class="prices">$0.00</span></p>
             <hr class="total-divider" />
-            <p class="totals-row total"><span class="text">Total:</span> <span id="total" class="price">$0.00</span></p>
+            <p class="totals-row total"><span class="text">Total:</span> <span id="total" class="prices">$0.00</span></p>
           </div>
           <button class="checkout-button">Proceed to Checkout</button>
         </div>
@@ -74,50 +85,63 @@ export class VirtualCart extends BaseComponent {
     return this.#container;
   }
 
-  #attachEventListeners() {
+#attachEventListeners() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
+    const savedItemsContainer = this.#container.querySelector("#saved-items");
 
+    // Handle cart item buttons
     cartItemsContainer.addEventListener("click", (e) => {
-      if (e.target.classList.contains("increment")) {
         const index = e.target.dataset.index;
-        this.#cartItems[index].quantity++;
-        this.#refreshCart();
-      }
-
-      if (e.target.classList.contains("decrement")) {
-        const index = e.target.dataset.index;
-        if (this.#cartItems[index].quantity > 1) {
-          this.#cartItems[index].quantity--;
-        } else {
-          this.#cartItems.splice(index, 1);
+        if (e.target.classList.contains("increment")) {
+            this.#cartItems[index].quantity++;
+            this.#refreshCart();
+        } else if (e.target.classList.contains("decrement")) {
+            if (this.#cartItems[index].quantity > 1) {
+                this.#cartItems[index].quantity--;
+            } else {
+                this.#cartItems.splice(index, 1);
+            }
+            this.#refreshCart();
+        } else if (e.target.classList.contains("delete")) {
+            this.#cartItems.splice(index, 1);
+            this.#refreshCart();
+        } else if (e.target.classList.contains("save-later")) {
+            const item = this.#cartItems[index];
+            this.#savedForLater.push({ ...item }); // Ensure a copy is made
+            this.#cartItems.splice(index, 1);
+            this.#refreshCart();
         }
-        this.#refreshCart();
-      }
     });
 
-    const backLink = this.#container.querySelector('.back-link');
-    backLink.addEventListener('click', (event) => {
-      event.preventDefault();
-      console.log("Navigating to marketplace...");
-      const appController = AppController.getInstance();
-      appController.navigate("marketplacePage");
+    // Handle saved-for-later item buttons
+    savedItemsContainer.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        if (e.target.classList.contains("add-to-cart")) {
+            const item = this.#savedForLater[index];
+            // Ensure the quantity is set to 1 if it doesn't exist
+            this.#cartItems.push({
+                ...item,
+                quantity: item.quantity || 1,
+            });
+            this.#savedForLater.splice(index, 1);
+            this.#refreshCart();
+        }
     });
+}
 
-    const checkoutButton = this.#container.querySelector(".checkout-button");
-    checkoutButton.addEventListener("click", () => {
-      console.log("Navigating to secure checkout...");      
-      const appController = AppController.getInstance();
-      appController.navigate("secureCheckout");
-    });
-  }
 
-  #refreshCart() {
+#refreshCart() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
+    const savedItemsContainer = this.#container.querySelector("#saved-items");
+
     cartItemsContainer.innerHTML = this.#generateCartItems();
+    savedItemsContainer.innerHTML = this.#generateSavedItems();
+
     this.#updateCartTotals();
   }
 
-  #generateCartItems() {
+
+#generateCartItems() {
     return this.#cartItems
       .map(
         (item, index) => `
@@ -131,8 +155,10 @@ export class VirtualCart extends BaseComponent {
             <span>${item.quantity}</span>
             <button class="increment" data-index="${index}">+</button>
           </div>
-          <div class="item-price">
-            $${(item.price * item.quantity).toFixed(2)}
+          <div class="item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+          <div class="item-actions">
+            <button class="save-later" data-index="${index}">Save</button>
+            <button class="delete" data-index="${index}">Delete</button>
           </div>
         </div>
       `
@@ -140,7 +166,29 @@ export class VirtualCart extends BaseComponent {
       .join("");
   }
 
-  #updateCartTotals() {
+
+#generateSavedItems() {
+    return this.#savedForLater
+      .map(
+        (item, index) => `
+        <div class="saved-item">
+          <div class="item-details">
+            <h4>${item.name}</h4>
+            <p>${item.description}</p>
+            <p>Quantity: ${item.quantity || 1}</p>
+            <p>Price: $${item.price.toFixed(2)}</p>
+          </div>
+          <div class="item-actions">
+            <button class="add-to-cart" data-index="${index}">Add to Cart</button>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+
+#updateCartTotals() {
     const subtotal = this.#cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0
