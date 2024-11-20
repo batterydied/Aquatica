@@ -1,9 +1,10 @@
 // This will render all of our app's features.
 
 // Imports
+
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
 import { ProductService } from '../services/ProductService.js';
-// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
+import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 // import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 // import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 // import { ProductPage } from '../components/ProductPage/ProductPage.js';
@@ -19,13 +20,14 @@ export class AppController {
       // Initialize components
       this.#views = {
          marketplace: new MarketplacePage(this),
-	 // secureCheckout: new SecureCheckout(),
-  	 // virtualCart:  new VirtualCart(), 
-	 // navigationMenu: new NavigationMenu(),
-	 // productPage: new ProductPage(),
-	 // profilePage: new ProfilePage(),
+	       secureCheckout: new SecureCheckout(),
+  	  // virtualCart:  new VirtualCart(), 
+	    // navigationMenu: new NavigationMenu(),
+	    // productPage: new ProductPage(),
+	    // profilePage: new ProfilePage(),
       };
 	
+
       this.#currentView = this.#views.marketplace;
    }
 
