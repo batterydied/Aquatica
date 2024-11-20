@@ -1,7 +1,14 @@
 // This will render all of our app's features.
 
 // Imports
-import { VirtualCart } from '../components/virtualCart/VirtualCart.js';
+// import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
+// import { ProductService } from '../services/ProductService.js';
+// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
+import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
+// import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
+// import { ProductPage } from '../components/ProductPage/ProductPage.js';
+// import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
+
 
 export class AppController {
    #container = null;
@@ -11,14 +18,18 @@ export class AppController {
    constructor() {
       // Initialize components
       this.#views = {
-         virtualCart: new VirtualCart(this),
+         // marketplace: new MarketplacePage(),
+	 // secureCheckout: new SecureCheckout(),
+  	 virtualCart:  new VirtualCart(this), 
+	 // navigationMenu: new NavigationMenu(),
+	 // productPage: new ProductPage(),
+	 // profilePage: new ProfilePage(),
       };
-
-      // TESTING FOR VIRTUALCART
+	
       this.#currentView = this.#views.virtualCart;
    }
 
-   /**
+	/**
    * Render the AppController container and initialize the default view.
    */
    render() {
@@ -34,6 +45,11 @@ export class AppController {
 
       return this.#container;
    }
+
+    // Render the navigationMenu only if not on SecureCheckout
+    // if (this.#currentView !== this.#views.secureCheckout) {
+    //  this.#container.appendChild(this.#navigationMenu.render());
+    // }
 
    /**
    * Public method to navigate to a different view.

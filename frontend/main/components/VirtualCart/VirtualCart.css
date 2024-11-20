@@ -26,6 +26,11 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
+.back-link {
+  text-decoration: none;
+  color: grey;
+}
+
 /* Left panel styling */
 .cart-left {
   flex: 2;

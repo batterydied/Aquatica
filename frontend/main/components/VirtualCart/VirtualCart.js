@@ -1,7 +1,6 @@
-// import { SecureCheckout } from "../components/SecureCheckout/SecureCheckout.js"; // Commented out import
-
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { CartService } from "../../services/CartService.js";
+import { AppController } from "../../app/AppController.js";
 
 export class VirtualCart extends BaseComponent {
   #container = null;
@@ -45,7 +44,7 @@ export class VirtualCart extends BaseComponent {
       // Define the cart's structure
       this.#container.innerHTML = `
         <div class="cart-left">
-          <a href="#" class="back-link">← Back</a>
+          <a href="#" class="back-link">← Marketplace</a>
           <h2>Your Cart</h2>
           <div id="cart-items">
             ${
@@ -96,14 +95,19 @@ export class VirtualCart extends BaseComponent {
       }
     });
 
+    const backLink = this.#container.querySelector('.back-link');
+    backLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      console.log("Navigating to marketplace...");
+      const appController = AppController.getInstance();
+      appController.navigate("marketplacePage");
+    });
+
     const checkoutButton = this.#container.querySelector(".checkout-button");
     checkoutButton.addEventListener("click", () => {
-      console.log("Navigating to secure checkout...");
-      // Uncomment this section when SecureCheckout is implemented
-      /*
+      console.log("Navigating to secure checkout...");      
       const appController = AppController.getInstance();
       appController.navigate("secureCheckout");
-      */
     });
   }
 
