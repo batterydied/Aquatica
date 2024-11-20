@@ -40,6 +40,9 @@
     width: 5rem;
 
 }
+.quantity-input:focus{
+    outline: none;
+}
 .image-panel{
     display: flex;
     flex-direction: column;
@@ -80,6 +83,15 @@
     border: #5B91C8;
     border-radius: 4px;
     cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.add-to-cart:hover{
+    filter: brightness(0.90);
+}
+
+.add-to-cart:active{
+    filter: brightness(0.80);
 }
 
 .product-selection {

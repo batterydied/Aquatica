@@ -1,6 +1,6 @@
 import { BaseComponent } from '../../app/BaseComponent.js';
-import { productData } from '../../../tests/mock_data/product_page_mock_data.js';
-
+import { productData } from './product_page_mock_data.js';
+import { handleIncrease, updatePrice, handleDecrease, handleAddToCart } from './events.js';
 export class ProductPage extends BaseComponent {
   #container = null;
 
@@ -112,8 +112,14 @@ export class ProductPage extends BaseComponent {
     productTypes.className = 'product-types';
 
     const priceLabel = document.createElement('p');
-    priceLabel.innerText = `Price: $${productData.product.selectedProductType.price.toFixed(2)}`;
-    priceLabel.className = 'product-price';
+    priceLabel.innerText = 'Price: ';
+    const price = document.createElement('span');
+    price.dataset.originalPrice = productData.product.selectedProductType.price.toFixed(2);
+    price.innerText = price.dataset.originalPrice;
+    priceLabel.appendChild(price);
+    price.id = 'price';
+ 
+    priceLabel.id = 'product-price';
 
     const typeDropdown = document.createElement('select');
     typeDropdown.className = 'type-dropdown';
@@ -130,33 +136,44 @@ export class ProductPage extends BaseComponent {
       const selectedType = productData.product.productTypes.find(
         (type) => type.type === e.target.value,
       );
-      priceLabel.innerText = `Price: $${selectedType.price.toFixed(2)} (${selectedType.type})`;
+      const amount = parseInt(document.getElementById('quantity-input').value) || 1;
+      price.dataset.originalPrice = selectedType.price;
+      price.innerText = (selectedType.price * amount).toFixed(2)
     });
 
     const addToCartBtn = document.createElement('button');
     addToCartBtn.classList.add('add-to-cart');
     addToCartBtn.innerText = 'Add to Cart';
-    addToCartBtn.classList.add('add-to-cart');
-
-
-    const quantityForm = document.createElement('div');
-    const quantityIncrease = document.createElement('input');
-    quantityIncrease.value = '+';
-    quantityIncrease.type = 'button';
-    quantityIncrease.classList.add('quantity-increase');
-    quantityIncrease.classList.add('quantity-increase');
-
-    const quantityDecrease = document.createElement('input');
-    quantityIncrease.classList.add('quantity-decrease');
-    quantityDecrease.value = '-';
-    quantityDecrease.type = 'button';
-    quantityDecrease.classList.add('quantity-decrease');
+    addToCartBtn.addEventListener('click', handleAddToCart);
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'number';
     quantityInput.value = '1';
     quantityInput.min = '1';
     quantityInput.classList.add('quantity-input');
+    quantityInput.id = 'quantity-input';
+    quantityInput.addEventListener('input', ()=>{
+      updatePrice();
+    });
+
+    const quantityForm = document.createElement('div');
+    const quantityIncrease = document.createElement('input');
+    quantityIncrease.value = '+';
+    quantityIncrease.type = 'button';
+    quantityIncrease.classList.add('quantity-increase');
+    quantityIncrease.addEventListener('click', ()=>{
+      handleIncrease();
+      updatePrice();
+    });
+
+    const quantityDecrease = document.createElement('input');
+    quantityDecrease.value = '-';
+    quantityDecrease.type = 'button';
+    quantityDecrease.classList.add('quantity-decrease');
+    quantityDecrease.addEventListener('click', ()=>{
+      handleDecrease();
+      updatePrice();
+    });
 
     quantityForm.appendChild(quantityDecrease);
     quantityForm.appendChild(quantityInput);
