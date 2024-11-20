@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../app/BaseComponent.js";
-import { CartService } from "../../services/CartService.js";
 import { AppController } from "../../app/AppController.js";
+import { hub } from "../../eventhub/EventHub.js";
 
 export class VirtualCart extends BaseComponent {
   #container = null;
@@ -85,52 +85,71 @@ export class VirtualCart extends BaseComponent {
     return this.#container;
   }
 
-#attachEventListeners() {
+  #attachEventListeners() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
+    const checkoutButton = this.#container.querySelector(".checkout-button");
 
-    // Handle cart item buttons
+    // Handle cart item actions
     cartItemsContainer.addEventListener("click", (e) => {
-        const index = e.target.dataset.index;
-        if (e.target.classList.contains("increment")) {
-            this.#cartItems[index].quantity++;
-            this.#refreshCart();
-        } else if (e.target.classList.contains("decrement")) {
-            if (this.#cartItems[index].quantity > 1) {
-                this.#cartItems[index].quantity--;
-            } else {
-                this.#cartItems.splice(index, 1);
-            }
-            this.#refreshCart();
-        } else if (e.target.classList.contains("delete")) {
-            this.#cartItems.splice(index, 1);
-            this.#refreshCart();
-        } else if (e.target.classList.contains("save-later")) {
-            const item = this.#cartItems[index];
-            this.#savedForLater.push({ ...item }); // Ensure a copy is made
-            this.#cartItems.splice(index, 1);
-            this.#refreshCart();
+      const index = e.target.dataset.index;
+      if (e.target.classList.contains("increment")) {
+        this.#cartItems[index].quantity++;
+        this.#refreshCart();
+      } else if (e.target.classList.contains("decrement")) {
+        if (this.#cartItems[index].quantity > 1) {
+          this.#cartItems[index].quantity--;
+        } else {
+          this.#cartItems.splice(index, 1);
         }
+        this.#refreshCart();
+      } else if (e.target.classList.contains("delete")) {
+        this.#cartItems.splice(index, 1);
+        this.#refreshCart();
+      } else if (e.target.classList.contains("save-later")) {
+        const item = this.#cartItems[index];
+        this.#savedForLater.push({ ...item });
+        this.#cartItems.splice(index, 1);
+        this.#refreshCart();
+      }
     });
 
-    // Handle saved-for-later item buttons
+    // Handle saved-for-later actions
     savedItemsContainer.addEventListener("click", (e) => {
-        const index = e.target.dataset.index;
-        if (e.target.classList.contains("add-to-cart")) {
-            const item = this.#savedForLater[index];
-            // Ensure the quantity is set to 1 if it doesn't exist
-            this.#cartItems.push({
-                ...item,
-                quantity: item.quantity || 1,
-            });
-            this.#savedForLater.splice(index, 1);
-            this.#refreshCart();
-        }
+      const index = e.target.dataset.index;
+      if (e.target.classList.contains("add-to-cart")) {
+        const item = this.#savedForLater[index];
+        this.#cartItems.push({ ...item, quantity: item.quantity || 1 });
+        this.#savedForLater.splice(index, 1);
+        this.#refreshCart();
+      }
     });
-}
 
+    // Handle navigation to checkout
+    checkoutButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      hub.publish("cartData", {
+        cartItems: this.#cartItems,
+        totals: this.#calculateTotals(),
+      });
+      const appController = AppController.getInstance();
+      appController.navigate("secureCheckout");
+    });
+  }
 
-#refreshCart() {
+  #calculateTotals() {
+    const subtotal = this.#cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+    const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
+    const tax = subtotal * 0.1;
+    const total = subtotal + shipping + tax;
+
+    return { subtotal, shipping, tax, total };
+  }
+
+  #refreshCart() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
 
@@ -140,8 +159,7 @@ export class VirtualCart extends BaseComponent {
     this.#updateCartTotals();
   }
 
-
-#generateCartItems() {
+  #generateCartItems() {
     return this.#cartItems
       .map(
         (item, index) => `
@@ -166,8 +184,7 @@ export class VirtualCart extends BaseComponent {
       .join("");
   }
 
-
-#generateSavedItems() {
+  #generateSavedItems() {
     return this.#savedForLater
       .map(
         (item, index) => `
@@ -187,20 +204,12 @@ export class VirtualCart extends BaseComponent {
       .join("");
   }
 
-
-#updateCartTotals() {
-    const subtotal = this.#cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
-    const tax = subtotal * 0.1; // Example tax calculation (10%)
-    const total = subtotal + shipping + tax;
-
-    this.#container.querySelector("#subtotal").textContent = `$${subtotal.toFixed(2)}`;
-    this.#container.querySelector("#shipping").textContent = `$${shipping.toFixed(2)}`;
-    this.#container.querySelector("#tax").textContent = `$${tax.toFixed(2)}`;
-    this.#container.querySelector("#total").textContent = `$${total.toFixed(2)}`;
+  #updateCartTotals() {
+    const totals = this.#calculateTotals();
+    this.#container.querySelector("#subtotal").textContent = `$${totals.subtotal.toFixed(2)}`;
+    this.#container.querySelector("#shipping").textContent = `$${totals.shipping.toFixed(2)}`;
+    this.#container.querySelector("#tax").textContent = `$${totals.tax.toFixed(2)}`;
+    this.#container.querySelector("#total").textContent = `$${totals.total.toFixed(2)}`;
   }
 }
 
