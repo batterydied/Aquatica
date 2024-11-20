@@ -2,10 +2,10 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
-import { products } from "./Products.js";
-import { AppController } from "../../app/AppController.js";
+//import { products } from "./Products.js";
+//import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
-import { ProfileService } from "../../services/ProfileService.js";
+//import { ProfileService } from "../../services/ProfileService.js";
 import { EventHub, hub } from "../../eventhub/EventHub.js";
 
 export class MarketplacePage extends BaseComponent {
@@ -150,7 +150,7 @@ export class MarketplacePage extends BaseComponent {
         const searchInput = document.createElement("input");
         searchInput.classList.add("search-input");
         searchInput.type = "text";
-        searchInput.placeholder = "Search_"
+        searchInput.placeholder = "Search"
         searchInput.addEventListener("keyup", () => {
             this.regex = new RegExp(searchInput.value, "ig");
             this.reloadFilters();
@@ -458,26 +458,10 @@ export class MarketplacePage extends BaseComponent {
     }
 
     goToProductPage(prodid) {
-<<<<<<< HEAD
-        console.log(`going to product page for product: ${prodid}`);
-        // const appController = AppController.getInstance();
-        // const productService = ProductService.getInstance();
-        // productService.curProdId = prodid;
-        // appController.navigate("product");
-    }
-
-    goToSellerProfile(sellid) {
-        console.log(`going to profile page for seller: ${sellid}`);
-        // const appController = AppController.getInstance();
-        // const profileService = ProfileService.getInstance();
-        // profileService.curSellId = sellid;
-        // appController.navigate("profile");
-=======
         console.log(`going to product page for product ${prodid}`);
     }
 
     goToSellerProfile(sellid) {
         console.log(`going to profile page for seller ${sellid}`);
->>>>>>> main-app
     }
 }

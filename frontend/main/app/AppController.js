@@ -20,7 +20,7 @@ export class AppController {
       // Initialize components
       this.#views = {
          marketplace: new MarketplacePage(this),
-	       secureCheckout: new SecureCheckout(),
+	      secureCheckout: new SecureCheckout(),
   	  // virtualCart:  new VirtualCart(), 
 	    // navigationMenu: new NavigationMenu(),
 	    // productPage: new ProductPage(),
