@@ -3,8 +3,8 @@
 // Imports
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
 import { ProductService } from '../services/ProductService.js';
-import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
-import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
+// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
+// import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 // import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 // import { ProductPage } from '../components/ProductPage/ProductPage.js';
 // import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
@@ -19,8 +19,8 @@ export class AppController {
       // Initialize components
       this.#views = {
          marketplace: new MarketplacePage(this),
-	 secureCheckout: new SecureCheckout(),
-  	 virtualCart:  new VirtualCart(), 
+	 // secureCheckout: new SecureCheckout(),
+  	 // virtualCart:  new VirtualCart(), 
 	 // navigationMenu: new NavigationMenu(),
 	 // productPage: new ProductPage(),
 	 // profilePage: new ProfilePage(),
