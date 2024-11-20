@@ -1,4 +1,5 @@
 import { BaseComponent } from '../../app/BaseComponent.js';
+import { AppController } from "../../app/AppController.js";
 
 export class SecureCheckout extends BaseComponent {
   #container = null;
@@ -142,11 +143,8 @@ export class SecureCheckout extends BaseComponent {
     backLink.addEventListener('click', (event) => {
       event.preventDefault();
       console.log("Navigate back to the cart.");
-      // Uncomment this section when integrated with AppController
-      /*
       const appController = AppController.getInstance();
       appController.navigate("virtualCart");
-      */
     });
   }
 }
