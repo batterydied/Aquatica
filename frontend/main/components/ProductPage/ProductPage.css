@@ -184,4 +184,122 @@
     .product-selection{
         align-items: center;
     }
+
+    .reviewsAndRatingsContainer {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 5%;
+    }
+    
+    .reviewsAndRatings {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 50%; 
+    }
+    
+    .reviewsAndRatingsBar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: -30px;
+    }
+    
+    .reviewsTitle {
+        font-weight: bold;
+        font-size: 1.2rem;
+        display: inline-block;
+    }
+    
+    .addReviewButton {
+        background-color: #FFA41E; 
+        color: white; 
+        border: none; 
+        border-radius: 2px; 
+        padding: 10px 20px;
+        margin-top: 5%;
+        font-size: 16px;
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+    }
+    
+    .stars i {
+        color: gold; 
+        margin-right: 2px; 
+        font-size: 20px;
+    }
+    
+    .stars {
+        margin-left: 10px;
+        display: inline-block;
+    }
+    
+    .reviews {
+        margin-top: 20px;
+    }
+    
+    .review {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        border-top: 1px solid #ccc;
+        width: 100%; 
+    }
+    
+    .userStarsDate {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    
+    .user {
+        font-weight: bold; 
+        margin-bottom: 5px; 
+        display: inline-block;
+    }
+    
+    .date {
+        font-weight: bold; 
+        margin-bottom: 5px; 
+        display: inline-block;
+    }
+    
+    .comment {
+        font-size: 0.9em; 
+    }
+    
+    .review:last-child {
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .addReview {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .addReviewBox {
+        width: 200%;
+        height: 50%;
+    }
+    
+    .addRatingContainer {
+        display: flex;
+        direction: row;
+        cursor: pointer;
+    }
+    
+    .addRatingContainer i {
+        font-size: 2rem;
+        color: #ccc;
+        transition: color 0.3s ease;
+    }
+    
+    .addRatingContainer i.selected {
+        color: gold;
+    }
+      
+    .ratingValue {
+        font-size: 1rem;
+        margin-top: 10px;
+        font-weight: bold;
+    }
 }
