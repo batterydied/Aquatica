@@ -3,7 +3,12 @@
 // Imports
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
 import { ProductService } from '../services/ProductService.js';
-import { ProfileService } from '../services/ProfileService.js';
+import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
+import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
+// import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
+// import { ProductPage } from '../components/ProductPage/ProductPage.js';
+// import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
+
 
 export class AppController {
    #container = null;
@@ -13,14 +18,18 @@ export class AppController {
    constructor() {
       // Initialize components
       this.#views = {
-         marketplace: new MarketplacePage()
+         marketplace: new MarketplacePage(this),
+	 secureCheckout: new SecureCheckout(),
+  	 virtualCart:  new VirtualCart(), 
+	 // navigationMenu: new NavigationMenu(),
+	 // productPage: new ProductPage(),
+	 // profilePage: new ProfilePage(),
       };
-
-      // TESTING FOR MARKETPLACEPAGE
+	
       this.#currentView = this.#views.marketplace;
    }
 
-   /**
+	/**
    * Render the AppController container and initialize the default view.
    */
    render() {
@@ -36,6 +45,11 @@ export class AppController {
 
       return this.#container;
    }
+
+    // Render the navigationMenu only if not on SecureCheckout
+    // if (this.#currentView !== this.#views.secureCheckout) {
+    //  this.#container.appendChild(this.#navigationMenu.render());
+    // }
 
    /**
    * Public method to navigate to a different view.
@@ -60,4 +74,3 @@ export class AppController {
       return AppController.instance;
    }
 }
-
