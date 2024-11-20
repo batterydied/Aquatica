@@ -16,7 +16,12 @@ export class SecureCheckout extends BaseComponent {
     this.loadCSS("SecureCheckout");
 
     hub.subscribe("cartData", (data) => {
-      this.#updateCartReview(data.cartItems, data.totals);
+      // Wait for the container to render before updating the review
+      if (this.#container) {
+        this.#updateCartReview(data.cartItems, data.totals);
+      } else {
+        setTimeout(() => this.#updateCartReview(data.cartItems, data.totals), 0);
+      }
     });
   }
 
@@ -200,6 +205,12 @@ export class SecureCheckout extends BaseComponent {
     const subtotalEl = this.#container.querySelector("#subtotal");
     const shippingEl = this.#container.querySelector("#shipping");
     const totalEl = this.#container.querySelector("#total");
+
+    // Ensure elements exist before updating
+    if (!reviewItemsContainer || !subtotalEl || !shippingEl || !totalEl) {
+      console.error("Some elements are missing in the DOM.");
+      return;
+    }
 
     reviewItemsContainer.innerHTML = cartItems
       .map(
