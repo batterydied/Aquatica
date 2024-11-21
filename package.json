@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "Welcome to **Aquatica** – an e-commerce platform designed specifically for aquarium enthusiasts! Whether you’re a beginner looking to set up your first tank or an experienced aquarist seeking rare fish species, Aquatica is the go-to marketplace for all your aquarium needs.",
   "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "directories": {
+    "test": "tests"
   },
-  "keywords": [],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server ./ -c-1"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "bootstrap": "^5.3.3"
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }
