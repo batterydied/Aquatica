@@ -32,9 +32,19 @@ export class ProductPage extends BaseComponent {
     // Image Gallery
     const imageGallery = this.#createImageGallery();
 
+    const reviewsAndRatings = this.#createReviewsAndRatings();
     // Append all elements to the container
-    this.#container.appendChild(imageGallery);
-    this.#container.appendChild(productInfoPanel);
+
+    const top = document.createElement('div');
+    const bottom = document.createElement('div');
+    top.appendChild(imageGallery);
+    top.appendChild(productInfoPanel);
+    bottom.appendChild(reviewsAndRatings);
+    
+    top.className = 'topContainer';
+    bottom.className ='bottomContainer';
+    this.#container.appendChild(top);
+    this.#container.appendChild(bottom);
   }
   #createProductInfoPanel(){
     const titles = this.#createTitles();
@@ -217,5 +227,150 @@ export class ProductPage extends BaseComponent {
     shippingInfo.className = 'shipping-info';
 
     return shippingInfo;
+  }
+  #createReviewsAndRatings(){
+    const reviewsAndRatingsContainer = document.createElement('div');
+    reviewsAndRatingsContainer.className = 'reviewsAndRatingsContainer';
+
+    const reviewsAndRatings = document.createElement('div');
+    reviewsAndRatings.className = 'reviewsAndRatings';
+
+    const reviewsAndRatingsBar = document.createElement('div');
+    reviewsAndRatingsBar.className = 'reviewsAndRatingsBar';
+
+    const reviewsTitle = document.createElement('div');
+    reviewsTitle.innerText = `Reviews (${productData.product.reviewsCount}) ${productData.product.rating}`;
+    reviewsTitle.className = 'reviewsTitle';
+
+    const starsContainer = document.createElement('div'); 
+    starsContainer.className = 'stars';
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        star.className = i <= Math.floor(productData.product.rating) ? 'fas fa-star' : 'far fa-star';
+        starsContainer.appendChild(star);
+    }
+    reviewsTitle.appendChild(starsContainer);
+    reviewsAndRatingsBar.appendChild(reviewsTitle);
+
+    const customerReviews = document.createElement('div');
+    productData.product.reviews.forEach(review => {
+        const rev = document.createElement('div');
+        rev.className = 'review'; 
+
+        const userStarsDate = document.createElement('div');
+        userStarsDate.className = 'userStarsDate';
+        const userStars = document.createElement('div');
+
+        const user = document.createElement('div');
+        user.className = 'user';
+        user.innerText = `${review.user}`;
+        userStars.appendChild(user);
+
+
+
+        const revStarsContainer = document.createElement('div'); 
+        revStarsContainer.className = 'stars';
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+            star.className = i <= Math.floor(review.rating) ? 'fas fa-star' : 'far fa-star';
+            revStarsContainer.appendChild(star);
+        }
+        userStars.appendChild(revStarsContainer);
+
+        const date = document.createElement('div');
+        date.className = 'date';
+        date.innerText = `${review.date}`;
+        userStarsDate.appendChild(userStars);
+        userStarsDate.appendChild(date);
+
+
+        const comment = document.createElement('div');
+        comment.className = 'comment';
+        comment.innerText = `${review.comment}`;
+        rev.appendChild(userStarsDate);
+        rev.appendChild(comment);
+
+        customerReviews.appendChild(rev);
+    });
+    customerReviews.className = 'reviews';
+
+    reviewsAndRatings.appendChild(reviewsAndRatingsBar);
+    reviewsAndRatings.appendChild(customerReviews);
+
+    const addReview = document.createElement('div');
+    addReview.className = 'addReview';
+
+    const addRatingContainer = document.createElement('div')
+    addRatingContainer.className = 'addRatingContainer';
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        star.className = 'far fa-star'; 
+        star.dataset.value = i; 
+        addRatingContainer.appendChild(star);
+      }
+
+    const ratingValueDisplay = document.createElement('p');
+    ratingValueDisplay.className = 'ratingValue';
+    ratingValueDisplay.innerText = 'Rating: 0';
+
+    addReview.appendChild(addRatingContainer);
+    addReview.appendChild(ratingValueDisplay);
+
+    const stars = addRatingContainer.querySelectorAll('i');
+    let currentRating = 0;
+
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            currentRating = index + 1; 
+            updateRatingDisplay();
+        });
+
+        star.addEventListener('mouseover', () => highlightStars(index));
+        star.addEventListener('mouseout', updateRatingDisplay); 
+    });
+    function highlightStars(index) {
+      stars.forEach((star, i) => {
+          if (i <= index) {
+              star.classList.replace('far', 'fas'); 
+              star.classList.add('selected');
+          } else {
+              star.classList.replace('fas', 'far'); 
+              star.classList.remove('selected');
+          }
+      });
+  }
+
+  function updateRatingDisplay() {
+      stars.forEach((star, i) => {
+          if (i < currentRating) {
+              star.classList.replace('far', 'fas');
+              star.classList.add('selected');
+          } else {
+              star.classList.replace('fas', 'far'); 
+              star.classList.remove('selected');
+          }
+      });
+  ratingValueDisplay.innerText = `Rating: ${currentRating}`;
+  }
+
+
+  const addReviewBox = document.createElement('input');
+  addReviewBox.className = 'addReviewBox';
+  addReviewBox.type = 'text';
+  addReviewBox.placeholder = 'Add review'
+  addReview.appendChild(addReviewBox);
+
+  const addReviewButton = document.createElement('button');
+  addReviewButton.textContent = ' + Add Review';
+  addReviewButton.className = 'addReviewButton';
+
+
+  addReview.appendChild(addReviewButton);
+
+  reviewsAndRatingsContainer.appendChild(reviewsAndRatings);
+  reviewsAndRatingsContainer.appendChild(addReview);
+    return reviewsAndRatingsContainer;
   }
 }
