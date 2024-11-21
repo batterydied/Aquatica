@@ -29,7 +29,7 @@ export class AppController {
       };
 	
 
-      this.#currentView = this.#views.virtualCart;
+      this.#currentView = this.#views.productPage
    }
 
 	/**
