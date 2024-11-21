@@ -9,7 +9,7 @@ import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
 // import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 
-// import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
+import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 
 
 export class AppController {
@@ -25,11 +25,11 @@ export class AppController {
   	      virtualCart:  new VirtualCart(), 
 	    // navigationMenu: new NavigationMenu(),
 	      productPage: new ProductPage(),
-	    // profilePage: new ProfilePage(),
+	      profilePage: new ProfilePage(),
       };
 	
 
-      this.#currentView = this.#views.productPage;
+      this.#currentView = this.#views.profilePage;
    }
 
 	/**
