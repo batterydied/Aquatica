@@ -6,8 +6,9 @@ import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.j
 import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
-// import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
+// import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
+
 // import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 
 
@@ -28,7 +29,7 @@ export class AppController {
       };
 	
 
-      this.#currentView = this.#views.marketplace;
+      this.#currentView = this.#views.productPage;
    }
 
 	/**

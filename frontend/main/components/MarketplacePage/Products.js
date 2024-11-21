@@ -280,4 +280,3 @@ export const products = [
       price: 11.99
     }
 ];
-//hi

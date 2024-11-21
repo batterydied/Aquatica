@@ -6,4 +6,3 @@ export const PriceBrackets = {
     bracket5: "$500 - $1000",
     bracket6: "Over $1000"
 }
-//hi
