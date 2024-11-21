@@ -6,6 +6,7 @@ export class AppController {
   #container = null;
   #currentView = null; // Track the currently rendered view
   #views = {}; // Store initialized views
+  
 
   constructor() {
     // Initialize components
