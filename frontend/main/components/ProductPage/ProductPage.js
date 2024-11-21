@@ -88,6 +88,7 @@ export class ProductPage extends BaseComponent {
       img.className = 'thumbnail-img';
       img.addEventListener('mouseover', ()=>{
         mainImage.src = img.src;
+        img.classList.add('image-border');
       });
       imagePanel.appendChild(img);
     });

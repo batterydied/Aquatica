@@ -94,6 +94,9 @@
     filter: brightness(0.80);
 }
 
+.image-border{
+    border: 0.5rem solid black;
+}
 .product-selection {
     display: flex;
     flex-direction: column;
