@@ -1,188 +1,70 @@
-/* Reset box-sizing */
-.navigation-menu,
-.navigation-menu * {
-  box-sizing: border-box;
-}
 
-/* main navigation container */
+/* Main Navigation Container */
 .navigation-menu {
-  background: #232c3c;
+  background-color: #232c3c; /* Dark background */
   display: flex;
-  /* flex-direction: row;  --> default for desktop */
-  flex-direction: column; 
-    /* TODO need resize for responsive */
-  /* default for small screen */
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between; /* Separate logo and buttons to opposite ends */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 10px 0;
-
+  padding: 10px 40px; /* Add padding to push content inward */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
 }
 
-/* Header container */
-.header{
+/* Logo Button */
+.logo-button {
   display: flex;
+  align-items: center;
+  flex: 0; /* Prevents the logo from growing */
+  margin-right: 20px; /* Add space between the logo and the navbar content */
+}
+
+.logo-image {
+  height: 50px; /* Adjust height for balance */
+  width: auto;
+}
+
+/* Navigation Buttons Container */
+.nav-buttons-container {
+  display: flex;
+  margin-right: 50px;
+  flex-direction: row; /* Keep buttons in a horizontal line */
+  align-items: center; /* Align buttons vertically in the center */
+  gap: 30px; /* Increase spacing between nav buttons */
+  flex: 0; /* Prevents the buttons container from growing */
+}
+
+/* Navigation Button */
+.nav-button {
+  display: flex;
+  flex-direction: column; /* Stack icon and text */
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 1200px;
-    /* TODO need resize for responsive */
-  padding: 0px 20;
-}
-
-/* LOGO container */
-.logo-button {
-  align-self: stretch;
-  flex: 1;
-  height: auto;
-  max-width: 120px;
-  /* mouse pointer changes */
-  cursor: pointer; 
-  /* TODOneed resize for responsive */
-}
-
-/* Buttons container */
-.sell-button,
-.cart-button,
-.save-list-button,
-.profile-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  /* justify-content: center; */
-  padding: 10 px;
-  gap: 8 px;
-  margin: 0 10px;
+  padding: 5px;
   cursor: pointer;
   color: #ffffff;
-  flex-wrap: wrap;
-  align-content: center;
-  align-self: stretch;
-  flex: 1;
-  position: relative;
-    /* TODO need resize for responsive */
+  text-decoration: none;
+  transition: all 0.3s ease; /* Smooth hover effect */
 }
 
-/* Buttons contents */
-.sell {
-  background: linear-gradient(to left, #ffffff, #ffffff);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: right;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 4.528934001922607rem;
-  line-height: 3.686875rem;
-  letter-spacing: -0.019em;
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Highlight on hover */
+  border-radius: 5px;
+}
+
+.nav-icon {
+  width: 30px; /* Icon size */
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.nav-text {
+  font-family: "Inter", sans-serif;
+  font-size: 14px; /* Readable font size */
   font-weight: 500;
-  position: relative;
-  flex: 1;
-  height: 10.67625rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  text-align: center;
+  color: #ffffff;
 }
-
-/* changes here for all icons */
-.icons {
-  flex-shrink: 0;
-  width: 5.858125rem;
-  height: 5.858125rem;
-  position: relative;
-  overflow: visible;
-}
-
-.virtual-cart {
-  background: linear-gradient(to left, #ffffff, #ffffff);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: right;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 4.528934001922607rem;
-  line-height: 3.686875rem;
-  letter-spacing: -0.019em;
-  font-weight: 500;
-  position: relative;
-  flex: 1;
-  height: 12.980625rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.save-for-later {
-  background: linear-gradient(to left, #ffffff, #ffffff);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: right;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 4.528934001922607rem;
-  line-height: 3.686875rem;
-  letter-spacing: -0.019em;
-  font-weight: 500;
-  position: relative;
-  flex: 1;
-  height: 14.835rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-
-.user-center {
-  background: linear-gradient(to left, #ffffff, #ffffff);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: right;
-  font-family: "Inter-Medium", sans-serif;
-  font-size: 4.528934001922607rem;
-  line-height: 3.686875rem;
-  letter-spacing: -0.019em;
-  font-weight: 500;
-  position: relative;
-  flex: 1;
-  height: 12.886875rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-/* .person-fill {
-  width: 75%;
-  height: 75%;
-  position: absolute;
-  right: 12.5%;
-  left: 12.5%;
-  bottom: 12.5%;
-  top: 12.5%;
-  overflow: visible;
-} */
-
-/* Responsive Styles Awaiting */
-/* Mobile - Default styles (0em - 47.9em) /
-@media screen and (max-width: 47.9em) { / 0px - 767px /
-    / Mobile-specific styles /
-}
-
-/ Tablet (48em - 63.9em) /
-@media screen and (min-width: 48em) and (max-width: 63.9em) { / 768px - 1023px /
-    / Tablet-specific styles /
-}
-
-/ Desktop (64em - 74.9em) /
-@media screen and (min-width: 64em) and (max-width: 74.9em) { / 1024px - 1199px /
-    / Desktop-specific styles /
-}
-
-/ Large screens (75em and up) /
-@media screen and (min-width: 75em) { / 1200px and up /
-    / Large screen-specific styles }.}
-*/

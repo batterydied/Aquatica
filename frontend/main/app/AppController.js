@@ -1,6 +1,5 @@
 import { ProfilePage } from "../components/ProfilePage/ProfilePage.js";
-import { SecureCheckout } from '../components/SecureCheckout/securecheckout.js';
-import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
+import { NavigationMenu } from '../components/NavigationMenu/navigationmenu.js';
 
 export class AppController {
   #container = null;
@@ -10,13 +9,12 @@ export class AppController {
   constructor() {
     // Initialize components
     this.#views = {
-      cart: new VirtualCart(this), // Pass AppController instance to VirtualCart ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
-      checkout: new SecureCheckout(),
       profile: new ProfilePage(),
+      navigationMenu: new NavigationMenu(this)
     };
 
     // Set the initial view for testing ((THIS IS JUST FOR TESTING MY (DEVIN) COMPONENTS))
-    this.#currentView = this.#views.cart;
+    this.#currentView = this.#views.navigationMenu;
   }
 
   /**

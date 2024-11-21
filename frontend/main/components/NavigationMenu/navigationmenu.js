@@ -1,83 +1,64 @@
-export function navigationMenu(container) {
+import { AppController } from '../../app/AppController.js';
+import { BaseComponent } from '../../app/BaseComponent.js';
+export class NavigationMenu extends BaseComponent {
   constructor() {
+    super();
     this.container = document.createElement("div");
     this.container.classList.add("navigation-menu");
-
+    this.loadCSS("navigationmenu");
     this.createHeader();
     this.attachEventListeners();
   }
 
-  createHeader() {
-    const header = document.createElement("div");
-    header.classList.add("header");
 
-    // Logo
-    const logoButton = document.createElement("div");
-    logoButton.classList.add("logo-button");
+createHeader() {
+  const header = document.createElement("div");
+  header.classList.add("navigation-menu");
 
-    const logoImage = document.createElement("img");
-    logoImage.src =
-      "https://github.com/batterydied/Aquatica/blob/6b4de9b95524fb1032619fbe91e69632eebeb230/frontend/assets/navigation-menu/logo-1.svg";
-    logoImage.alt = "Logo";
-    logoImage.classList.add("logo-image");
-    logoButton.appendChild(logoImage);
+  // Logo Section
+  const logoButton = document.createElement("div");
+  logoButton.classList.add("logo-button");
 
-    header.appendChild(logoButton);
+  const logoImage = document.createElement("img");
+  logoImage.src = "../../../assets/navigation-menu/logo-0.svg";
+  logoImage.alt = "Logo";
+  logoImage.classList.add("logo-image");
+  logoButton.appendChild(logoImage);
 
-    // Links with SVG icons
-    const links = [
-      {
-        text: "Sell",
-        src: "https://github.com/batterydied/Aquatica/blob/6b4de9b95524fb1032619fbe91e69632eebeb230/frontend/assets/navigation-menu/sell-0.svg",
-        className: "sell-button",
-        target: "sellPage",
-      },
-      {
-        text: "Virtual Cart",
-        src: "https://github.com/batterydied/Aquatica/blob/6b4de9b95524fb1032619fbe91e69632eebeb230/frontend/assets/navigation-menu/cart-0.svg",
-        className: "cart-button",
-        target: "virtualCart",
-      },
-      {
-        text: "Save For Later",
-        src: "https://github.com/batterydied/Aquatica/blob/6b4de9b95524fb1032619fbe91e69632eebeb230/frontend/assets/navigation-menu/save-0.svg",
-        className: "save-list-button",
-        target: "saveForLater",
-      },
-      {
-        text: "User Center",
-        src: "https://github.com/batterydied/Aquatica/blob/6b4de9b95524fb1032619fbe91e69632eebeb230/frontend/assets/navigation-menu/profile-0.svg",
-        className: "profile-button",
-        target: "profilePage",
-      },
-    ];
+  // Navigation Buttons Section
+  const navButtonsContainer = document.createElement("div");
+  navButtonsContainer.classList.add("nav-buttons-container");
 
-    links.forEach((link) => {
-      const button = document.createElement("div");
-      button.classList.add("nav-button", link.className);
+  const links = [
+    { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
+    { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "sellerPage" },
+    { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
+    { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
+  ];
 
-      // Add SVG icon
-      const icon = document.createElement("img");
-      icon.src = link.src;
-      icon.alt = `${link.text} icon`;
-      icon.classList.add("nav-icon");
-      button.appendChild(icon);
+  links.forEach((link) => {
+    const button = document.createElement("div");
+    button.classList.add("nav-button", link.className);
 
-      // Add text
-      const textElement = document.createElement("span");
-      textElement.textContent = link.text;
-      textElement.classList.add("nav-text");
-      button.appendChild(textElement);
+    const icon = document.createElement("img");
+    icon.src = link.src;
+    icon.alt = `${link.text} icon`;
+    icon.classList.add("nav-icon");
+    button.appendChild(icon);
 
-      // Set navigation target
-      button.dataset.target = link.target;
+    const textElement = document.createElement("span");
+    textElement.textContent = link.text;
+    textElement.classList.add("nav-text");
+    button.appendChild(textElement);
 
-      header.appendChild(button);
-    });
+    navButtonsContainer.appendChild(button);
+  });
 
-    this.container.appendChild(header);
-  }
-
+  // Append Logo and Navigation Buttons to the Header
+  header.appendChild(logoButton);
+  header.appendChild(navButtonsContainer);
+  this.container.appendChild(header);
+}
   attachEventListeners() {
     this.container.addEventListener("click", (event) => {
       const button = event.target.closest(".nav-button");
