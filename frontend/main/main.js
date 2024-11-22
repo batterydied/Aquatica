@@ -4,7 +4,7 @@ import { AppController } from './app/AppController.js';
 const appContainer = document.getElementById('app');
 
 // Create an instance of the main app controller
-const appController = new AppController();
+const appController = AppController.getInstance();
 
 // Render the appController and append it to the HTML container
 appContainer.appendChild(appController.render());

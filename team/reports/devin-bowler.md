@@ -32,3 +32,31 @@
 **Link to Commit:** [Commit Link](https://github.com/batterydied/Aquatica/compare/913e87a88901a5289041e08ec2847c4fdef5c66b...c6b2439a2e77fda953a336aa9facd8969e711f17)
 
 ---
+
+## November 12, 2024
+**Task:** AppController and BaseComponent Setup  
+**Details:** Designed and implemented the foundational architecture for the app, enabling a modular and scalable approach for rendering views and managing state.
+**Link to Commit:** [Commit Link](https://github.com/batterydied/Aquatica/commit/60e78df90353072a70173492cc7cdacded63900f)
+
+---
+
+## November 17, 2024
+**Task:** VirtualCart Feature
+**Details:** Completed the VirtualCart functionality, allowing users to add, remove, and update items dynamically in their cart.
+**Link to Commit:** [Commit Link](https://github.com/batterydied/Aquatica/commit/88a9690a1c7997c9f291793f3680d76428aee3fd)
+
+---
+
+## November 17, 2024
+**Task:** SecureCheckout Feature 
+**Details:** Developed the SecureCheckout module, integrating payment form validation and navigation to ensure a seamless user checkout experience.
+**Link to Commit:** [Commit Link](https://github.com/batterydied/Aquatica/commit/28332935955c7481e435dd71250b05aa56018bb1)
+
+---
+
+## November 21, 2024
+**Task:** NavigationBar Assistance
+**Details:** Assisted in the creation of the NavigationBar, re-structuring the code, and ensuring it integrates properly with the AppController for smooth navigation across features.
+**Link to Commit:** [Commit Link](https://github.com/batterydied/Aquatica/commit/dc41c79269d50eda4308b06ef39a99fb9d196709)
+
+---
