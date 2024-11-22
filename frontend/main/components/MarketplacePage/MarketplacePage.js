@@ -70,6 +70,7 @@ export class MarketplacePage extends BaseComponent {
     }
 
     render() {
+        this.container.innerHTML = "";
         //background image and logo
         const bg = document.createElement("div");
         bg.classList.add("background");

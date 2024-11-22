@@ -11,6 +11,7 @@ export class NavigationMenu extends BaseComponent {
   }
 
 
+
 createHeader() {
   const header = document.createElement("div");
   header.classList.add("navigation-menu");
@@ -31,7 +32,7 @@ createHeader() {
 
   const links = [
     { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
-    { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "sellerPage" },
+    { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "productPage" },
     { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
     { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
   ];
@@ -39,6 +40,9 @@ createHeader() {
   links.forEach((link) => {
     const button = document.createElement("div");
     button.classList.add("nav-button", link.className);
+
+    // Set the data-target attribute
+    button.dataset.target = link.target;
 
     const icon = document.createElement("img");
     icon.src = link.src;
@@ -59,6 +63,8 @@ createHeader() {
   header.appendChild(navButtonsContainer);
   this.container.appendChild(header);
 }
+
+
   attachEventListeners() {
     this.container.addEventListener("click", (event) => {
       const button = event.target.closest(".nav-button");

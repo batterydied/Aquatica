@@ -19,38 +19,34 @@ export class AppController {
    constructor() {
       // Initialize components
       this.#views = {
-         marketplace: new MarketplacePage(this),
-	       secureCheckout: new SecureCheckout(),
-  	     virtualCart:  new VirtualCart(), 
-	       navigationMenu: new NavigationMenu(),
-	       productPage: new ProductPage(),
-	       profilePage: new ProfilePage()
-      };
+         marketplace: new MarketplacePage(),
+	 secureCheckout: new SecureCheckout(),
+  	 virtualCart:  new VirtualCart(), 
+	 navigationMenu: new NavigationMenu(),
+	 productPage: new ProductPage(),
+	 profilePage: new ProfilePage()
+      }=	;
 	
 
       this.#currentView = this.#views.marketplace;
    }
 
 
-   render() {
-      // Create the main container if not already created
-      if (!this.#container) {
-         this.#container = document.createElement('div');
-         this.#container.classList.add('app-controller');
-      }
+  render() {
+    if (!this.#container) {
+      this.#container = document.createElement('div');
+      this.#container.classList.add('app-controller');
+    }
 
-      // Render the current view (Cart for testing)
-      this.#container.innerHTML = ''; // Clear previous content
-      this.#container.appendChild(this.#currentView.render());
+    this.#container.innerHTML = '';
+    this.#container.appendChild(this.#currentView.render());
 
-      return this.#container;
-   }
-
-    // Render the navigationMenu only if not on SecureCheckout
     if (this.#currentView !== this.#views.secureCheckout) {
-      this.#container.appendChild(this.#navigationMenu.render());
-     }
+      this.#container.appendChild(this.#views.navigationMenu.render());
+    }
 
+    return this.#container;
+  }
    /**
    * Public method to navigate to a different view.
    * @param {string} viewName - The name of the view to navigate to.
