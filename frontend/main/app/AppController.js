@@ -7,7 +7,7 @@ import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
-import { NavigationMenu } from '../components/NavigationMenu/navigationmenu.js';
+import { NavigationMenu } from '../components/NavigationMenu/navigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 
 
@@ -15,19 +15,21 @@ export class AppController {
    #container = null;
    #currentView = null; // Track the currently rendered views
    #views = {}; // Store initialized views
+   #navigationMenu = null; // Store the navigation menu separately and add on views
 
    constructor() {
       // Initialize components
       this.#views = {
          marketplace: new MarketplacePage(this),
-	       secureCheckout: new SecureCheckout(),
-  	     virtualCart:  new VirtualCart(), 
-	       navigationMenu: new NavigationMenu(),
-	       productPage: new ProductPage(),
-	       profilePage: new ProfilePage()
+	      productPage: new ProductPage(),
+	      profilePage: new ProfilePage(),
+         virtualCart:  new VirtualCart(), 
+         secureCheckout: new SecureCheckout()
       };
-	
+	   // Initialize navigation menu
+      this.#navigationMenu = new NavigationMenu();
 
+      // Default Page set as marketplace page
       this.#currentView = this.#views.marketplace;
    }
 
@@ -39,17 +41,19 @@ export class AppController {
          this.#container.classList.add('app-controller');
       }
 
-      // Render the current view (Cart for testing)
-      this.#container.innerHTML = ''; // Clear previous content
+      // Clear previous content
+      this.#container.innerHTML = ''; 
+      // Render the navigationMenu only if not on SecureCheckout
+      if (this.#currentView != this.#views.secureCheckout) {
+         this.#container.appendChild(this.#navigationMenu.render());
+      }
+      // Render the current view
       this.#container.appendChild(this.#currentView.render());
 
       return this.#container;
    }
 
-    // Render the navigationMenu only if not on SecureCheckout
-    if (this.#currentView !== this.#views.secureCheckout) {
-      this.#container.appendChild(this.#navigationMenu.render());
-     }
+
 
    /**
    * Public method to navigate to a different view.
