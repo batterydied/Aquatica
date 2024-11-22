@@ -8,6 +8,7 @@ export class ProfileService extends Service {
         this.initDB();
     }
 
+    
     async initDB() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.dbName, 1);

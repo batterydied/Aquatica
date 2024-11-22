@@ -7,7 +7,7 @@ export class ProfilePage extends BaseComponent {
     constructor() {
         super();
         this.container.classList.add('profile-page');
-
+        
         this.currentUser = userinfo[0]; //only shows the first user now, but will change later
 
         this.profileContainer = document.createElement("div");
