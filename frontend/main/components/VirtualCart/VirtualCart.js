@@ -126,6 +126,14 @@ export class VirtualCart extends BaseComponent {
     });
 
     // Handle navigation to checkout
+    const backLink = this.#container.querySelector(".back-link");
+    backLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      const appController = AppController.getInstance();
+      appController.navigate("marketplace");
+    });
+
+    // Handle navigation to checkout
     checkoutButton.addEventListener("click", (e) => {
       e.preventDefault();
       hub.publish("cartData", {
