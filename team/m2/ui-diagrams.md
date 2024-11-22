@@ -53,3 +53,49 @@ On this screen, users can interact with five main elements:
 **Use Case**: 
 
 A user wants to communicate with two seller and comparing the price for a same breed, they can use the private chat channel and ask the seller for more detailed information, disease-free certificate, bargain, and make the final decision.
+
+---
+
+## Product Page Screen
+
+The **Product Page** provides users with detailed information about a specific product, including its description, images, and interactive UI elements. It allows users to view, customize, and purchase products easily while offering a visually appealing and intuitive design.
+
+![Product Page Layout](https://github.com/user-attachments/assets/8cfa68d4-618f-4a55-841b-55161a53ebab)
+
+On this screen, users can interact with several main elements:
+
+1. **Image Gallery**: 
+   - A vertical panel on the left displays product thumbnails.
+   - Hovering over a thumbnail dynamically updates the main product image.
+   - The main image occupies the center, allowing users to view the product in high detail.
+
+2. **Product Titles and Description**:
+   - The top-right panel displays the product name, scientific name, and a brief description.
+   - The description highlights the product's unique features and specifications.
+
+3. **Pricing and Product Types**:
+   - Includes a dropdown for selecting product types, dynamically updating the displayed price.
+   - Ensures users can easily understand product variations and their associated costs.
+
+4. **Quantity Selector**:
+   - Features "+" and "-" buttons to increment or decrement the product quantity.
+   - A numeric input allows users to manually set the quantity, with validation to prevent values below `1`.
+
+5. **Action Buttons**:
+   - **Add to Cart Button**: Adds the selected product to the user's shopping cart.
+   - Planned buttons:
+     - **Save for Later**: Allows users to save the product for future reference.
+     - **Buy Now**: Enables quick purchase functionality.
+
+6. **Product Information Panel**:
+   - Includes key product details such as:
+     - Shipping information (e.g., cost and delivery time).
+     - Specifications (e.g., size, tank requirements, and care level).
+   - Provides a clear and accessible layout for users to review essential information at a glance.
+
+**Use Case**:
+A user browsing the store selects a product to view detailed information. They hover over the thumbnails to inspect various product images, select a different product type from the dropdown, adjust the quantity to `2`, and add the product to their cart. The clear layout and responsive design ensure seamless interaction across devices.
+
+---
+
+
