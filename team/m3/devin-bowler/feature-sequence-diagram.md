@@ -1,37 +1,34 @@
+```mermaid
 sequenceDiagram
     participant User
     participant UI as User Interface
     participant JS as JavaScript Logic
-    participant DB as IndexedDB
 
     User->>UI: Opens the Cart Page
     UI->>JS: Request to Load Cart Data
-    JS->>DB: Fetch cart items from IndexedDB
-    DB-->>JS: Return cart items
-    JS->>UI: Render cart items in the UI
+    JS-->>UI: Render cart items and saved-for-later items
 
-    User->>UI: Clicks "Add to Cart" on a product
+    User->>UI: Clicks "Add to Cart" on a saved-for-later item
     UI->>JS: Trigger "addToCart" event
-    JS->>DB: Check if item exists in IndexedDB
-    alt Item exists
-        DB->>JS: Increment item quantity
-    else Item doesn't exist
-        DB->>JS: Add new item to IndexedDB
-    end
-    JS->>UI: Update cart UI with new data
+    JS->>UI: Move item from Saved for Later to Cart, retaining price and quantity
 
-    User->>UI: Adjusts item quantity (increment/decrement)
+    User->>UI: Clicks "Save for Later" on a cart item
+    UI->>JS: Trigger "saveForLater" event
+    JS->>UI: Move item from Cart to Saved for Later, retaining price and quantity
+
+    User->>UI: Adjusts item quantity in the cart (increment/decrement)
     UI->>JS: Trigger "updateQuantity" event
-    JS->>DB: Update item quantity in IndexedDB
-    DB-->>JS: Confirm update
-    JS->>UI: Reflect updated quantity and price
+    JS->>UI: Update item quantity and reflect in the UI
 
     User->>UI: Removes an item from the cart
-    UI->>JS: Trigger "removeItem" event
-    JS->>DB: Delete item from IndexedDB
-    DB-->>JS: Confirm deletion
-    JS->>UI: Remove item from UI
+    UI->>JS: Trigger "deleteItem" event
+    JS->>UI: Remove item from the Cart UI
+
+    User->>UI: Removes an item from the saved-for-later list
+    UI->>JS: Trigger "deleteSavedItem" event
+    JS->>UI: Remove item from the Saved for Later UI
 
     User->>UI: Proceeds to Checkout
     UI->>JS: Trigger navigation to Checkout Page
     JS->>UI: Render Checkout Page
+```
