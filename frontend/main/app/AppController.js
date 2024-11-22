@@ -25,7 +25,7 @@ export class AppController {
 	 navigationMenu: new NavigationMenu(),
 	 productPage: new ProductPage(),
 	 profilePage: new ProfilePage()
-      }=	;
+      };
 	
 
       this.#currentView = this.#views.marketplace;
