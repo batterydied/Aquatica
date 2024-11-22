@@ -27,4 +27,3 @@ export class EventHub {
 }
 
 export const hub = new EventHub();
-
