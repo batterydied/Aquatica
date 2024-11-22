@@ -20,7 +20,7 @@ createHeader() {
   logoButton.classList.add("logo-button");
 
   const logoImage = document.createElement("img");
-  logoImage.src = "../../../assets/navigation-menu/logo-0.svg";
+  logoImage.src = "../../../assets/navigation-menu/logo-1.svg";
   logoImage.alt = "Logo";
   logoImage.classList.add("logo-image");
   logoButton.appendChild(logoImage);
@@ -30,8 +30,8 @@ createHeader() {
   navButtonsContainer.classList.add("nav-buttons-container");
 
   const links = [
-    { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
-    { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "sellerPage" },
+    // { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
+    { text: "Seller Page", src: "../../../assets/navigation-menu/sell-0.svg", className: "sell-button", target: "sellerPage" },
     { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
     { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
   ];
