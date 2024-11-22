@@ -1,7 +1,7 @@
 
 /* Main Navigation Container */
 .navigation-menu {
-  background-color: #232c3c; /* Dark background */
+  background-color: #232c3c; /* Dark Blue background: theme color #232c3c */
   display: flex;
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between; /* Separate logo and buttons to opposite ends */
