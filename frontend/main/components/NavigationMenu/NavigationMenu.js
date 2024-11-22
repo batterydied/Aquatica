@@ -5,65 +5,79 @@ export class NavigationMenu extends BaseComponent {
     super();
     this.container = document.createElement("div");
     this.container.classList.add("navigation-menu");
-    this.loadCSS("navigationmenu");
+    this.loadCSS("NavigationMenu");
     this.createHeader();
     this.attachEventListeners();
   }
 
 
 
-createHeader() {
-  const header = document.createElement("div");
-  header.classList.add("navigation-menu");
+  createHeader() {
+    const header = document.createElement("div");
+    header.classList.add("navigation-menu");
 
-  // Logo Section
-  const logoButton = document.createElement("div");
-  logoButton.classList.add("logo-button");
 
-  const logoImage = document.createElement("img");
-  logoImage.src = "../../../assets/navigation-menu/logo-0.svg";
-  logoImage.alt = "Logo";
-  logoImage.classList.add("logo-image");
-  logoButton.appendChild(logoImage);
+    // Logo Section
+    const logoButton = document.createElement("div");
+    // Logo Unique CSS
+    logoButton.classList.add("logo-button");
+    // Link for Marketplace
+    logoButton.classList.add("nav-button");
+    logoButton.dataset.target = "marketplace";
 
-  // Navigation Buttons Section
-  const navButtonsContainer = document.createElement("div");
-  navButtonsContainer.classList.add("nav-buttons-container");
+    const logoImage = document.createElement("img");
+    logoImage.src = "/frontend/assets/navigation-menu/logo-light.png";
+    logoImage.alt = "Logo";
+    logoImage.classList.add("logo-image");
+    logoButton.appendChild(logoImage);
 
-  const links = [
-    { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
-    { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "productPage" },
-    { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
-    { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
-  ];
+    // Navigation Buttons Section
+    const navButtonsContainer = document.createElement("div");
+    navButtonsContainer.classList.add("nav-buttons-container");
 
-  links.forEach((link) => {
-    const button = document.createElement("div");
-    button.classList.add("nav-button", link.className);
 
-    // Set the data-target attribute
-    button.dataset.target = link.target;
+    const links = [
+      { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
+      { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "productPage" },
+      { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
+      { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
+    ];
 
-    const icon = document.createElement("img");
-    icon.src = link.src;
-    icon.alt = `${link.text} icon`;
-    icon.classList.add("nav-icon");
-    button.appendChild(icon);
 
-    const textElement = document.createElement("span");
-    textElement.textContent = link.text;
-    textElement.classList.add("nav-text");
-    button.appendChild(textElement);
+    links.forEach((link) => {
+      const button = document.createElement("div");
+      button.classList.add("nav-button", link.className);
 
-    navButtonsContainer.appendChild(button);
-  });
+      // Set the data-target attribute
+      button.dataset.target = link.target;
+
+      // Add text first
+      const textElement = document.createElement("span");
+      textElement.textContent = link.text;
+      textElement.classList.add("nav-text");
+      button.appendChild(textElement);
+
+      // Add icon second
+      const icon = document.createElement("img");
+      icon.src = link.src;
+      icon.alt = `${link.text} icon`;
+      icon.classList.add("nav-icon");
+      button.appendChild(icon);
+
+      navButtonsContainer.appendChild(button);
+    });
+
+    // Append Logo and Navigation Buttons to the Header
+    header.appendChild(logoButton);
+    header.appendChild(navButtonsContainer);
+    this.container.appendChild(header);
+  }
 
   // Append Logo and Navigation Buttons to the Header
   header.appendChild(logoButton);
   header.appendChild(navButtonsContainer);
   this.container.appendChild(header);
 }
-
 
   attachEventListeners() {
     this.container.addEventListener("click", (event) => {

@@ -398,7 +398,7 @@ export class MarketplacePage extends BaseComponent {
         this.end = 5;
     }
 
-    reStyleButtons(buttonClass) {
+    reStyleButtons(buttonClass) {  //__Fix_Me__: Restyle Price Buttons
         const buttons = document.querySelectorAll(`.${buttonClass}`);
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].style.backgroundColor = "#FFFFFF";

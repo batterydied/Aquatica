@@ -7,7 +7,7 @@ import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
-import { NavigationMenu } from '../components/NavigationMenu/navigationmenu.js';
+import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 
 
@@ -15,6 +15,7 @@ export class AppController {
    #container = null;
    #currentView = null; // Track the currently rendered views
    #views = {}; // Store initialized views
+   #navigationMenu = null; // Store the navigation menu separately and add on views
 
    constructor() {
       // Initialize components
@@ -26,8 +27,8 @@ export class AppController {
 	 productPage: new ProductPage(),
 	 profilePage: new ProfilePage()
       };
-	
 
+      // Default Page set as marketplace page
       this.#currentView = this.#views.marketplace;
    }
 
