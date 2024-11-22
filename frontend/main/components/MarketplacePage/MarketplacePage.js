@@ -2,7 +2,7 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
-//import { products } from "./Products.js";
+import { products } from "./Products.js";
 //import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
 //import { ProfileService } from "../../services/ProfileService.js";
@@ -12,9 +12,11 @@ export class MarketplacePage extends BaseComponent {
     constructor() {
         super();
         this.container.classList.add('marketplace-page');
-        this.fullProdList = [];
-        this.prodList = [];
-        //this.getProdList();
+        this.fullProdList = products;
+        for (let i = 0; i < this.fullProdList.length; i++) {
+            this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+        }
+        this.prodList = this.fullProdList;
         this.marketplace = document.createElement("div");
 
         hub.subscribe("retrievedProduct", (data) => {
@@ -26,7 +28,7 @@ export class MarketplacePage extends BaseComponent {
             this.renderMarketplace();
         });
 
-        this.getProdList();
+        //this.getProdList();
 
         this.curCategory = "All";
         this.curBracket = "All";
@@ -135,7 +137,7 @@ export class MarketplacePage extends BaseComponent {
 
         for (let bracket in PriceBrackets) {
             const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
-            bracketButton.id = bracket;
+            bracketButton.id = PriceBrackets[bracket];
             priceBox.appendChild(bracketButton);
         }
 
@@ -414,6 +416,7 @@ export class MarketplacePage extends BaseComponent {
             curButton.style.color = "#FFFFFF";
         }
         if (this.curBracket !== "All") {
+            console.log(this.curBracket);
             const curButton = document.getElementById(this.curBracket);
             curButton.style.backgroundColor = "#43608D";
             curButton.style.color = "#FFFFFF";
