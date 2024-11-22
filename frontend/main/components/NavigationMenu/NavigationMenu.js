@@ -26,7 +26,7 @@ export class NavigationMenu extends BaseComponent {
     logoButton.dataset.target = "marketplace";
 
     const logoImage = document.createElement("img");
-    logoImage.src = "/frontend/assets/navigation-menu/logo-light.png";
+    logoImage.src = "../../../assets/navigation-menu/logo-light.png";
     logoImage.alt = "Logo";
     logoImage.classList.add("logo-image");
     logoButton.appendChild(logoImage);
