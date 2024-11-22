@@ -2,16 +2,32 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
-import { products } from "./Products.js";
+//import { products } from "./Products.js";
+//import { AppController } from "../../app/AppController.js";
+import { ProductService} from "../../services/ProductService.js";
+//import { ProfileService } from "../../services/ProfileService.js";
+import { EventHub, hub } from "../../eventhub/EventHub.js";
 
 export class MarketplacePage extends BaseComponent {
     constructor() {
         super();
         this.container.classList.add('marketplace-page');
-        this.fullProdList = this.getProdList();
+        this.fullProdList = [];
+        this.prodList = [];
+        //this.getProdList();
         this.marketplace = document.createElement("div");
 
-        this.prodList = this.fullProdList; // to be changed with search/filter
+        hub.subscribe("retrievedProduct", (data) => {
+            this.fullProdList.push(data);
+            for (let i = 0; i < this.fullProdList.length; i++) {
+                this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+            }
+            this.reloadFilters();
+            this.renderMarketplace();
+        });
+
+        this.getProdList();
+
         this.curCategory = "All";
         this.curBracket = "All";
         this.regex = /(?:)/gi;
@@ -24,14 +40,17 @@ export class MarketplacePage extends BaseComponent {
         this.loadCSS("MarketplacePage");
     }
 
-    getProdList() { // TODO: will be async
-        const list = products; // will eventually be fetched from server, this is just test data
+    async getProdList() {
+        const productService = new ProductService();
+        const list = await productService.retrieveAllProducts();
 
-        for (let i = 0; i < list.length; i++) {
+        /*for (let i = 0; i < list.length; i++) {
             list[i].bracket = this.calculateBracket(list[i].price);
         }
 
-        return list;
+        this.fullProdList = list;
+        this.prodList = this.fullProdList;
+        return list;*/
     }
 
     calculateBracket(price) {
@@ -51,6 +70,7 @@ export class MarketplacePage extends BaseComponent {
     }
 
     render() {
+        this.container.innerHTML = "";
         //background image and logo
         const bg = document.createElement("div");
         bg.classList.add("background");
@@ -115,7 +135,7 @@ export class MarketplacePage extends BaseComponent {
 
         for (let bracket in PriceBrackets) {
             const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
-            bracketButton.id = PriceBrackets[bracket];
+            bracketButton.id = bracket;
             priceBox.appendChild(bracketButton);
         }
 
@@ -131,7 +151,7 @@ export class MarketplacePage extends BaseComponent {
         const searchInput = document.createElement("input");
         searchInput.classList.add("search-input");
         searchInput.type = "text";
-        searchInput.placeholder = "Search_"
+        searchInput.placeholder = "Search"
         searchInput.addEventListener("keyup", () => {
             this.regex = new RegExp(searchInput.value, "ig");
             this.reloadFilters();
@@ -239,7 +259,6 @@ export class MarketplacePage extends BaseComponent {
                     this.curBracket = text;
                 }
                 this.reloadFilters();
-                // TODO: add styling
             } else {
                 // update toggle
                 if (kind === "category") {
@@ -286,24 +305,22 @@ export class MarketplacePage extends BaseComponent {
 
         const prodName = document.createElement("span");
         prodName.classList.add("prodname");
-        const prodLink = document.createElement("a");
+        const prodLink = document.createElement("span");
         prodLink.classList.add("prodtext");
         prodLink.classList.add("prodlink");
         prodLink.innerText = prodListItem.name + '\n';
-        prodLink.href = ""; // will be link to seller profile page
         prodName.appendChild(prodLink);
-        // TODO: needs to tell AppController to open product page and what productid to load
+        prodName.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
         prodInfo.appendChild(prodName);
 
         const sellName = document.createElement("span");
         sellName.classList.add("sellname");
-        const sellLink = document.createElement("a");
+        const sellLink = document.createElement("span");
         sellLink.classList.add("prodtext");
         sellLink.classList.add("prodlink");
         sellLink.innerText = prodListItem.sellername;
-        sellLink.href = ""; // will be link to seller profile page
         sellName.appendChild(sellLink);
-        // TODO: tell AppController to open profile page and what sellerid to load
+        sellName.addEventListener("click", () => this.goToSellerProfile(prodListItem.sellerid));
         prodInfo.appendChild(sellName);
 
         if (prodListItem.numreviews > 0 && prodListItem.average_rating !== null) {
@@ -322,11 +339,10 @@ export class MarketplacePage extends BaseComponent {
             starText.innerText = `${prodListItem.average_rating} Stars`;
             starIMGDiv.appendChild(starText);
 
-            const numReviews = document.createElement("a");
+            const numReviews = document.createElement("span");
             numReviews.classList.add("reviews-text");
             numReviews.classList.add("prodlink");
-            numReviews.href = ""
-            // TODO: tell AppController to open ratings page and what productid to load
+            numReviews.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
 
             const reviews = prodListItem.numreviews === 1 ? "Review" : "Reviews";
             numReviews.innerText = ` ${prodListItem.numreviews} ${reviews}\n`;
@@ -382,9 +398,8 @@ export class MarketplacePage extends BaseComponent {
         this.end = 5;
     }
 
-    reStyleButtons(buttonClass) {
+    reStyleButtons(buttonClass) {  //__Fix_Me__: Restyle Price Buttons
         const buttons = document.querySelectorAll(`.${buttonClass}`);
-        console.log(buttonClass);
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].style.backgroundColor = "#FFFFFF";
             buttons[i].style.color = "#232C3C";
@@ -441,5 +456,13 @@ export class MarketplacePage extends BaseComponent {
             this.end -= this.pageLength;
             this.renderMarketplace();
         }
+    }
+
+    goToProductPage(prodid) {
+        console.log(`going to product page for product ${prodid}`);
+    }
+
+    goToSellerProfile(sellid) {
+        console.log(`going to profile page for seller ${sellid}`);
     }
 }

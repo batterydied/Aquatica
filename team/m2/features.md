@@ -1,44 +1,232 @@
 # Application Features
 
+## Navigation Menu
+
+Customers will be able to find products by browsing through categories such as fish, tanks, plants, decorations, food, and equipment, as well as search, filter, and sort items. This allows users to effectively and efficiently find the products that they are looking for. 
+
+### **Features**
+
+
+#### **1. Description**
+- Displays a detailed overview of the product, highlighting its key features and specifications.
+- Includes:
+  - Product name.
+  - Scientific name.
+  - Description of the product.
+
+
+### **Implementation Details**
+
+#### **Point Value: 29 points**
+
+- **Static navigation bar (1 points):** Includes detailed product specifications and shipping information. (Benson)
+- **Logo (1 point):** High-quality image gallery with dynamic main image. (Benson)
+- **Breeder Contact (3 points):** Integration of contact options for breeders. (Future)
+- **Ratings (3 points):** Aggregated product ratings. (Nikhil)
+- **Reviews (3 points):** Customer reviews and feedback section. (Nikhil)
+- **Add to Cart Button (1 points):** Adds product to the shopping cart. (Benson)
+- **Save for Later Button (2 points):** Option to save the product for future reference. (Future)
+- **Buy Now Button (2 points):** Quick purchase option. (Future)
+- **CSS Positioning (2 points):** (Benson)
+- **Pricing and Product Types (2 points):** Displays pricing dynamically based on the selected product type. (Benson)
+- **Quantity Selector (2 points):** Allows users to adjust product quantities with a user-friendly interface. (Benson)
+- **UI Design (6 points):** Visually appealing and user-friendly design. (Asritha)
+
+
+Seller Dashboard (If logged in as a seller) icon (2～3)
+Cart icon (1)
+Save for later icon (1)
+Profile icon (1)
+Messages (Either in user profile, or nav bar) icon (1)
+UI design (1~2)
+
+This helps customers find related products that they might need without having to search for it.
+---
+
+### **Team Member**
+- **Haiyi: 10 points**
+- **Devin: 6 points**
+
+---
+
+This Product Page design prioritizes interactivity, responsiveness, and user experience, ensuring an intuitive and visually engaging interface for customers.
+
+------------------------------------------------------------
 ## Marketplace
 
 Customers will be able to find products by browsing through categories such as fish, tanks, plants, decorations, food, and equipment, as well as search, filter, and sort items. This allows users to effectively and efficiently find the products that they are looking for. 
 
-**Assigned to**: Nikhil Bahadur
+**Assigned to**: Winifred Nauda
 
+------------------------------------------------------------
 ## Sell Products
 
 Sellers will be able to list their own aquarium-related products for sale, manage inventory, and easily track sales through a user-friendly dashboard. 
 
 **Assigned to**: Winifred Nauda
 
-## Secure Payments
+------------------------------------------------------------
+## Product Page Features
 
-Users will be able to purchase products through secure and convenient payment options. This allows for a seamless buying experience for customers.
+The Product Page is a comprehensive interface that provides users with detailed information about a specific product. It incorporates high-quality images, product details, and interactive UI elements to enhance the user experience. This document outlines the key features implemented in the Product Page.
 
-**Assigned to**: Haiyi Cai
+---
 
+### **Features**
 
-## Direct Breeder Contact
+#### **1. Description**
+- Displays a detailed overview of the product, highlighting its key features and specifications.
+- Includes:
+  - Product name.
+  - Scientific name.
+  - Description of the product.
 
-Customers will be able to connect and communicate with aquatic animal breeders and place custom orders. This feature allows customers to easily get the perfect match for their needs. 
+#### **2. Images**
+- Provides a gallery of high-quality product images for better visualization.
+- Includes:
+  - A **main image** that displays the first image by default or updates dynamically when the user hovers over a thumbnail.
+  - **Thumbnails** displayed in a vertical panel, allowing users to preview other images.
 
-**Assigned to**: Benson Zheng
+#### **3. Product Information Panel**
+- Includes detailed information about the product, such as:
+  - **Specifications**: A list of product specifications displayed as a list.
+  - **Shipping Info**: Displays shipping cost and delivery time.
 
+#### **4. Quantity Selector**
+- Provides a form to adjust the quantity of the product:
+  - Includes "+" and "-" buttons to increase or decrease the quantity.
+  - A numeric input field to enter the desired quantity manually.
+  - The form ensures that the quantity cannot drop below `1`.
+
+#### **5. Pricing and Product Types**
+- Displays the price of the selected product type.
+- Includes a dropdown to select between different product types, dynamically updating the displayed price based on the selection.
+
+#### **6. Action Buttons**
+- **Add to Cart Button**:
+  - Allows users to add the product to their shopping cart.
+- **Save for Later Button** (planned):
+  - Will enable users to save the product for future reference.
+- **Buy Now Button** (planned):
+  - Will provide a direct option for purchasing the product instantly.
+
+#### **7. UI Design**
+- Focuses on creating a visually appealing and user-friendly interface:
+  - Titles and descriptions are styled with clear typography.
+  - Thumbnails and the main image follow responsive design principles.
+  - Intuitive layout for product selection and quantity adjustments.
+
+#### **8. CSS Positioning**
+
+- Utilizes CSS for precise and responsive element positioning:
+  - Ensures all elements are aligned for consistent visual appeal.
+  - Adapts layout seamlessly across various screen sizes.
+---
+
+### **Additional Planned Features**
+
+#### **1. Breeder Contact**
+- Will integrate contact options for breeders, allowing users to connect directly with sellers for inquiries.
+
+#### **2. Ratings and Reviews**
+- **Ratings**:
+  - Displays aggregated ratings to help users assess the quality of the product.
+- **Reviews**:
+  - Will include a section for customer feedback and testimonials, building trust and credibility.
+
+---
+
+### **Implementation Details**
+
+#### **Point Value: 29 points**
+
+- **Product Information Panel (1 points):** Includes detailed product specifications and shipping information. (Benson)
+- **Images (2 point):** High-quality image gallery with dynamic main image. (Benson)
+- **Breeder Contact (3 points):** Integration of contact options for breeders. (Future)
+- **Ratings (3 points):** Aggregated product ratings. (Nikhil)
+- **Reviews (3 points):** Customer reviews and feedback section. (Nikhil)
+- **Add to Cart Button (1 points):** Adds product to the shopping cart. (Benson)
+- **Save for Later Button (2 points):** Option to save the product for future reference. (Future)
+- **Buy Now Button (2 points):** Quick purchase option. (Future)
+- **CSS Positioning (2 points):** (Benson)
+- **Pricing and Product Types (2 points):** Displays pricing dynamically based on the selected product type. (Benson)
+- **Quantity Selector (2 points):** Allows users to adjust product quantities with a user-friendly interface. (Benson)
+- **UI Design (6 points):** Visually appealing and user-friendly design. (Asritha)
+
+---
+
+### **Team Member**
+- **Benson: 10 points**
+- **Asritha: 6 points**
+- **Nikhil: 6 points**
+
+---
+
+This Product Page design prioritizes interactivity, responsiveness, and user experience, ensuring an intuitive and visually engaging interface for customers.
+
+------------------------------------------------------------
 ## Virtual Cart for Customers
 
 Customers will be able to bookmark items that they are interested in as well as place multiple orders at once through a virtual cart. This allows customers to compare items that they are interested in buying so they can find the best product for their needs. This also allows customers to easily refind an item they were interested in buying if they don't immediately place an order.
 
 **Assigned to**: Devin Bowler
 
-## Personalized Recommendations
+------------------------------------------------------------
+## Secure Payments
 
-Customers will recieve personalized product recommendations based on past purchases, browsing history, and purchases from other customers. This helps customers find related products that they might need without having to search for it.
+Users will be able to purchase products through secure and convenient payment options. This allows for a seamless buying experience for customers.
 
-**Assigned to**: Yukun Yang
+**Assigned to**: Devin 
 
+------------------------------------------------------------
+## Profile Page
+
+Description: The Profile Page allows users to view and manage their personal information. It provides dynamic access to private information such as payment methods and addresses, and features an order history section for tracking past purchases. Users can edit their profile details directly from the page, ensuring up-to-date information while maintaining an intuitive and secure user experience.
+
+Team Member: Yukun Yang
+
+Point Value: 9 points
+
+Details:
+
+Profile Picture (1 point): Features an avatar to personalize the user profile.
+
+Contact Details (1 points): Displays to the user's phone number and email address.
+
+Private Information (1-2 points): Enables secure access to sensitive information such as payment methods and addresses, with a toggle to show or hide details.
+
+Order History (2 points): Includes a detailed history of past purchases, with information on order IDs, dates, totals, and items.
+
+Edit Functionality (2 points): Provides an option to edit personal details with dynamic input fields and validation.
+
+Save Changes Button (1 points): Allows users to save updates to their profile seamlessly.
+
+UI Design (1-2 points): Implements a clean and responsive design to enhance usability, with sections organized for easy navigation and interaction.
+
+------------------------------------------------------------
 ## Reviews and Ratings
 
 Customers will be able to read product reviews and ratings from other customers under each product. This allows customers to make an informed decision on their purchase ensuring they purchase the best possible product and avoid bad products.
 
-**Assigned to**: Asritha Bodepudi
+**Assigned to**: Nikhil Bahadur
+
+Point Value: 9 Points
+
+Details: 
+
+Customer Review Table (2 points): Includes username, rating, review, and date of customers who left a review on a certain product.
+
+Select Star Rating (2 Points): Interactive display of stars that allows you to choose your rating out of 5 stars when leaving a review on a product.
+
+Input Box For Review Comment (1 Point): Allows user to write comment for a review
+
+Add Review Button (1 Point): Allows user to submit review which will be displayed in the customer review table.
+
+Customer Review Bar (1 Point): Displays the total reviews and the average rating of the product
+
+UI Design (2 points): A clean, responsive, and user-friendly UI design that allows interaction from users.
+
+------------------------------------------------------------
+## Personalized Recommendations (Dropped)
+
+Customers will recieve personalized product recommendations based on past purchases, browsing history, and purchases from other customers. This helps customers find related products that they might need without having to search for it.
