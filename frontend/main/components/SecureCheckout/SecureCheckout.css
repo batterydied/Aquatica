@@ -10,41 +10,101 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ensures the content is vertically centered */
+  min-height: 100vh;
 }
 
-/* Main container styling */
+/* Mobile - Default styles (0em - 47.9em) */
+@media screen and (max-width: 47.9em) { /* 0px - 767px */
+  .checkout-container {
+    flex-direction: column; /* Stack panels */
+    padding: 60px;
+    gap: 20px; /* Reduce gap for tighter layout */
+    max-width: 500px;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%; /* Full width for both panels */
+    padding: 0; /* Remove padding */
+    border: none; /* Remove dividing line for mobile */
+  }
+
+  .tabs {
+    justify-content: space-evenly;
+    gap: 10px; /* Reduce gap between tabs */
+  }
+
+  .tab {
+    width: 48%; /* Equal width for tabs */
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 10px; /* Reduce spacing between form groups */
+  }
+
+  .form-group-row {
+    flex-direction: column; /* Stack grouped inputs vertically */
+    gap: 10px; /* Reduce spacing */
+  }
+
+  .pay-now {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .checkout-summary p {
+    font-size: 14px; /* Smaller font size for summary items */
+  }
+
+  .review-items p {
+    font-size: 14px;
+    line-height: 1.4; /* Adjust spacing between lines */
+  }
+}
+
+/* Tablet (48em - 71.9em) */
+@media screen and (min-width: 48em) and (max-width: 71.9em) { /* 768px - 1150px */
+  .checkout-container {
+    width: 80%; /* Reduce container width for tablets */
+    padding: 30px;
+    gap: 40px;
+  }
+}
+
+
+
+/* Desktop and Larger - Default styles (48em and up) */
+@media screen and (min-width: 72em) {
 .checkout-container {
   display: flex;
-  gap: 50px; /* Increased gap between left and right panels */
+  gap: 50px;
   padding: 40px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 1200px; /* Restricts the total width */
+  max-width: 1200px;
   width: 100%;
 }
 
-/* Left panel styling */
+}
+
 .left-panel {
-  width: 600px; /* Fixed width to prevent shrinking */
-  padding-right: 30px; /* Add padding for spacing */
+  width: 600px;
+  padding-right: 30px;
   border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  min-height: 550px; /* Consistent height */
-  gap: 20px; /* Spacing between elements */
+  gap: 20px;
+  margin-top: 25px;
 }
 
-
-/* Right panel styling */
 .right-panel {
   flex: 1;
   min-width: 250px;
   padding-left: 30px;
 }
 
-/* Tabs */
 .tabs {
   display: flex;
   gap: 20px;
@@ -55,19 +115,15 @@ body {
   padding: 10px;
   cursor: pointer;
   background-color: #f1f1f1;
-  border: none; 
-  padding-left: 15px;
-  padding-right: 15px;
+  border: none;
   border-radius: 8px;
 }
 
 .tab.active {
-  background-color: #FFA41E; /* Blue background for active tab */
-  color: black; /* White text for better contrast */
+  background-color: #FFA41E;
+  color: black;
 }
 
-/* Form sections */
-/* By default, forms are hidden */
 .form-section {
   visibility: hidden;
   opacity: 0;
@@ -76,7 +132,7 @@ body {
   left: 0;
   width: 100%;
   transition: visibility 0s, opacity 0.3s ease;
-  min-height: 550px; /* Ensures both forms have the same height */
+  min-height: 550px;
 }
 
 .form-section.visible {
@@ -85,24 +141,22 @@ body {
   position: relative;
 }
 
-
 .form-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
-  gap: 8px; /* Spacing between label and input */
+  gap: 8px;
 }
 
 .form-group-row {
   display: flex;
-  gap: 20px; /* Spacing between grouped inputs */
+  gap: 20px;
 }
 
 .form-group-row .form-group {
   flex: 1;
 }
 
-/* Input styling */
 input {
   padding: 12px;
   border: 1px solid #ccc;
@@ -121,10 +175,8 @@ label {
   text-decoration: none;
   color: black;
   cursor: pointer;
-  max-height: 25px;
 }
 
-/* Pay Now Button */
 .pay-now {
   background-color: #FFA41E;
   color: black;
@@ -135,12 +187,11 @@ label {
   cursor: pointer;
   width: 100%;
   font-weight: 600;
-  margin-top: 20px; /* Add spacing from summary section */
+  margin-top: 20px;
 }
 
-/* Checkout summary and review styling */
 .review-items {
-  margin-bottom: 20px; /* Add space between review and checkout summary */
+  margin-bottom: 20px;
 }
 
 .checkout-summary p {
