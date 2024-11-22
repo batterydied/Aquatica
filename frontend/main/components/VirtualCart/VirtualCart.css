@@ -1,7 +1,6 @@
-/* Import Montserrat font */
+/* Global styles and imports */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
-/* Global font styling */
 body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
@@ -10,10 +9,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ensures the content is vertically centered */
+  min-height: 100vh;
 }
 
-/* Cart container styling */
+/* Original styles (default for tablet and up) */
 .cart-container {
   display: flex;
   gap: 50px;
@@ -22,19 +21,12 @@ body {
   border-radius: 8px;
   max-width: 1300px;
   width: 100%;
-  min-height: 600px; /* Added minimum height for proper spacing */
-  font-family: 'Montserrat', sans-serif;
+  min-height: 600px;
 }
 
-.back-link {
-  text-decoration: none;
-  color: grey;
-}
-
-/* Left panel styling */
 .cart-left {
   flex: 2;
-  min-width: 600px; /* Ensures consistent width */
+  min-width: 600px;
   padding-right: 30px;
 }
 
@@ -45,86 +37,62 @@ body {
   border-left: 1px solid #ddd;
 }
 
-.cart-right h3 {
-  border-bottom: solid 1px grey;
-  padding-bottom: 10px;
-}
-
-/* Cart items */
 .cart-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 15px; /* Default gap for larger screens */
 }
 
 .item-details {
-  flex: 2; /* Takes up most of the space */
-}
-
-.item-details h4 {
-  margin-bottom: 10px;
-}
-
-.item-details p {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
-}
-
-.item-quantity {
-  flex: 0 0 120px; /* Fixed width for consistent alignment */
-  text-align: center;
-}
-
-.item-quantity button {
-  border: none;
-  background-color: transparent;
-  text-decoration: none;
+  flex: 2;
 }
 
 .item-price {
-  flex: 0 0 100px; /* Fixed width for consistent alignment */
+  flex: 0 0 100px;
+  font-weight: bold;
+  text-align: left;
+  max-height: 25px;
+}
+
+.item-quantity {
+  flex: 0 0 120px;
   text-align: right;
-  font-weight: bold;
-  margin-right: 30px; /* Add margin to the right of the price */
+  max-height: 45px;
 }
 
-.empty-cart {
-  font-size: 18px;
-  color: #666;
-  text-align: center;
-  margin-top: 50px;
-}
+.item-quantity button {
+    border: none;
+  }
 
-/* Cart totals */
-.cart-totals p {
-  margin: 10px 0;
-  font-size: 16px;
-}
-
-.total {
-  font-weight: bold;
-  padding-top: 5px;
-  padding-bottom 25px;
-}
-
-.totals-row {
+.item-actions {
   display: flex;
-  justify-content: space-between; /* Ensures proper spacing between text and price */
-  align-items: center; /* Aligns items vertically */
-  margin: 10px 0;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.totals-row .text {
-  flex: 1; /* Takes up the remaining space on the left */
-  text-align: left; /* Align text to the left */
+.item-actions button {
+  background-color: rgba(255, 164, 30, 0.7); /* Orange with 70% opacity */
+  color: black;
+  width: 100px;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.totals-row .price {
-  flex: 0 0 100px; /* Fixed width for consistent alignment */
-  text-align: right; /* Align prices to the right */
+.item-actions button:hover {
+  background-color: #FFC266;
 }
 
+.cart-left h2 {
+  border-top: 1px grey solid;
+  padding-top: 10px;
+}
+
+/* Checkout button */
 .checkout-button {
   background-color: #FFA41E;
   color: black;
@@ -137,49 +105,58 @@ body {
   margin-top: 20px;
 }
 
-/* Style buttons as links */
-/* Spacing between the cart and Save for Later section */
-.cart-left h3 {
-  font-size: 1.3em;
-  margin-top: 50px;
-  padding: 15px;
-  padding-left: 0px;
-  border-top: 1px solid grey;
+/* Responsive Design */
+
+/* Mobile - Default styles (0em - 47.9em) */
+@media screen and (max-width: 47.9em) { /* 0px - 767px */
+  .cart-container {
+    flex-direction: column;
+    padding: 60px;
+    gap: 0px;
+  }
+
+  .cart-left,
+  .cart-right {
+    flex: 1 1 auto;
+    min-width: unset;
+    padding: 0;
+    border: none;
+  }
+
+  .cart-item {
+    flex-direction: column; /* Stack elements */
+    align-items: flex-start;
+    gap: 8px; /* Reduce gap between elements */
+  }
+
+  .item-details {
+    width: 100%;
+    margin-bottom: 5px; /* Add slight margin for spacing */
+  }
+
+  .item-price {
+    width: 100%;
+    margin-top: -5px; /* Adjust spacing closer to quantity */
+    text-align: left;
+    max-height: 25px;
+  }
+
+  .item-quantity {
+    width: 100%;
+    margin-top: -5px; /* Pull closer to price */
+    text-align: left;
+    max-height: 45px;
+  }
+
+  .item-actions {
+    width: 100%; /* Buttons are full-width only for mobile */
+  }
+
+  .item-actions button {
+    width: 100%; /* Full-width for buttons */
+    font-size: 14px;
+    padding: 12px;
+  }
 }
 
-#saved-items {
-  margin-top: 40px; /* Increased margin for better separation */
-}
 
-/* Buttons positioned below the cart item */
-.item-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 10px;
-}
-
-/* Style buttons with a grey look */
-.item-actions button {
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 8px 15px; /* Increase padding for better appearance */
-  font-size: 12px;
-  color: #333;
-  cursor: pointer;
-  margin-bottom: 5px; /* Space between buttons */
-  width: 100px; /* Set a fixed width for consistent button size */
-  text-align: center; /* Ensure text is centered within the button */
-}
-
-.item-actions button:hover {
-  background: #e0e0e0;
-}
-
-/* Adjust flex spacing for better button placement */
-.item-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}

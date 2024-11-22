@@ -48,7 +48,7 @@ export class VirtualCart extends BaseComponent {
       this.#container.innerHTML = `
         <div class="cart-left">
           <a href="#" class="back-link">← Marketplace</a>
-          <h2>Your Cart</h2>
+          <h1>Your Cart</h1>
           <div id="cart-items">
             ${
               this.#cartItems.length > 0
@@ -56,7 +56,7 @@ export class VirtualCart extends BaseComponent {
                 : '<p class="empty-cart">Your cart is empty.</p>'
             }
           </div>
-          <h3>Save for Later</h3>
+          <h2>Save for Later</h2>
           <div id="saved-items">
             ${
               this.#savedForLater.length > 0
