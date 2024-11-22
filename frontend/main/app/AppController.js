@@ -20,41 +20,34 @@ export class AppController {
    constructor() {
       // Initialize components
       this.#views = {
-         marketplace: new MarketplacePage(this),
-	      productPage: new ProductPage(),
-	      profilePage: new ProfilePage(),
-         virtualCart:  new VirtualCart(), 
-         secureCheckout: new SecureCheckout()
+         marketplace: new MarketplacePage(),
+	 secureCheckout: new SecureCheckout(),
+  	 virtualCart:  new VirtualCart(), 
+	 navigationMenu: new NavigationMenu(),
+	 productPage: new ProductPage(),
+	 profilePage: new ProfilePage()
       };
-	   // Initialize navigation menu
-      this.#navigationMenu = new NavigationMenu();
 
       // Default Page set as marketplace page
       this.#currentView = this.#views.marketplace;
    }
 
 
-   render() {
-      // Create the main container if not already created
-      if (!this.#container) {
-         this.#container = document.createElement('div');
-         this.#container.classList.add('app-controller');
-      }
+  render() {
+    if (!this.#container) {
+      this.#container = document.createElement('div');
+      this.#container.classList.add('app-controller');
+    }
 
-      // Clear previous content
-      this.#container.innerHTML = ''; 
-      // Render the navigationMenu only if not on SecureCheckout
-      if (this.#currentView != this.#views.secureCheckout) {
-         this.#container.appendChild(this.#navigationMenu.render());
-      }
-      // Render the current view
-      this.#container.appendChild(this.#currentView.render());
+    this.#container.innerHTML = '';
+    this.#container.appendChild(this.#currentView.render());
 
-      return this.#container;
-   }
+    if (this.#currentView !== this.#views.secureCheckout) {
+      this.#container.appendChild(this.#views.navigationMenu.render());
+    }
 
-
-
+    return this.#container;
+  }
    /**
    * Public method to navigate to a different view.
    * @param {string} viewName - The name of the view to navigate to.
