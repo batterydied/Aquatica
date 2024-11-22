@@ -45,16 +45,16 @@ export class NavigationMenu extends BaseComponent {
       button.classList.add("nav-button", link.className);
       button.dataset.target = link.target;
 
+      const textElement = document.createElement("span"); /* Put text ahead of icons */
+      textElement.textContent = link.text;
+      textElement.classList.add("nav-text");
+      button.appendChild(textElement);
+
       const icon = document.createElement("img");
       icon.src = link.src;
       icon.alt = `${link.text} icon`;
       icon.classList.add("nav-icon");
       button.appendChild(icon);
-
-      const textElement = document.createElement("span");
-      textElement.textContent = link.text;
-      textElement.classList.add("nav-text");
-      button.appendChild(textElement);
 
       navButtonsContainer.appendChild(button);
     });

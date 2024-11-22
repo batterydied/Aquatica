@@ -1,24 +1,71 @@
 # Application Features
 
+## Navigation Menu
+
+Customers will be able to find products by browsing through categories such as fish, tanks, plants, decorations, food, and equipment, as well as search, filter, and sort items. This allows users to effectively and efficiently find the products that they are looking for. 
+
+### **Features**
+
+
+#### **1. Description**
+- Displays a detailed overview of the product, highlighting its key features and specifications.
+- Includes:
+  - Product name.
+  - Scientific name.
+  - Description of the product.
+
+
+### **Implementation Details**
+
+#### **Point Value: 29 points**
+
+- **Static navigation bar (1 points):** Includes detailed product specifications and shipping information. (Benson)
+- **Logo (1 point):** High-quality image gallery with dynamic main image. (Benson)
+- **Breeder Contact (3 points):** Integration of contact options for breeders. (Future)
+- **Ratings (3 points):** Aggregated product ratings. (Nikhil)
+- **Reviews (3 points):** Customer reviews and feedback section. (Nikhil)
+- **Add to Cart Button (1 points):** Adds product to the shopping cart. (Benson)
+- **Save for Later Button (2 points):** Option to save the product for future reference. (Future)
+- **Buy Now Button (2 points):** Quick purchase option. (Future)
+- **CSS Positioning (2 points):** (Benson)
+- **Pricing and Product Types (2 points):** Displays pricing dynamically based on the selected product type. (Benson)
+- **Quantity Selector (2 points):** Allows users to adjust product quantities with a user-friendly interface. (Benson)
+- **UI Design (6 points):** Visually appealing and user-friendly design. (Asritha)
+
+
+Seller Dashboard (If logged in as a seller) icon (2～3)
+Cart icon (1)
+Save for later icon (1)
+Profile icon (1)
+Messages (Either in user profile, or nav bar) icon (1)
+UI design (1~2)
+
+This helps customers find related products that they might need without having to search for it.
+---
+
+### **Team Member**
+- **Haiyi: 10 points**
+- **Devin: 6 points**
+
+---
+
+This Product Page design prioritizes interactivity, responsiveness, and user experience, ensuring an intuitive and visually engaging interface for customers.
+
+------------------------------------------------------------
 ## Marketplace
 
 Customers will be able to find products by browsing through categories such as fish, tanks, plants, decorations, food, and equipment, as well as search, filter, and sort items. This allows users to effectively and efficiently find the products that they are looking for. 
 
-**Assigned to**: Nikhil Bahadur
+**Assigned to**: Winifred Nauda
 
+------------------------------------------------------------
 ## Sell Products
 
 Sellers will be able to list their own aquarium-related products for sale, manage inventory, and easily track sales through a user-friendly dashboard. 
 
 **Assigned to**: Winifred Nauda
 
-## Secure Payments
-
-Users will be able to purchase products through secure and convenient payment options. This allows for a seamless buying experience for customers.
-
-**Assigned to**: Haiyi Cai
-
-
+------------------------------------------------------------
 ## Product Page Features
 
 The Product Page is a comprehensive interface that provides users with detailed information about a specific product. It incorporates high-quality images, product details, and interactive UI elements to enhance the user experience. This document outlines the key features implemented in the Product Page.
@@ -117,17 +164,21 @@ The Product Page is a comprehensive interface that provides users with detailed 
 
 This Product Page design prioritizes interactivity, responsiveness, and user experience, ensuring an intuitive and visually engaging interface for customers.
 
-
+------------------------------------------------------------
 ## Virtual Cart for Customers
 
 Customers will be able to bookmark items that they are interested in as well as place multiple orders at once through a virtual cart. This allows customers to compare items that they are interested in buying so they can find the best product for their needs. This also allows customers to easily refind an item they were interested in buying if they don't immediately place an order.
 
 **Assigned to**: Devin Bowler
 
-## Personalized Recommendations (Dropped)
+------------------------------------------------------------
+## Secure Payments
 
-Customers will recieve personalized product recommendations based on past purchases, browsing history, and purchases from other customers. This helps customers find related products that they might need without having to search for it.
+Users will be able to purchase products through secure and convenient payment options. This allows for a seamless buying experience for customers.
 
+**Assigned to**: Devin 
+
+------------------------------------------------------------
 ## Profile Page
 
 Description: The Profile Page allows users to view and manage their personal information. It provides dynamic access to private information such as payment methods and addresses, and features an order history section for tracking past purchases. Users can edit their profile details directly from the page, ensuring up-to-date information while maintaining an intuitive and secure user experience.
@@ -152,6 +203,7 @@ Save Changes Button (1 points): Allows users to save updates to their profile se
 
 UI Design (1-2 points): Implements a clean and responsive design to enhance usability, with sections organized for easy navigation and interaction.
 
+------------------------------------------------------------
 ## Reviews and Ratings
 
 Customers will be able to read product reviews and ratings from other customers under each product. This allows customers to make an informed decision on their purchase ensuring they purchase the best possible product and avoid bad products.
@@ -173,3 +225,8 @@ Add Review Button (1 Point): Allows user to submit review which will be displaye
 Customer Review Bar (1 Point): Displays the total reviews and the average rating of the product
 
 UI Design (2 points): A clean, responsive, and user-friendly UI design that allows interaction from users.
+
+------------------------------------------------------------
+## Personalized Recommendations (Dropped)
+
+Customers will recieve personalized product recommendations based on past purchases, browsing history, and purchases from other customers. This helps customers find related products that they might need without having to search for it.
