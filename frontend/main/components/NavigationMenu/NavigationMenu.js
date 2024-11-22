@@ -73,12 +73,6 @@ export class NavigationMenu extends BaseComponent {
     this.container.appendChild(header);
   }
 
-  // Append Logo and Navigation Buttons to the Header
-  header.appendChild(logoButton);
-  header.appendChild(navButtonsContainer);
-  this.container.appendChild(header);
-}
-
   attachEventListeners() {
     this.container.addEventListener("click", (event) => {
       const button = event.target.closest(".nav-button");
