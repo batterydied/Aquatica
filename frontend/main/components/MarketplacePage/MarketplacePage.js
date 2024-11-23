@@ -416,6 +416,7 @@ export class MarketplacePage extends BaseComponent {
             curButton.style.color = "#FFFFFF";
         }
         if (this.curBracket !== "All") {
+            console.log(this.curBracket);
             const curButton = document.getElementById(this.curBracket);
             curButton.style.backgroundColor = "#43608D";
             curButton.style.color = "#FFFFFF";

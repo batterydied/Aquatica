@@ -34,7 +34,6 @@ export class AppController {
       this.#currentView = this.#views.marketplace;
    }
 
-
   render() {
     if (!this.#container) {
       this.#container = document.createElement('div');
