@@ -69,3 +69,17 @@
 - **Task**: Create sequence diagram for Marketplace Page.
 - **Details**: Created a sequence diagram to explain the interactions involved in the Marketplace Page.
 - **Link to Commit**: [create sequence diagram for marketplace page](https://github.com/batterydied/Aquatica/commit/c10f0e393ef84e10589045eeb8d01bcf81debf63)
+
+### November 22, 2024
+- **Task**: Fix icons for Marketplace
+- **Details**: Change the path for icons so they can be found by the server.
+- **Link to Commit**: [fix icons] (https://github.com/batterydied/Aquatica/commit/b8a5bbc4b0b5c5b8b4db99d421e8e972aa356fa3)
+- **Task**: Implement page navigation on Marketplace Page
+- **Details**: Modify event listeners to go to product and profile page.
+- **Link to Commit**: [navigation] (https://github.com/batterydied/Aquatica/commit/f908d7db7995f4a1d0f2a85a4177665cd1e65607)
+- **Task**: Fix styling of price buttons.
+- **Details**: Fixed a bug that caused the styling of the price buttons to be abnormal by changing the way their ids are assigned.
+- **Link to Commit**: [fix price buttons] (https://github.com/batterydied/Aquatica/commit/ebc221c7852234a4c1c95329ae0720d533c52c7c)
+- **Task**: Add navigation to Sell Products page.
+- **Details**: Modify event listeners on edit and create buttons to go to the product page.
+- **Link to Commit**: [add navigation to sell products page] (https://github.com/batterydied/Aquatica/commit/dc872006ce6ecd545b24930575c724bdd3251713)
