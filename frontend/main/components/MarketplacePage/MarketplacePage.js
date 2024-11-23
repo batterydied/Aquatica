@@ -2,8 +2,8 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
-//import { products } from "./Products.js";
-//import { AppController } from "../../app/AppController.js";
+import { products } from "./Products.js";
+import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
 //import { ProfileService } from "../../services/ProfileService.js";
 import { EventHub, hub } from "../../eventhub/EventHub.js";
@@ -12,9 +12,11 @@ export class MarketplacePage extends BaseComponent {
     constructor() {
         super();
         this.container.classList.add('marketplace-page');
-        this.fullProdList = [];
-        this.prodList = [];
-        //this.getProdList();
+        this.fullProdList = products;
+        for (let i = 0; i < this.fullProdList.length; i++) {
+            this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+        }
+        this.prodList = this.fullProdList;
         this.marketplace = document.createElement("div");
 
         hub.subscribe("retrievedProduct", (data) => {
@@ -26,7 +28,7 @@ export class MarketplacePage extends BaseComponent {
             this.renderMarketplace();
         });
 
-        this.getProdList();
+        //this.getProdList();
 
         this.curCategory = "All";
         this.curBracket = "All";
@@ -74,17 +76,17 @@ export class MarketplacePage extends BaseComponent {
         //background image and logo
         const bg = document.createElement("div");
         bg.classList.add("background");
-        const bgimg = document.createElement("img");
-        bgimg.classList.add("bgimg");
-        bgimg.src = "../frontend/assets/bg-dummy.png"; // TODO: site main image
-        bg.appendChild(bgimg);
-        const iconContainer = document.createElement("div");
-        iconContainer.classList.add("icon-container");
-        const icon = document.createElement("img");
-        icon.src = "../frontend/assets/logo-dummy.png"; // TODO: icon
-        icon.classList.add("icon");
-        iconContainer.appendChild(icon);
-        bg.appendChild(iconContainer);
+        // const bgimg = document.createElement("img");
+        // bgimg.classList.add("bgimg");
+        // bgimg.src = "../frontend/assets/bg-dummy.png"; // TODO: site main image
+        // bg.appendChild(bgimg);
+        // const iconContainer = document.createElement("div");
+        // iconContainer.classList.add("icon-container");
+        // const icon = document.createElement("img");
+        // icon.src = "../frontend/assets/logo-dummy.png"; // TODO: icon
+        // icon.classList.add("icon");
+        // iconContainer.appendChild(icon);
+        // bg.appendChild(iconContainer);
         this.container.appendChild(bg);
 
         const mainPage = document.createElement("div");
@@ -135,7 +137,7 @@ export class MarketplacePage extends BaseComponent {
 
         for (let bracket in PriceBrackets) {
             const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
-            bracketButton.id = bracket;
+            bracketButton.id = PriceBrackets[bracket];
             priceBox.appendChild(bracketButton);
         }
 
@@ -144,7 +146,7 @@ export class MarketplacePage extends BaseComponent {
         searchBar.classList.add("search-bar");
         
         const searchIcon = document.createElement("img");
-        searchIcon.src = "/frontend/assets/search-icon.png";
+        searchIcon.src = "/assets/search-icon.png";
         searchIcon.classList.add("search-icon");
         searchBar.appendChild(searchIcon);
 
@@ -211,7 +213,7 @@ export class MarketplacePage extends BaseComponent {
 
             const nextPageIMG = document.createElement('img');
             nextPageIMG.classList.add("page-img");
-            nextPageIMG.src = "/frontend/assets/next-page.png";
+            nextPageIMG.src = "/assets/next-page.png";
             nextPage.appendChild(nextPageIMG);
 
             nextPage.classList.add('page-button');
@@ -225,7 +227,7 @@ export class MarketplacePage extends BaseComponent {
 
             const prevPageIMG = document.createElement('img');
             prevPageIMG.classList.add("page-img");
-            prevPageIMG.src = "/frontend/assets/prev-button.png";
+            prevPageIMG.src = "/assets/prev-button.png";
             prevPage.appendChild(prevPageIMG);
 
             prevPage.classList.add('page-button');
@@ -284,7 +286,7 @@ export class MarketplacePage extends BaseComponent {
         curProduct.appendChild(prodIMGDiv);
 
         const prodIMG = document.createElement("img");
-        prodIMG.src = "/frontend/assets/dummy_600x400_ffffff_cccccc.png";
+        prodIMG.src = "/assets/dummy_600x400_ffffff_cccccc.png";
         prodIMG.classList.add("prodimg");
         //prodIMG.src = this.prodList[i].imgurl;
         prodIMGDiv.appendChild(prodIMG);
@@ -422,23 +424,23 @@ export class MarketplacePage extends BaseComponent {
 
     getStarIMG(rating) {
         if (rating < 1.4) {
-            return "/frontend/assets/one-star.png";
+            return "/assets/one-star.png";
         } else if (rating < 1.9) {
-            return "/frontend/assets/one-point-five-star.png";
+            return "/assets/one-point-five-star.png";
         } else if (rating < 2.4) {
-            return "/frontend/assets/two-star.png";
+            return "/assets/two-star.png";
         } else if (rating < 2.9) {
-            return "/frontend/assets/two-point-five-star.png";
+            return "/assets/two-point-five-star.png";
         } else if (rating < 3.4) {
-            return "/frontend/assets/three-star.png";
+            return "/assets/three-star.png";
         } else if (rating < 3.9) {
-            return "/frontend/assets/three-point-five-star.png";
+            return "/assets/three-point-five-star.png";
         } else if (rating < 4.4) {
-            return "/frontend/assets/four-star.png";
+            return "/assets/four-star.png";
         } else if (rating < 4.9) {
-            return "/frontend/assets/four-point-five-star.png";
+            return "/assets/four-point-five-star.png";
         } else {
-            return "/frontend/assets/five-star.png";
+            return "/assets/five-star.png";
         }
     }
 
@@ -460,9 +462,13 @@ export class MarketplacePage extends BaseComponent {
 
     goToProductPage(prodid) {
         console.log(`going to product page for product ${prodid}`);
+        const appController = AppController.getInstance();
+        appController.navigate("productPage");
     }
 
     goToSellerProfile(sellid) {
         console.log(`going to profile page for seller ${sellid}`);
+        const appController = AppController.getInstance();
+        appController.navigate("profilePage");
     }
 }

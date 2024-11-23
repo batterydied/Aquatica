@@ -9,6 +9,7 @@ import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
 import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
+import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
 
 
 export class AppController {
@@ -21,11 +22,12 @@ export class AppController {
       // Initialize components
       this.#views = {
          marketplace: new MarketplacePage(),
-	 secureCheckout: new SecureCheckout(),
-  	 virtualCart:  new VirtualCart(), 
-	 navigationMenu: new NavigationMenu(),
-	 productPage: new ProductPage(),
-	 profilePage: new ProfilePage()
+         secureCheckout: new SecureCheckout(),
+         virtualCart:  new VirtualCart(), 
+         navigationMenu: new NavigationMenu(),
+         productPage: new ProductPage(),
+         profilePage: new ProfilePage(),
+         sellProductsPage: new SellProductsPage()
       };
 
       // Default Page set as marketplace page

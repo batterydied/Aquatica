@@ -36,12 +36,10 @@ export class SellProductsPage extends MarketplacePage {
 
         const addItemIcon = document.createElement('img');
         addItemIcon.classList.add("add-item-icon");
-        addItemIcon.src = "/frontend/assets/plus-icon.svg";
+        addItemIcon.src = "/assets/plus-icon.svg";
         addItem.appendChild(addItemIcon);
 
-        addItem.addEventListener("click", () => {
-            console.log("*takes you to a new product page*");
-        })
+        addItem.addEventListener("click", () => this.goToProductPage("new product"))
 
         this.marketplace.childNodes[0].appendChild(addItem);
         
@@ -56,10 +54,8 @@ export class SellProductsPage extends MarketplacePage {
         const product = super.createProduct(prodListItem);
         const editButton = document.createElement('img');
         editButton.classList.add("edit-button");
-        editButton.src = "/frontend/assets/edit-icon.svg";
-        editButton.addEventListener("click", () => {
-            console.log(`*takes you to the product page for product ${prodListItem.prodid}*`);
-        });
+        editButton.src = "/assets/edit-icon.svg";
+        editButton.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
         product.childNodes[1].appendChild(editButton);
         return product;
     }
