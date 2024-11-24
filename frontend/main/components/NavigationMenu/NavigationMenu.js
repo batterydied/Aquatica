@@ -38,7 +38,7 @@ export class NavigationMenu extends BaseComponent {
 
     const links = [
       { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
-      { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "productPage" },
+      { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "sellProductsPage" },
       { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
       { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
     ];
