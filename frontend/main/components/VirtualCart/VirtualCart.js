@@ -1,8 +1,10 @@
+// Imports
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { AppController } from "../../app/AppController.js";
 import { hub } from "../../eventhub/EventHub.js";
 
 export class VirtualCart extends BaseComponent {
+  // Initialize the container that will hold the pages content, and 2 empty arrays.
   #container = null;
   #cartItems = [];
   #savedForLater = [];
@@ -40,6 +42,7 @@ export class VirtualCart extends BaseComponent {
     ];
   }
 
+  // Render method to create the structure for this component.
   render() {
     if (!this.#container) {
       this.#container = document.createElement("div");
@@ -85,6 +88,7 @@ export class VirtualCart extends BaseComponent {
     return this.#container;
   }
 
+  // This method holds every event listener for all actions that involve interaction.
   #attachEventListeners() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
@@ -159,6 +163,7 @@ export class VirtualCart extends BaseComponent {
     this.#updateCartTotals();
   }
 
+  // This is a method called from within the render method, which generates the cart.
   #generateCartItems() {
     return this.#cartItems
       .map(
@@ -184,6 +189,7 @@ export class VirtualCart extends BaseComponent {
       .join("");
   }
 
+  // This is a method called from within the render method, which generates the save for later.
   #generateSavedItems() {
     return this.#savedForLater
       .map(
@@ -204,6 +210,7 @@ export class VirtualCart extends BaseComponent {
       .join("");
   }
 
+  // This method simply update all the values on the summary section of cart, to reflect totals.
   #updateCartTotals() {
     const totals = this.#calculateTotals();
     this.#container.querySelector("#subtotal").textContent = `$${totals.subtotal.toFixed(2)}`;
