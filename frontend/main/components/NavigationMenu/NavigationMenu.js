@@ -1,5 +1,7 @@
 import { AppController } from '../../app/AppController.js';
 import { BaseComponent } from '../../app/BaseComponent.js';
+import { icons } from './icons.js';
+
 export class NavigationMenu extends BaseComponent {
   constructor() {
     super();
@@ -26,7 +28,7 @@ export class NavigationMenu extends BaseComponent {
     logoButton.dataset.target = "marketplace";
 
     const logoImage = document.createElement("img");
-    logoImage.src = "../../../assets/navigation-menu/logo-light.png";
+    logoImage.src = icons[1];
     logoImage.alt = "Logo";
     logoImage.classList.add("logo-image");
     logoButton.appendChild(logoImage);
@@ -36,11 +38,13 @@ export class NavigationMenu extends BaseComponent {
     navButtonsContainer.classList.add("nav-buttons-container");
 
 
-    const links = [
-      { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
-      { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "sellProductsPage" },
-      { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
-      { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
+    const links = [ // TODO Add Save-for-later feature for better user experience if extra time.
+      { text: "Seller Page", src: icons[2], className: "sell-button", target: "sellProductsPage" },
+      { text: "Marketplace", src: icons[4], className: "marketplace-button", target: "marketplace" },
+      { text: "Virtual Cart", src: icons[8], className: "cart-button", target: "virtualCart" },
+      { text: "User Center", src: icons[10], className: "profile-button", target: "profilePage" },
+      // TODO links[3].text will be initialized as "Log In" after AuthPage implemented.
+  
     ];
 
 
