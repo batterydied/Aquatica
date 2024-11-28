@@ -79,8 +79,12 @@ class _ProductModel {
 
     async read(id = null) {
         /* Returns an existing product with the given id,
-           or all products if no id is given 
-           TODO: implement this method */
+           or all products if no id is given */
+        if (id) {
+            return await Product.findByPk(id);
+        } else {
+            return await Product.findAll();
+        }
     }
 
     async update(product) {

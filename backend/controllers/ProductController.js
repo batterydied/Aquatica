@@ -8,8 +8,9 @@ class ProductController {
 
     async getAllProducts(req, res) {
         /* Retrieves all products from the database
-           Response will be an object with a property containing an array of product objects 
-           TODO: Implement this method */
+           Response will be an object with a property containing an array of product objects */
+           const products = await this.model.read(); // argument is empty, meaning it will get all products
+           res.json({ products });
     }
 
     async getProduct(req, res) {
