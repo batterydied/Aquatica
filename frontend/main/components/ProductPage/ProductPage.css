@@ -16,7 +16,6 @@
 .topContainer{
     display: flex;
     flex-direction: row;
-    margin-top: 35px;
 }
 .product-secondary-title {
     color: black;

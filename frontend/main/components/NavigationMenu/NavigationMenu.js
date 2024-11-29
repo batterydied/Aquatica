@@ -4,7 +4,6 @@ export class NavigationMenu extends BaseComponent {
   constructor() {
     super();
     this.container = document.createElement("div");
-    this.container.classList.add("navigation-menu");
     this.loadCSS("NavigationMenu");
     this.createHeader();
     this.attachEventListeners();

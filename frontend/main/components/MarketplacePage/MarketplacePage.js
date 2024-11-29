@@ -75,7 +75,7 @@ export class MarketplacePage extends BaseComponent {
         this.container.innerHTML = "";
         //background image and logo
         const bg = document.createElement("div");
-        bg.classList.add("background");
+        //bg.classList.add("background");
         // const bgimg = document.createElement("img");
         // bgimg.classList.add("bgimg");
         // bgimg.src = "../frontend/assets/bg-dummy.png"; // TODO: site main image

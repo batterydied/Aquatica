@@ -38,13 +38,16 @@ export class AppController {
     if (!this.#container) {
       this.#container = document.createElement('div');
       this.#container.classList.add('app-controller');
+      this.#container.style.display = 'flex';
+      this.#container.style.flexDirection = 'column';
+      this.#container.style.justifyContent = 'center';
     }
 
     this.#container.innerHTML = '';
     this.#container.appendChild(this.#currentView.render());
 
     if (this.#currentView !== this.#views.secureCheckout) {
-      this.#container.appendChild(this.#views.navigationMenu.render());
+      this.#container.prepend(this.#views.navigationMenu.render());
     }
 
     return this.#container;
