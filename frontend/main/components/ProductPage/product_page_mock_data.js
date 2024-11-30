@@ -2,7 +2,7 @@ import {imgUrls} from './imgUrl.js'
 export const productData = 
 {
     "product": {
-      "id": "12345",
+      "id": 12345,
       "name": "Clownfish",
       "scientificName": "Amphiprioninae",
       "images": [
@@ -70,26 +70,6 @@ export const productData =
           "date": "2024-11-12"
         }
       ],
-      "relatedProducts": [
-        {
-          "id": "12346",
-          "name": "Sea Anemone (Heteractis magnifica)",
-          "price": 39.99,
-          "image": imgUrls[0]
-        },
-        {
-          "id": "12347",
-          "name": "Marine Flake Food",
-          "price": 9.99,
-          "image": imgUrls[0]
-        },
-        {
-          "id": "12348",
-          "name": "20-Gallon Starter Marine Tank",
-          "price": 129.99,
-          "image": imgUrls[1]
-        }
-      ]
     }
 }
   

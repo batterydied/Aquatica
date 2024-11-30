@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { handleGlobalError } from './utils/ErrorHandler.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import './database.js';
+import initializeDatabase from './tests/ProductPageDatabase.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,4 +67,5 @@ class Server {
 // Initialize and start the server
 console.log("Starting server...");
 const server = new Server();
-server.start(); 
+server.start();
+initializeDatabase(); 
