@@ -1,5 +1,5 @@
 import ProductModel from "../models/ProductModel.js";
-
+//hi
 class ProductController {
   constructor() {
     this.model = ProductModel; // Associate the controller with the ProductModel abstraction
