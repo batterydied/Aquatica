@@ -26,7 +26,7 @@ export class ProductPage extends BaseComponent {
   }
 
   // Render the ProductPage
-  async render(productId = '1a2b3c4d5e') { //defaults to this Id
+  async render(productId = 'abab6f2f-bc59-42b8-b433-13766b18953b') { //defaults to this Id
     if (productId) {
       await this.fetchProductData(productId); // Fetch product data for the given ID
     }

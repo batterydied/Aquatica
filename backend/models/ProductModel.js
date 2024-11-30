@@ -36,14 +36,6 @@ const Product = sequelize.define("Product", {
     type: DataTypes.DECIMAL,
     allowNull: false,
   },
-  average_rating: {
-    type: DataTypes.DECIMAL,
-    allowNull: true,
-  },
-  numreviews: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
 });
 
 const Review = sequelize.define("Review", {

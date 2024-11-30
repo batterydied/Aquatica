@@ -6,7 +6,6 @@ import { handleGlobalError } from './utils/ErrorHandler.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import './database.js';
-import initializeDatabase from './tests/ProductPageDatabase.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,4 +67,3 @@ class Server {
 console.log("Starting server...");
 const server = new Server();
 server.start();
-initializeDatabase(); 

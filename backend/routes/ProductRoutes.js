@@ -18,10 +18,10 @@ class ProductRoutes {
     this.router.post("/products", (req, res) => ProductController.addProduct(req, res));
 
     // Update an existing product
-    this.router.put("/products/:id", (req, res) => ProductController.updateProduct(req, res));
+    this.router.put("/products/:prodid", (req, res) => ProductController.updateProduct(req, res));
 
     // Delete a product by ID
-    this.router.delete("/products/:id", (req, res) => ProductController.deleteProduct(req, res));
+    this.router.delete("/products/:prodid", (req, res) => ProductController.deleteProduct(req, res));
   }
 }
 
