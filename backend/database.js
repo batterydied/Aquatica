@@ -14,11 +14,12 @@ const config = {
   development: {
     dialect: 'sqlite',
     storage: path.resolve(__dirname, process.env.DB_STORAGE || 'database.sqlite'), // Use __dirname to ensure path is relative to backend folder
+    logging: false,
   },
   test: {
     dialect: 'sqlite',
     storage: ':memory:', // In-memory database for testing
-    logging: console.log,
+    logging: false,
   },
 };
 

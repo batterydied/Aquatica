@@ -12,6 +12,10 @@ const Product = sequelize.define("Product", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  secondaryname: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   sellerid: {
     type: DataTypes.UUID,
     allowNull: false,

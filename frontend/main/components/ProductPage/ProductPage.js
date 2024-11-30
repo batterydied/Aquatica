@@ -1,4 +1,5 @@
 import { BaseComponent } from '../../app/BaseComponent.js';
+import { AppController } from '../../app/AppController.js';
 import { handleIncrease, updatePrice, handleDecrease, handleAddToCart } from './events.js';
 
 export class ProductPage extends BaseComponent {
@@ -12,6 +13,7 @@ export class ProductPage extends BaseComponent {
 
   // Fetch product data from the backend API
   async fetchProductData(productId) {
+    console.log("I am here, productID is:" + productId);
     try {
       const response = await fetch(`/api/products/${productId}`);
       if (!response.ok) {
@@ -24,9 +26,14 @@ export class ProductPage extends BaseComponent {
   }
 
   // Render the ProductPage
-  async render(productId = null) {
+  async render(productId = '1a2b3c4d5e') { //defaults to this Id
     if (productId) {
       await this.fetchProductData(productId); // Fetch product data for the given ID
+    }
+    else{
+      const text = document.createElement('h1');
+      text.innerText = 'Invalid product ID';
+      return text;
     }
 
     if (this.#container) {
@@ -97,13 +104,32 @@ export class ProductPage extends BaseComponent {
     const title = document.createElement('h1');
     title.className = 'product-title';
     title.innerText = this.#productData.name;
+    if(this.#productData.secondaryname){
+      const secondaryTitle = document.createElement('h2');
+      secondaryTitle.className = 'product-secondary-title';
+      secondaryTitle.innerText = this.#productData.secondaryname;
+      titles.appendChild(secondaryTitle);
+    }
+    const sellerLink = document.createElement('a');
+    const appController = AppController.getInstance();
+    //placeholder for now, supposed to go to the target seller's page
+    sellerLink.addEventListener('click', (event) => {
+      // Prevent the default behavior of the <a> tag
+      alert('hey');
+      // Use appController to navigate
+      appController.navigate('profilePage');
+    })
 
-    const secondaryTitle = document.createElement('h2');
-    secondaryTitle.className = 'product-secondary-title';
-    secondaryTitle.innerText = this.#productData.sellername;
+    const sellerName = document.createElement('p');
+    sellerName.className = 'sellername';
+    sellerName.innerText = `Visit the ${this.#productData.sellername} store`;
+    sellerLink.appendChild(sellerName);
+    
 
-    titles.appendChild(secondaryTitle);
     titles.appendChild(title);
+    titles.appendChild(sellerLink);
+    const horizontalLine = document.createElement('hr');
+    titles.appendChild(horizontalLine);
 
     return titles;
   }
@@ -128,6 +154,7 @@ export class ProductPage extends BaseComponent {
       thumbnail.alt = `${this.#productData.name} thumbnail`;
       thumbnail.addEventListener('mouseover', () => {
         mainImage.src = thumbnail.src; // Change main image on hover
+        thumbnail.classList.add('image-border'); // Add border effect to the thumbnail
       });
       thumbnails.appendChild(thumbnail);
     });
@@ -167,9 +194,15 @@ export class ProductPage extends BaseComponent {
     const productSelection = document.createElement('div');
     productSelection.className = 'product-selection';
 
+    // Product Types Container
+    const productTypes = document.createElement('div');
+    productTypes.className = 'product-types';
+
+    // Price Label and Span
     const priceLabel = document.createElement('p');
     priceLabel.innerText = 'Price: ';
     priceLabel.id = 'product-price';
+    priceLabel.className = 'product-secondary-title';
 
     const price = document.createElement('span');
     price.id = 'price';
@@ -177,11 +210,13 @@ export class ProductPage extends BaseComponent {
     price.innerText = price.dataset.originalPrice;
     priceLabel.appendChild(price);
 
-    // Create a container for the dropdown (optional)
+    // Append price label to product types
+    productTypes.appendChild(priceLabel);
+
+    // Product Types Dropdown
     const dropdownContainer = document.createElement('div');
     dropdownContainer.className = 'dropdown-container';
 
-    // Check if ProductTypes exists and is not empty before creating dropdown
     if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0) {
         const typeDropdown = document.createElement('select');
         typeDropdown.className = 'type-dropdown';
@@ -193,6 +228,10 @@ export class ProductPage extends BaseComponent {
             typeDropdown.appendChild(option);
         });
 
+        // Set default value
+        typeDropdown.value = this.#productData.ProductTypes[0]?.type || '';
+
+        // Update price on dropdown change
         typeDropdown.addEventListener('change', (e) => {
             const selectedType = this.#productData.ProductTypes.find((type) => type.type === e.target.value);
             const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
@@ -200,9 +239,17 @@ export class ProductPage extends BaseComponent {
             price.innerText = (selectedType.price * amount).toFixed(2);
         });
 
-        dropdownContainer.appendChild(typeDropdown); // Add dropdown to container
-        productSelection.appendChild(dropdownContainer); // Append container to selection
+        dropdownContainer.appendChild(typeDropdown);
+        productTypes.appendChild(dropdownContainer);
     }
+
+    // Append product types to product selection
+    productSelection.appendChild(productTypes);
+
+    // Quantity Controls
+    const quantityLabel = document.createElement('h1');
+    quantityLabel.innerText = 'Quantity';
+    quantityLabel.className = 'product-secondary-title';
 
     const quantityForm = document.createElement('div');
     quantityForm.className = 'quantity-form';
@@ -215,38 +262,46 @@ export class ProductPage extends BaseComponent {
     quantityInput.id = 'quantity-input';
     quantityInput.addEventListener('input', updatePrice);
 
-    const quantityIncrease = document.createElement('button');
-    quantityIncrease.innerText = '+';
-    quantityIncrease.classList.add('quantity-increase');
+    // Quantity Increase Button
+    const quantityIncrease = document.createElement('input');
+    quantityIncrease.type = 'button';
+    quantityIncrease.value = '+';
+    quantityIncrease.className = 'quantity-increase';
     quantityIncrease.addEventListener('click', () => {
         handleIncrease();
         updatePrice();
     });
 
-    const quantityDecrease = document.createElement('button');
-    quantityDecrease.innerText = '-';
-    quantityDecrease.classList.add('quantity-decrease');
+    // Quantity Decrease Button
+    const quantityDecrease = document.createElement('input');
+    quantityDecrease.type = 'button';
+    quantityDecrease.value = '-';
+    quantityDecrease.className = 'quantity-decrease';
     quantityDecrease.addEventListener('click', () => {
         handleDecrease();
         updatePrice();
     });
 
+    // Combine Quantity Controls
     quantityForm.appendChild(quantityDecrease);
     quantityForm.appendChild(quantityInput);
     quantityForm.appendChild(quantityIncrease);
 
+    // Append quantity label and form to product selection
+    productSelection.appendChild(quantityLabel);
+    productSelection.appendChild(quantityForm);
+
+    // Add to Cart Button
     const addToCartBtn = document.createElement('button');
     addToCartBtn.className = 'add-to-cart';
     addToCartBtn.innerText = 'Add to Cart';
     addToCartBtn.addEventListener('click', handleAddToCart);
 
-    productSelection.appendChild(priceLabel);
-    productSelection.appendChild(quantityForm);
+    // Append Add to Cart Button to product selection
     productSelection.appendChild(addToCartBtn);
 
     return productSelection;
 }
-
 
   // Create reviews and ratings
   #createReviewsAndRatings() {
@@ -257,6 +312,19 @@ export class ProductPage extends BaseComponent {
     reviewsTitle.innerText = `Reviews (${this.#productData.Reviews?.length || 0})`;
     container.appendChild(reviewsTitle);
 
+    // Create stars display for the overall rating
+    const starsContainer = document.createElement('div');
+    starsContainer.className = 'stars';
+
+    const averageRating = this.#productData.average_rating || 0;
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('i');
+      star.className = i <= Math.floor(averageRating) ? 'fas fa-star' : 'far fa-star';
+      starsContainer.appendChild(star);
+    }
+    reviewsTitle.appendChild(starsContainer);
+
+    // Display all reviews
     this.#productData.Reviews?.forEach((review) => {
       const reviewContainer = document.createElement('div');
       reviewContainer.className = 'review';
@@ -276,6 +344,95 @@ export class ProductPage extends BaseComponent {
 
       container.appendChild(reviewContainer);
     });
+
+    // Add the review input section at the bottom
+    const addReviewSection = document.createElement('div');
+    addReviewSection.className = 'addReview';
+
+    const addRatingContainer = document.createElement('div');
+    addRatingContainer.className = 'addRatingContainer';
+
+    // Create star input for new ratings
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('i');
+      star.className = 'far fa-star';
+      star.dataset.value = i;
+      addRatingContainer.appendChild(star);
+    }
+
+    const ratingValueDisplay = document.createElement('p');
+    ratingValueDisplay.className = 'ratingValue';
+    ratingValueDisplay.innerText = 'Rating: 0';
+    addReviewSection.appendChild(addRatingContainer);
+    addReviewSection.appendChild(ratingValueDisplay);
+
+    let currentRating = 0;
+
+    // Event listeners for star click/hover
+    const stars = addRatingContainer.querySelectorAll('i');
+    stars.forEach((star, index) => {
+      star.addEventListener('click', () => {
+        currentRating = index + 1;
+        updateRatingDisplay();
+      });
+
+      star.addEventListener('mouseover', () => highlightStars(index));
+      star.addEventListener('mouseout', updateRatingDisplay);
+    });
+
+    // Highlight stars on hover
+    function highlightStars(index) {
+      stars.forEach((star, i) => {
+        if (i <= index) {
+          star.classList.replace('far', 'fas');
+          star.classList.add('selected');
+        } else {
+          star.classList.replace('fas', 'far');
+          star.classList.remove('selected');
+        }
+      });
+    }
+
+    // Update the rating display based on selected stars
+    function updateRatingDisplay() {
+      stars.forEach((star, i) => {
+        if (i < currentRating) {
+          star.classList.replace('far', 'fas');
+          star.classList.add('selected');
+        } else {
+          star.classList.replace('fas', 'far');
+          star.classList.remove('selected');
+        }
+      });
+      ratingValueDisplay.innerText = `Rating: ${currentRating}`;
+    }
+
+    // Input box for the review comment
+    const addReviewBox = document.createElement('input');
+    addReviewBox.className = 'addReviewBox';
+    addReviewBox.type = 'text';
+    addReviewBox.placeholder = 'Add review';
+    addReviewSection.appendChild(addReviewBox);
+
+    // Add review button
+    const addReviewButton = document.createElement('button');
+    addReviewButton.textContent = ' + Add Review';
+    addReviewButton.className = 'addReviewButton';
+    addReviewButton.addEventListener('click', async () => {
+      const reviewData = {
+        rating: currentRating,
+        comment: addReviewBox.value,
+        user: 'Current User', // Replace with actual user name
+      };
+
+      if (reviewData.comment && currentRating > 0) {
+        // Send the review data to the backend (you can integrate your API call here)
+        await this.addReview(reviewData); // Function to handle the review submission
+      }
+    });
+    addReviewSection.appendChild(addReviewButton);
+
+    container.appendChild(addReviewSection);
 
     return container;
   }
