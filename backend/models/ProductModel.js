@@ -20,10 +20,6 @@ const Product = sequelize.define("Product", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  imgurl: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   category: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -57,12 +53,14 @@ const Review = sequelize.define("Review", {
 const Image = sequelize.define("Image", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   url: { type: DataTypes.STRING, allowNull: false },
+  productId: { type: DataTypes.UUID, allowNull: false },
 });
 
 const ProductType = sequelize.define("ProductType", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   type: { type: DataTypes.STRING, allowNull: false },
   price: { type: DataTypes.FLOAT, allowNull: false },
+  productId: { type: DataTypes.UUID, allowNull: false },
 });
 
 // Define relationships
@@ -101,19 +99,18 @@ class _ProductModel {
     }
   }
 
-  async read(id = null) {
+  async read(id = null, options = {}) {
     try {
       if (id) {
-        return await Product.findByPk(id, {
-          include: [Review, Image, ProductType], // Include related models
-        });
+        return await Product.findByPk(id, { ...options }); // Pass options for relationships
       }
-      return await Product.findAll({ include: [Review, Image, ProductType] });
+      return await Product.findAll({ ...options }); // Fetch all products with options
     } catch (error) {
       console.error("Error reading product(s):", error);
       throw error;
     }
   }
+  
 
   async update(id, updates) {
     try {
@@ -142,4 +139,4 @@ class _ProductModel {
 
 const ProductModel = new _ProductModel();
 export default ProductModel;
-
+export { Product, Review, Image, ProductType };

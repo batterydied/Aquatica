@@ -1,13 +1,14 @@
 import ProductModel from "../models/ProductModel.js";
+
 class ProductController {
   constructor() {
     this.model = ProductModel; // Associate the controller with the ProductModel abstraction
   }
 
-  // Retrieve all products from the database
+  // Retrieve all products from the database, including related images
   async getAllProducts(req, res) {
     try {
-      const products = await this.model.read(); // Use the read method to fetch all products
+      const products = await this.model.read(null, { include: ["Images"] }); // Include related images
       res.status(200).json(products);
     } catch (error) {
       console.error("Error retrieving products:", error);
@@ -15,11 +16,11 @@ class ProductController {
     }
   }
 
-  // Retrieve a specific product by ID
+  // Retrieve a specific product by ID, including related images
   async getProduct(req, res) {
     try {
       const { id } = req.params;
-      const product = await this.model.read(id); // Use the read method to fetch a single product
+      const product = await this.model.read(id, { include: ["Images"] }); // Include related images
 
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
@@ -35,19 +36,18 @@ class ProductController {
   // Add a new product to the database
   async addProduct(req, res) {
     try {
-      const { name, sellerid, sellername, imgurl, category, description, price } = req.body;
+      const { name, sellerid, sellername, category, description, price } = req.body;
 
       // Validate input
       if (!name || !sellerid || !sellername || !category || !price) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
-      // Create a new product using the create method
+      // Create a new product
       const newProduct = await this.model.create({
         name,
         sellerid,
         sellername,
-        imgurl,
         category,
         description,
         price,

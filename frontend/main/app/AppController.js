@@ -1,7 +1,3 @@
-// This will render all of our app's features.
-
-// Imports
-
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
 import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
@@ -11,28 +7,28 @@ import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
 
-
 export class AppController {
-   #container = null;
-   #currentView = null; // Track the currently rendered views
-   #views = {}; // Store initialized views
-   #navigationMenu = null; // Store the navigation menu separately and add on views
+  #container = null;
+  #currentView = null; // Track the currently rendered view
+  #views = {}; // Store initialized views
+  #navigationMenu = null; // Navigation menu component
+  static instance = null; // Singleton instance
 
-   constructor() {
-      // Initialize components
-      this.#views = {
-         marketplace: new MarketplacePage(),
-         secureCheckout: new SecureCheckout(),
-         virtualCart:  new VirtualCart(), 
-         navigationMenu: new NavigationMenu(),
-         productPage: new ProductPage(),
-         profilePage: new ProfilePage(),
-         sellProductsPage: new SellProductsPage()
-      };
+  constructor() {
+    // Initialize components
+    this.#views = {
+      marketplace: new MarketplacePage(),
+      secureCheckout: new SecureCheckout(),
+      virtualCart: new VirtualCart(),
+      navigationMenu: new NavigationMenu(),
+      productPage: null, // ProductPage will be dynamically initialized
+      profilePage: new ProfilePage(),
+      sellProductsPage: new SellProductsPage(),
+    };
 
-      // Default Page set as marketplace page
-      this.#currentView = this.#views.marketplace;
-   }
+    // Set the default page as the marketplace
+    this.#currentView = this.#views.marketplace;
+  }
 
   render() {
     if (!this.#container) {
@@ -43,35 +39,61 @@ export class AppController {
       this.#container.style.justifyContent = 'center';
     }
 
-    this.#container.innerHTML = '';
-    this.#container.appendChild(this.#currentView.render());
+    this.#container.innerHTML = ''; // Clear previous content
+    this.#container.appendChild(this.#currentView.render()); // Render the current view
 
+    // Add navigation menu except for specific views
     if (this.#currentView !== this.#views.secureCheckout) {
       this.#container.prepend(this.#views.navigationMenu.render());
     }
 
     return this.#container;
   }
-   /**
-   * Public method to navigate to a different view.
+
+  /**
+   * Navigate to a specific view.
    * @param {string} viewName - The name of the view to navigate to.
+   * @param {Object} params - Additional parameters to pass to the view.
    */
-   navigate(viewName) {
-      // Check if the view exists
-      if (!this.#views[viewName]) {
+  async navigate(viewName, params = {}) {
+    if (!this.#views[viewName]) {
       throw new Error(`View "${viewName}" not found.`);
-      }
+    }
 
-      // Switch to the new view
+    if (viewName === 'productPage') {
+      // Default to product ID '1a2b3c4d5e' if no ID is provided
+      const productId = params.productId || '1a2b3c4d5e';
+
+      // Dynamically initialize and fetch product data for ProductPage
+      const productPage = new ProductPage();
+      await productPage.fetchProductData(productId); // Load product data
+      this.#views.productPage = productPage; // Store the initialized ProductPage
+      this.#currentView = this.#views.productPage;
+    } else {
       this.#currentView = this.#views[viewName];
-      // Re-render the app controller with the new view
-      this.render();
-   }
+    }
 
-   static getInstance() {
-      if (!AppController.instance) {
-         AppController.instance = new AppController;
-      }
-      return AppController.instance;
-   }
+    this.render();
+  }
+
+  /**
+   * Handle routing based on the current URL.
+   */
+  handleRoute() {
+    const path = window.location.pathname; // Get the URL path
+    const [route, productId] = path.split('/').filter(Boolean); // Extract route and params
+
+    if (route === 'product' && productId) {
+      this.navigate('productPage', { productId }); // Navigate to productPage with productId
+    } else {
+      this.navigate('marketplace'); // Default to marketplace
+    }
+  }
+
+  static getInstance() {
+    if (!AppController.instance) {
+      AppController.instance = new AppController();
+    }
+    return AppController.instance;
+  }
 }
