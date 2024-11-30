@@ -1,0 +1,19 @@
+/* CSS Style for AuthPage, includes:
+  *- Authentication Forms:
+  - Registration Form
+  - Login Form
+  - Password-reset Form
+
+    *- Form Elements:
+    - Input fields (username, password, email).
+    - Buttons (login, register, reset password).
+    - Labels and error messages.
+
+  *- Interact Buttons:
+  - Logout Button
+  - Password-reset Request Button
+  
+  *- Feedback Elements:
+  - Error messages for invalid credentials or form validation.
+  - Success messages for registration or password reset requests.
+*/
