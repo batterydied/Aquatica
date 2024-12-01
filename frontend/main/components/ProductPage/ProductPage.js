@@ -229,34 +229,38 @@ export class ProductPage extends BaseComponent {
     productTypes.appendChild(priceLabel);
 
     // Product Types Dropdown
-    const dropdownContainer = document.createElement('div');
-    dropdownContainer.className = 'dropdown-container';
+const dropdownContainer = document.createElement('div');
+dropdownContainer.className = 'dropdown-container';
 
-    if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0) {
-        const typeDropdown = document.createElement('select');
-        typeDropdown.className = 'type-dropdown';
+if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0) {
+    const typeDropdown = document.createElement('select');
+    typeDropdown.className = 'type-dropdown';
 
-        this.#productData.ProductTypes.forEach((type) => {
-            const option = document.createElement('option');
-            option.value = type.type;
-            option.innerText = `${type.type} - $${type.price.toFixed(2)}`;
-            typeDropdown.appendChild(option);
-        });
+    // Reverse the ProductTypes array
+    const reversedProductTypes = [...this.#productData.ProductTypes].reverse();
 
-        // Set default value
-        typeDropdown.value = this.#productData.ProductTypes[0]?.type || '';
+    reversedProductTypes.forEach((type) => {
+        const option = document.createElement('option');
+        option.value = type.type;
+        option.innerText = `${type.type} - $${type.price.toFixed(2)}`;
+        typeDropdown.appendChild(option);
+    });
 
-        // Update price on dropdown change
-        typeDropdown.addEventListener('change', (e) => {
-            const selectedType = this.#productData.ProductTypes.find((type) => type.type === e.target.value);
-            const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
-            price.dataset.originalPrice = selectedType.price;
-            price.innerText = (selectedType.price * amount).toFixed(2);
-        });
+    // Set default value
+    typeDropdown.value = reversedProductTypes[0]?.type || '';
 
-        dropdownContainer.appendChild(typeDropdown);
-        productTypes.appendChild(dropdownContainer);
-    }
+    // Update price on dropdown change
+    typeDropdown.addEventListener('change', (e) => {
+        const selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
+        const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
+        price.dataset.originalPrice = selectedType.price;
+        price.innerText = (selectedType.price * amount).toFixed(2);
+    });
+
+    dropdownContainer.appendChild(typeDropdown);
+    productTypes.appendChild(dropdownContainer);
+}
+
 
     // Append product types to product selection
     productSelection.appendChild(productTypes);

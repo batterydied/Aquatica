@@ -21,7 +21,7 @@ class ProductController {
   async getProduct(req, res) {
     try {
       const { id } = req.params;
-      const product = await this.model.read(id, { include: ["Images", "Reviews", "ProductTypes"] }); // Include related images
+      const product = await this.model.read(id, { include: ["Images", "Reviews", "ProductTypes"] }); // Include related
 
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
