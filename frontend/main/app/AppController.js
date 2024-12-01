@@ -30,7 +30,7 @@ export class AppController {
      this.#currentView = this.#views.marketplace;
    }
 
-   async render() {
+   async render(id=null) {
      if (!this.#container) {
        this.#container = document.createElement('div');
        this.#container.classList.add('app-controller');
@@ -40,8 +40,12 @@ export class AppController {
      }
 
      this.#container.innerHTML = ''; // Clear previous content
-     const content = await this.#currentView.render();
-     console.log(content);
+     let content;
+     if(!id){
+      content = await this.#currentView.render();
+     }else{
+      content = await this.#currentView.render(id);
+     }
      this.#container.appendChild(content); // Render the current view
 
      // Add navigation menu except for specific views
@@ -61,14 +65,12 @@ export class AppController {
      if (!this.#views[viewName]) {
        throw new Error(`View "${viewName}" not found.`);
      }
-
-     
       this.#currentView = this.#views[viewName];
      if(viewName === 'productPage'){
-      console.log("oh hi");
+      this.render(params.prodid);
+     }else{
+      this.render();
      }
-
-     this.render();
    }
 
    static getInstance() {

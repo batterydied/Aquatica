@@ -464,7 +464,7 @@ export class MarketplacePage extends BaseComponent {
     goToProductPage(prodid) {
         console.log(`going to product page for product ${prodid}`);
         const appController = AppController.getInstance();
-        appController.navigate("productPage");
+        appController.navigate("productPage", {prodid});
     }
 
     goToSellerProfile(sellid) {

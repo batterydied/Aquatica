@@ -20,7 +20,6 @@ export class ProductPage extends BaseComponent {
         throw new Error(`Failed to fetch product data: ${response.statusText}`);
       }
       this.#productData = await response.json(); // Store fetched product data
-      console.log("wow" + this.#productData);
     } catch (error) {
       console.error("Error fetching product data:", error);
     }
