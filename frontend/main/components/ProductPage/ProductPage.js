@@ -20,6 +20,7 @@ export class ProductPage extends BaseComponent {
         throw new Error(`Failed to fetch product data: ${response.statusText}`);
       }
       this.#productData = await response.json(); // Store fetched product data
+      console.log("wow" + this.#productData);
     } catch (error) {
       console.error("Error fetching product data:", error);
     }
@@ -147,17 +148,34 @@ export class ProductPage extends BaseComponent {
     const thumbnails = document.createElement('div');
     thumbnails.className = 'image-panel';
 
-    this.#productData.Images?.forEach((image) => {
+    this.#productData.Images?.forEach((image, index) => {
       const thumbnail = document.createElement('img');
       thumbnail.className = 'thumbnail-img';
       thumbnail.src = image.url;
       thumbnail.alt = `${this.#productData.name} thumbnail`;
+    
+      // Add a border to the first thumbnail by default
+      if (index === 0) {
+        thumbnail.classList.add('image-border'); // Apply border to the first thumbnail
+      }
+    
+      // Add event listener for hover
       thumbnail.addEventListener('mouseover', () => {
         mainImage.src = thumbnail.src; // Change main image on hover
-        thumbnail.classList.add('image-border'); // Add border effect to the thumbnail
+        
+        // Remove border from all thumbnails first
+        document.querySelectorAll('.thumbnail-img').forEach((thumb) => {
+          thumb.classList.remove('image-border');
+        });
+    
+        // Add border effect to the hovered thumbnail
+        thumbnail.classList.add('image-border');
       });
+    
+      // Append thumbnail to the container
       thumbnails.appendChild(thumbnail);
     });
+    
 
     imageGallery.appendChild(thumbnails);
     imageGallery.appendChild(mainImage);

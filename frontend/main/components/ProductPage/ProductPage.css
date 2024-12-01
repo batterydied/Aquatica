@@ -35,11 +35,12 @@
     margin-left: 3rem;
 }
 .thumbnail-img{
-    width: 3rem;
-    height: 3rem;
+    width: 3.7rem;
+    height: 3.7rem;
     border-radius: 0.5rem;
     object-fit: cover;
     cursor: pointer;
+    transition: border 0.3s ease
 }
 .quantity-input{
     width: 5rem;
@@ -105,7 +106,7 @@ input{
 }
 
 .image-border{
-    border: 0.5rem solid black;
+    border: 0.3rem solid #232c3c;
 }
 .product-selection {
     display: flex;
@@ -121,7 +122,16 @@ input{
     height: auto;
     gap: 0.5rem;
     cursor: pointer;
-}
+  }
+  
+  /* Neutralize :focus and :active without removing base styles */
+  .type-dropdown:focus,
+  .type-dropdown:active {
+    outline: none;  /* Remove focus outline */
+    box-shadow: none;  /* Remove any box shadow */
+  }
+  
+   
 .image-gallery{
     display: flex;
     width: 55%;
