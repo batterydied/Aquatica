@@ -1,30 +1,30 @@
-export class EventHub {
-  static instance = null;
+// EventHub.js
 
+class EventHub {
   constructor() {
-    if (EventHub.instance) return EventHub.instance;
-
-    this.events = {}; // Event listeners storage
-    EventHub.instance = this;
+    this.events = {};
   }
 
-  subscribe(eventName, callback) {
-    if (!this.events[eventName]) this.events[eventName] = [];
-    this.events[eventName].push(callback);
-  }
-
-  publish(eventName, data) {
-    if (this.events[eventName]) {
-      this.events[eventName].forEach((callback) => callback(data));
+  subscribe(event, listener) {
+    if (!this.events[event]) {
+      this.events[event] = [];
     }
+    this.events[event].push(listener);
+    return () => this.unsubscribe(event, listener);
   }
 
-  unsubscribe(eventName, callback) {
-    if (this.events[eventName]) {
-      this.events[eventName] = this.events[eventName].filter((cb) => cb !== callback);
-    }
+  publish(event, data) {
+    if (!this.events[event]) return;
+    this.events[event].forEach((listener) => listener(data));
+  }
+
+  unsubscribe(event, listenerToRemove) {
+    if (!this.events[event]) return;
+    this.events[event] = this.events[event].filter(
+      (listener) => listener !== listenerToRemove
+    );
   }
 }
 
-export const hub = new EventHub();
+export default new EventHub(); // Use default export
 

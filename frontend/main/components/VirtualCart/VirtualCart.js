@@ -1,10 +1,9 @@
 // Imports
 import { BaseComponent } from "../../app/BaseComponent.js";
-import { AppController } from "../../app/AppController.js";
-import { hub } from "../../eventhub/EventHub.js";
+import CartEvents from "../../eventhub/CartEvents.js";
+import EventHub from "../../eventhub/EventHub.js";
 
 export class VirtualCart extends BaseComponent {
-  // Initialize the container that will hold the pages content, and 2 empty arrays.
   #container = null;
   #cartItems = [];
   #savedForLater = [];
@@ -13,36 +12,39 @@ export class VirtualCart extends BaseComponent {
     super();
     this.loadCSS("VirtualCart");
 
-    // Temporary placeholder data for the cart
-    this.#cartItems = [
-      {
-        id: 1,
-        name: "Sample Product 1",
-        description: "This is a placeholder product.",
-        quantity: 2,
-        price: 19.99,
-      },
-      {
-        id: 2,
-        name: "Sample Product 2",
-        description: "Another placeholder product.",
-        quantity: 1,
-        price: 39.99,
-      },
-    ];
+    // Subscribe to cart-related events
+    EventHub.subscribe("cartFetched", (cartItems) => {
+      this.#cartItems = cartItems;
+      this.#refreshCart();
+    });
 
-    // Temporary placeholder data for Save for Later
-    this.#savedForLater = [
-      {
-        id: 3,
-        name: "Sample Product 3",
-        description: "This product is saved for later.",
-        price: 9.99,
-      },
-    ];
+    EventHub.subscribe("savedItemsFetched", (savedItems) => {
+      this.#savedForLater = savedItems;
+      this.#refreshCart();
+    });
+
+    EventHub.subscribe("cartItemRemoved", (itemId) => {
+      this.#cartItems = this.#cartItems.filter((item) => item.id !== itemId);
+      this.#refreshCart();
+    });
+
+    EventHub.subscribe("itemSavedForLater", (savedItem) => {
+      this.#savedForLater.push(savedItem);
+      this.#cartItems = this.#cartItems.filter((item) => item.id !== savedItem.id);
+      this.#refreshCart();
+    });
+
+    EventHub.subscribe("itemMovedToCart", (movedItem) => {
+      this.#cartItems.push(movedItem);
+      this.#savedForLater = this.#savedForLater.filter((item) => item.id !== movedItem.id);
+      this.#refreshCart();
+    });
+
+    EventHub.subscribe("cartError", (errorMessage) => {
+      console.error("Cart Error:", errorMessage);
+    });
   }
 
-  // Render method to create the structure for this component.
   render() {
     if (!this.#container) {
       this.#container = document.createElement("div");
@@ -53,19 +55,11 @@ export class VirtualCart extends BaseComponent {
           <a href="#" class="back-link">← Marketplace</a>
           <h1>Your Cart</h1>
           <div id="cart-items">
-            ${
-              this.#cartItems.length > 0
-                ? this.#generateCartItems()
-                : '<p class="empty-cart">Your cart is empty.</p>'
-            }
+            <p class="loading-message">Loading cart items...</p>
           </div>
           <h2>Save for Later</h2>
           <div id="saved-items">
-            ${
-              this.#savedForLater.length > 0
-                ? this.#generateSavedItems()
-                : '<p class="empty-saved">No items saved for later.</p>'
-            }
+            <p class="loading-message">Loading saved items...</p>
           </div>
         </div>
         <div class="cart-right">
@@ -82,13 +76,13 @@ export class VirtualCart extends BaseComponent {
       `;
 
       this.#attachEventListeners();
-      this.#updateCartTotals();
+      CartEvents.fetchCart(); // Fetch cart data on render
+      CartEvents.fetchSavedItems(); // Fetch saved-for-later items on render
     }
 
     return this.#container;
   }
 
-  // This method holds every event listener for all actions that involve interaction.
   #attachEventListeners() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
@@ -99,22 +93,18 @@ export class VirtualCart extends BaseComponent {
       const index = e.target.dataset.index;
       if (e.target.classList.contains("increment")) {
         this.#cartItems[index].quantity++;
-        this.#refreshCart();
+        CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
       } else if (e.target.classList.contains("decrement")) {
         if (this.#cartItems[index].quantity > 1) {
           this.#cartItems[index].quantity--;
+          CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
         } else {
-          this.#cartItems.splice(index, 1);
+          CartEvents.removeFromCart(this.#cartItems[index].id);
         }
-        this.#refreshCart();
       } else if (e.target.classList.contains("delete")) {
-        this.#cartItems.splice(index, 1);
-        this.#refreshCart();
+        CartEvents.removeFromCart(this.#cartItems[index].id);
       } else if (e.target.classList.contains("save-later")) {
-        const item = this.#cartItems[index];
-        this.#savedForLater.push({ ...item });
-        this.#cartItems.splice(index, 1);
-        this.#refreshCart();
+        CartEvents.saveForLater(this.#cartItems[index].id);
       }
     });
 
@@ -122,23 +112,74 @@ export class VirtualCart extends BaseComponent {
     savedItemsContainer.addEventListener("click", (e) => {
       const index = e.target.dataset.index;
       if (e.target.classList.contains("add-to-cart")) {
-        const item = this.#savedForLater[index];
-        this.#cartItems.push({ ...item, quantity: item.quantity || 1 });
-        this.#savedForLater.splice(index, 1);
-        this.#refreshCart();
+        CartEvents.moveToCart(this.#savedForLater[index].id);
       }
     });
 
     // Handle navigation to checkout
     checkoutButton.addEventListener("click", (e) => {
       e.preventDefault();
-      hub.publish("cartData", {
+      const cartData = {
         cartItems: this.#cartItems,
         totals: this.#calculateTotals(),
-      });
-      const appController = AppController.getInstance();
-      appController.navigate("secureCheckout");
+      };
+      console.log("Proceeding to checkout with:", cartData);
+      // Trigger navigation or send data to backend
     });
+  }
+
+  #refreshCart() {
+    const cartItemsContainer = this.#container.querySelector("#cart-items");
+    const savedItemsContainer = this.#container.querySelector("#saved-items");
+
+    cartItemsContainer.innerHTML =
+      this.#cartItems.length > 0 ? this.#generateCartItems() : '<p class="empty-cart">Your cart is empty.</p>';
+    savedItemsContainer.innerHTML =
+      this.#savedForLater.length > 0
+        ? this.#generateSavedItems()
+        : '<p class="empty-saved">No items saved for later.</p>';
+
+    this.#updateCartTotals();
+  }
+
+  #generateCartItems() {
+    return this.#cartItems
+      .map(
+        (item, index) => `
+        <div class="cart-item">
+          <div class="item-details">
+            <h4>${item.productId}</h4>
+          </div>
+          <div class="item-quantity">
+            <button class="decrement" data-index="${index}">-</button>
+            <span>${item.quantity}</span>
+            <button class="increment" data-index="${index}">+</button>
+          </div>
+          <div class="item-actions">
+            <button class="save-later" data-index="${index}">Save for Later</button>
+            <button class="delete" data-index="${index}">Delete</button>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  #generateSavedItems() {
+    return this.#savedForLater
+      .map(
+        (item, index) => `
+        <div class="saved-item">
+          <div class="item-details">
+            <h4>${item.productId}</h4>
+          </div>
+          <div class="item-actions">
+            <button class="add-to-cart" data-index="${index}">Add to Cart</button>
+          </div>
+        </div>
+      `
+      )
+      .join("");
   }
 
   #calculateTotals() {
@@ -153,64 +194,6 @@ export class VirtualCart extends BaseComponent {
     return { subtotal, shipping, tax, total };
   }
 
-  #refreshCart() {
-    const cartItemsContainer = this.#container.querySelector("#cart-items");
-    const savedItemsContainer = this.#container.querySelector("#saved-items");
-
-    cartItemsContainer.innerHTML = this.#generateCartItems();
-    savedItemsContainer.innerHTML = this.#generateSavedItems();
-
-    this.#updateCartTotals();
-  }
-
-  // This is a method called from within the render method, which generates the cart.
-  #generateCartItems() {
-    return this.#cartItems
-      .map(
-        (item, index) => `
-        <div class="cart-item">
-          <div class="item-details">
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-          </div>
-          <div class="item-quantity">
-            <button class="decrement" data-index="${index}">-</button>
-            <span>${item.quantity}</span>
-            <button class="increment" data-index="${index}">+</button>
-          </div>
-          <div class="item-price">$${(item.price * item.quantity).toFixed(2)}</div>
-          <div class="item-actions">
-            <button class="save-later" data-index="${index}">Save</button>
-            <button class="delete" data-index="${index}">Delete</button>
-          </div>
-        </div>
-      `
-      )
-      .join("");
-  }
-
-  // This is a method called from within the render method, which generates the save for later.
-  #generateSavedItems() {
-    return this.#savedForLater
-      .map(
-        (item, index) => `
-        <div class="saved-item">
-          <div class="item-details">
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-            <p>Quantity: ${item.quantity || 1}</p>
-            <p>Price: $${item.price.toFixed(2)}</p>
-          </div>
-          <div class="item-actions">
-            <button class="add-to-cart" data-index="${index}">Add to Cart</button>
-          </div>
-        </div>
-      `
-      )
-      .join("");
-  }
-
-  // This method simply update all the values on the summary section of cart, to reflect totals.
   #updateCartTotals() {
     const totals = this.#calculateTotals();
     this.#container.querySelector("#subtotal").textContent = `$${totals.subtotal.toFixed(2)}`;
