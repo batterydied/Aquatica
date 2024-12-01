@@ -9,7 +9,7 @@ class ProductController {
   // Retrieve all products from the database, including related images
   async getAllProducts(req, res) {
     try {
-      const products = await this.model.read(null, { include: ["Images"] }); // Include related images
+        const products = await this.model.read(null, { include: ["Images", "Reviews", "ProductTypes"] });// Include related
       res.status(200).json(products);
     } catch (error) {
       console.error("Error retrieving products:", error);
@@ -21,7 +21,7 @@ class ProductController {
   async getProduct(req, res) {
     try {
       const { id } = req.params;
-      const product = await this.model.read(id, { include: ["Images"] }); // Include related images
+      const product = await this.model.read(id, { include: ["Images", "Reviews", "ProductTypes"] }); // Include related images
 
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
@@ -37,7 +37,7 @@ class ProductController {
   // Add a new product to the database
   async addProduct(req, res) {
     try {
-      const { name, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
+      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
   
       // Validate input
       if (!name || !sellerid || !sellername || !category || !price) {
@@ -47,6 +47,7 @@ class ProductController {
       // Create a new product
       const newProduct = await this.model.create({
         name,
+        secondaryname,
         sellerid,
         sellername,
         category,
@@ -101,7 +102,7 @@ class ProductController {
   async updateProduct(req, res) {
     try {
       const { prodid }  = req.params;  // Get the product prodid from the request
-      const { name, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
+      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
   
       // Step 1: Validate required fields
       if (!name || !sellerid || !sellername || !category || !price) {
@@ -118,6 +119,7 @@ class ProductController {
       // Step 3: Update main product fields
       await productToUpdate.update({
         name,
+        secondaryname,
         sellerid,
         sellername,
         category,

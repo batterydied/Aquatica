@@ -114,8 +114,6 @@ export class ProductPage extends BaseComponent {
     const appController = AppController.getInstance();
     //placeholder for now, supposed to go to the target seller's page
     sellerLink.addEventListener('click', (event) => {
-      // Prevent the default behavior of the <a> tag
-      alert('hey');
       // Use appController to navigate
       appController.navigate('profilePage');
     })
