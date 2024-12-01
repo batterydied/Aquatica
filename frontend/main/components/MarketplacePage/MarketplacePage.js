@@ -286,7 +286,7 @@ export class MarketplacePage extends BaseComponent {
         curProduct.appendChild(prodIMGDiv);
 
         const prodIMG = document.createElement("img");
-        prodIMG.src = "/assets/dummy_600x400_ffffff_cccccc.png";
+        prodIMG.src = prodListItem.imgurl;
         prodIMG.classList.add("prodimg");
         //prodIMG.src = this.prodList[i].imgurl;
         prodIMGDiv.appendChild(prodIMG);

@@ -288,7 +288,7 @@ export const products = [
     prodid: "1a2b3c4d5e",
     sellername: "Ocean Wonders",
     sellerid: "1234-5678",
-    imgurl: "https://scitechdaily.com/images/Clownfish-Art-Concept-Illustration.jpg",
+    imgurl: "https://miro.medium.com/v2/resize:fit:940/1*tqkPCH9gc8nv000FOpRoOA.png",
     name: "Clownfish",
     category: Category.SaltwaterFish,
     description: "Bright and vibrant saltwater fish.",
