@@ -1,5 +1,3 @@
-// EventHub.js
-
 class EventHub {
   constructor() {
     this.events = {};

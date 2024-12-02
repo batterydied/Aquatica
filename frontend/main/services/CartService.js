@@ -43,19 +43,26 @@ export default class CartService {
     }
   }
 
-  // Remove an item from the cart
-  static async removeFromCart(itemId) {
-    try {
-      const response = await fetch(`${this.baseUrl}/${itemId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to remove item from cart');
-      return await response.json();
-    } catch (error) {
-      console.error('CartService removeFromCart error:', error);
-      throw error;
+static async removeFromCart(itemId) {
+  try {
+    const response = await fetch(`${this.baseUrl}/${itemId}`, {
+      method: 'DELETE',
+    });
+
+    // Handle HTTP response status
+    if (!response.ok) {
+      throw new Error(`Failed to remove item: ${response.statusText}`);
     }
+
+    // If server returns no JSON (e.g., 204 status), avoid parsing JSON
+    const result = response.status === 204 ? null : await response.json();
+    return result;
+  } catch (error) {
+    console.error('CartService removeFromCart error:', error);
+    throw error;
   }
+}
+
 
   // Save an item for later
   static async saveForLater(itemId) {
@@ -84,5 +91,22 @@ export default class CartService {
       throw error;
     }
   }
+
+static async updateCartItem(itemId, quantity) {
+  try {
+    const response = await fetch(`${this.baseUrl}/${itemId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity }),
+    });
+
+    if (!response.ok) throw new Error('Failed to update item quantity');
+    return await response.json();
+  } catch (error) {
+    console.error('CartService updateCartItem error:', error);
+    throw error;
+  }
+}
+
 }
 

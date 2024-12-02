@@ -62,5 +62,16 @@ export default class CartEvents {
       EventHub.publish('cartError', error.message);
     }
   }
+
+
+static async updateCartItem(itemId, quantity) {
+  try {
+    const updatedItem = await CartService.updateCartItem(itemId, quantity);
+    EventHub.publish("cartItemUpdated", updatedItem); // Publish update
+  } catch (error) {
+    EventHub.publish("cartError", error.message); // Handle errors
+  }
+}
+
 }
 

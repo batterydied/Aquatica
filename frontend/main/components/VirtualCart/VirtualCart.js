@@ -8,42 +8,51 @@ export class VirtualCart extends BaseComponent {
   #cartItems = [];
   #savedForLater = [];
 
-  constructor() {
-    super();
-    this.loadCSS("VirtualCart");
+constructor() {
+  super();
+  this.loadCSS("VirtualCart");
 
-    // Subscribe to cart-related events
-    EventHub.subscribe("cartFetched", (cartItems) => {
-      this.#cartItems = cartItems;
-      this.#refreshCart();
-    });
+  // Subscribe to cart-related events
+  EventHub.subscribe("cartFetched", (cartItems) => {
+    this.#cartItems = cartItems;
+    this.#refreshCart();
+  });
 
-    EventHub.subscribe("savedItemsFetched", (savedItems) => {
-      this.#savedForLater = savedItems;
-      this.#refreshCart();
-    });
+  EventHub.subscribe("savedItemsFetched", (savedItems) => {
+    this.#savedForLater = savedItems;
+    this.#refreshCart();
+  });
 
-    EventHub.subscribe("cartItemRemoved", (itemId) => {
-      this.#cartItems = this.#cartItems.filter((item) => item.id !== itemId);
-      this.#refreshCart();
-    });
+  EventHub.subscribe("cartItemRemoved", (itemId) => {
+    this.#cartItems = this.#cartItems.filter((item) => item.id !== itemId);
+    this.#refreshCart();
+  });
 
-    EventHub.subscribe("itemSavedForLater", (savedItem) => {
-      this.#savedForLater.push(savedItem);
-      this.#cartItems = this.#cartItems.filter((item) => item.id !== savedItem.id);
-      this.#refreshCart();
-    });
+  EventHub.subscribe("itemSavedForLater", (savedItem) => {
+    this.#savedForLater.push(savedItem);
+    this.#cartItems = this.#cartItems.filter((item) => item.id !== savedItem.id);
+    this.#refreshCart();
+  });
 
-    EventHub.subscribe("itemMovedToCart", (movedItem) => {
-      this.#cartItems.push(movedItem);
-      this.#savedForLater = this.#savedForLater.filter((item) => item.id !== movedItem.id);
-      this.#refreshCart();
-    });
+  EventHub.subscribe("itemMovedToCart", (movedItem) => {
+    this.#cartItems.push(movedItem);
+    this.#savedForLater = this.#savedForLater.filter((item) => item.id !== movedItem.id);
+    this.#refreshCart();
+  });
 
-    EventHub.subscribe("cartError", (errorMessage) => {
-      console.error("Cart Error:", errorMessage);
-    });
-  }
+  // Subscribe to cart item updates
+  EventHub.subscribe("cartItemUpdated", (updatedItem) => {
+    const index = this.#cartItems.findIndex((item) => item.id === updatedItem.id);
+    if (index !== -1) {
+      this.#cartItems[index] = updatedItem; // Update the item in the local array
+      this.#refreshCart(); // Refresh the UI
+    }
+  });
+
+  EventHub.subscribe("cartError", (errorMessage) => {
+    console.error("Cart Error:", errorMessage);
+  });
+}
 
   render() {
     if (!this.#container) {
@@ -89,24 +98,26 @@ export class VirtualCart extends BaseComponent {
     const checkoutButton = this.#container.querySelector(".checkout-button");
 
     // Handle cart item actions
-    cartItemsContainer.addEventListener("click", (e) => {
-      const index = e.target.dataset.index;
-      if (e.target.classList.contains("increment")) {
-        this.#cartItems[index].quantity++;
-        CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
-      } else if (e.target.classList.contains("decrement")) {
-        if (this.#cartItems[index].quantity > 1) {
-          this.#cartItems[index].quantity--;
-          CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
-        } else {
-          CartEvents.removeFromCart(this.#cartItems[index].id);
-        }
-      } else if (e.target.classList.contains("delete")) {
-        CartEvents.removeFromCart(this.#cartItems[index].id);
-      } else if (e.target.classList.contains("save-later")) {
-        CartEvents.saveForLater(this.#cartItems[index].id);
-      }
-    });
+cartItemsContainer.addEventListener("click", (e) => {
+  const index = e.target.dataset.index;
+  if (e.target.classList.contains("increment")) {
+    this.#cartItems[index].quantity++;
+    CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
+  } else if (e.target.classList.contains("decrement")) {
+    if (this.#cartItems[index].quantity > 1) {
+      this.#cartItems[index].quantity--;
+      CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
+    } else {
+      // Prevent direct removal and update the quantity to 1
+      console.warn("Cannot decrement below 1. Quantity remains at 1.");
+    }
+  } else if (e.target.classList.contains("delete")) {
+    CartEvents.removeFromCart(this.#cartItems[index].id);
+  } else if (e.target.classList.contains("save-later")) {
+    CartEvents.saveForLater(this.#cartItems[index].id);
+  }
+});
+
 
     // Handle saved-for-later actions
     savedItemsContainer.addEventListener("click", (e) => {
@@ -142,57 +153,64 @@ export class VirtualCart extends BaseComponent {
     this.#updateCartTotals();
   }
 
-  #generateCartItems() {
-    return this.#cartItems
-      .map(
-        (item, index) => `
-        <div class="cart-item">
-          <div class="item-details">
-            <h4>${item.productId}</h4>
-          </div>
-          <div class="item-quantity">
-            <button class="decrement" data-index="${index}">-</button>
-            <span>${item.quantity}</span>
-            <button class="increment" data-index="${index}">+</button>
-          </div>
-          <div class="item-actions">
-            <button class="save-later" data-index="${index}">Save for Later</button>
-            <button class="delete" data-index="${index}">Delete</button>
-          </div>
+#generateCartItems() {
+  return this.#cartItems
+    .map(
+      (item, index) => `
+      <div class="cart-item">
+        <div class="item-details">
+          <h4>${item.productId}</h4>
+          <p>${item.description}</p> <!-- Display description -->
+          <p>Price: $${item.price.toFixed(2)}</p> <!-- Display price -->
         </div>
-      `
-      )
-      .join("");
-  }
-
-  #generateSavedItems() {
-    return this.#savedForLater
-      .map(
-        (item, index) => `
-        <div class="saved-item">
-          <div class="item-details">
-            <h4>${item.productId}</h4>
-          </div>
-          <div class="item-actions">
-            <button class="add-to-cart" data-index="${index}">Add to Cart</button>
-          </div>
+        <div class="item-quantity">
+          <button class="decrement" data-index="${index}">-</button>
+          <span>${item.quantity}</span>
+          <button class="increment" data-index="${index}">+</button>
         </div>
-      `
-      )
-      .join("");
-  }
+        <div class="item-actions">
+          <button class="save-later" data-index="${index}">Save for Later</button>
+          <button class="delete" data-index="${index}">Delete</button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
 
-  #calculateTotals() {
-    const subtotal = this.#cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
-    const tax = subtotal * 0.1;
-    const total = subtotal + shipping + tax;
 
-    return { subtotal, shipping, tax, total };
-  }
+#generateSavedItems() {
+  return this.#savedForLater
+    .map(
+      (item, index) => `
+      <div class="saved-item">
+        <div class="item-details">
+          <h4>${item.productId}</h4>
+          <p>${item.description}</p> <!-- Display description -->
+          <p>Price: $${item.price.toFixed(2)}</p> <!-- Display price -->
+        </div>
+        <div class="item-actions">
+          <button class="add-to-cart" data-index="${index}">Add to Cart</button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
+
+
+#calculateTotals() {
+  const subtotal = this.#cartItems.reduce(
+    (total, item) => total + item.price * item.quantity, // Use the price field
+    0
+  );
+  const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
+  const tax = subtotal * 0.1;
+  const total = subtotal + shipping + tax;
+
+  return { subtotal, shipping, tax, total };
+}
+
 
   #updateCartTotals() {
     const totals = this.#calculateTotals();

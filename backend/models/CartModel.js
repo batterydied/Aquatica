@@ -7,31 +7,16 @@ const Cart = sequelize.define("Cart", {
   productId: { type: DataTypes.STRING, allowNull: false },
   quantity: { type: DataTypes.INTEGER, defaultValue: 1 },
   isSaved: { type: DataTypes.BOOLEAN, defaultValue: false },
+  price: { type: DataTypes.FLOAT, allowNull: false }, // New field
+  description: { type: DataTypes.STRING, allowNull: false }, // New field
 });
 
 class CartModel {
   static async getModel() {
     // Ensure the database schema is synchronized
-    await sequelize.sync();
-    await CartModel.seedTestData(); // Seed test data
+    await sequelize.sync({ force: true }); // Force sync drops existing tables
+    console.log("Database schema recreated.");
     return Cart;
-  }
-
-  static async seedTestData() {
-    const testItems = [
-      { productId: "prod-123", quantity: 2, isSaved: false }, // Cart item
-      { productId: "prod-456", quantity: 1, isSaved: false }, // Cart item
-      { productId: "prod-789", quantity: 3, isSaved: true },  // Saved-for-later item
-    ];
-
-    // Check if the database already has items
-    const itemCount = await Cart.count();
-    if (itemCount === 0) {
-      console.log("Seeding test data...");
-      await Cart.bulkCreate(testItems);
-    } else {
-      console.log("Test data already exists.");
-    }
   }
 
   async getCartItems() {
@@ -52,16 +37,22 @@ class CartModel {
 
   async saveForLater(itemId) {
     const item = await Cart.findByPk(itemId);
-    item.isSaved = true;
-    await item.save();
-    return item;
+    if (item) {
+      item.isSaved = true;
+      await item.save();
+      return item;
+    }
+    throw new Error(`Item with ID ${itemId} not found.`);
   }
 
   async moveToCart(itemId) {
     const item = await Cart.findByPk(itemId);
-    item.isSaved = false;
-    await item.save();
-    return item;
+    if (item) {
+      item.isSaved = false;
+      await item.save();
+      return item;
+    }
+    throw new Error(`Item with ID ${itemId} not found.`);
   }
 }
 
