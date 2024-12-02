@@ -121,6 +121,7 @@ export class SecureCheckout extends BaseComponent {
     `;
   }
 
+  // TO-DO: Add events for adding an order.
   #attachEventListeners() {
     const shippingTab = this.#container.querySelector("#shipping-tab");
     const paymentTab = this.#container.querySelector("#payment-tab");
@@ -223,6 +224,7 @@ export class SecureCheckout extends BaseComponent {
       )
       .join("");
 
+    // TO-DO: Update this to take in the values from cart.
     subtotalEl.textContent = totals.subtotal.toFixed(2);
     shippingEl.textContent = totals.shipping.toFixed(2);
     totalEl.textContent = totals.total.toFixed(2);
