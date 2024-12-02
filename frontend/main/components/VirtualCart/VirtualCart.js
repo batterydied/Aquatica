@@ -1,7 +1,8 @@
 // Imports
 import { BaseComponent } from "../../app/BaseComponent.js";
+import { AppController } from "../../app/AppController.js";
 import CartEvents from "../../eventhub/CartEvents.js";
-import EventHub from "../../eventhub/EventHub.js";
+import { EventHub, hub } from "../../eventhub/EventHub.js";
 
 export class VirtualCart extends BaseComponent {
   #container = null;
@@ -13,35 +14,35 @@ constructor() {
   this.loadCSS("VirtualCart");
 
   // Subscribe to cart-related events
-  EventHub.subscribe("cartFetched", (cartItems) => {
+  hub.subscribe("cartFetched", (cartItems) => {
     this.#cartItems = cartItems;
     this.#refreshCart();
   });
 
-  EventHub.subscribe("savedItemsFetched", (savedItems) => {
+  hub.subscribe("savedItemsFetched", (savedItems) => {
     this.#savedForLater = savedItems;
     this.#refreshCart();
   });
 
-  EventHub.subscribe("cartItemRemoved", (itemId) => {
+  hub.subscribe("cartItemRemoved", (itemId) => {
     this.#cartItems = this.#cartItems.filter((item) => item.id !== itemId);
     this.#refreshCart();
   });
 
-  EventHub.subscribe("itemSavedForLater", (savedItem) => {
+  hub.subscribe("itemSavedForLater", (savedItem) => {
     this.#savedForLater.push(savedItem);
     this.#cartItems = this.#cartItems.filter((item) => item.id !== savedItem.id);
     this.#refreshCart();
   });
 
-  EventHub.subscribe("itemMovedToCart", (movedItem) => {
+  hub.subscribe("itemMovedToCart", (movedItem) => {
     this.#cartItems.push(movedItem);
     this.#savedForLater = this.#savedForLater.filter((item) => item.id !== movedItem.id);
     this.#refreshCart();
   });
 
   // Subscribe to cart item updates
-  EventHub.subscribe("cartItemUpdated", (updatedItem) => {
+  hub.subscribe("cartItemUpdated", (updatedItem) => {
     const index = this.#cartItems.findIndex((item) => item.id === updatedItem.id);
     if (index !== -1) {
       this.#cartItems[index] = updatedItem; // Update the item in the local array
@@ -49,7 +50,7 @@ constructor() {
     }
   });
 
-  EventHub.subscribe("cartError", (errorMessage) => {
+  hub.subscribe("cartError", (errorMessage) => {
     console.error("Cart Error:", errorMessage);
   });
 }
@@ -128,6 +129,14 @@ cartItemsContainer.addEventListener("click", (e) => {
     });
 
     // Handle navigation to checkout
+    const backLink = this.#container.querySelector(".back-link");
+    backLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      const appController = AppController.getInstance();
+      appController.navigate("marketplace");
+    });
+
+    // Handle navigation to checkout
     checkoutButton.addEventListener("click", (e) => {
       e.preventDefault();
       const cartData = {
@@ -135,7 +144,8 @@ cartItemsContainer.addEventListener("click", (e) => {
         totals: this.#calculateTotals(),
       };
       console.log("Proceeding to checkout with:", cartData);
-      // Trigger navigation or send data to backend
+      const appController = AppController.getInstance();
+      appController.navigate("secureCheckout");
     });
   }
 

@@ -1,56 +1,53 @@
 // This will render all of our app's features.
 
 // Imports
-// import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
-// import { ProductService } from '../services/ProductService.js';
-// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
+import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
+import { ProductService } from '../services/ProductService.js';
+import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
-// import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
-// import { ProductPage } from '../components/ProductPage/ProductPage.js';
-// import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
+import { ProductPage } from '../components/ProductPage/ProductPage.js';
+import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
+import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
+import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
 
 
 export class AppController {
    #container = null;
    #currentView = null; // Track the currently rendered views
    #views = {}; // Store initialized views
+   #navigationMenu = null; // Store the navigation menu separately and add on views
 
    constructor() {
       // Initialize components
       this.#views = {
-         // marketplace: new MarketplacePage(),
-	 // secureCheckout: new SecureCheckout(),
-  	 virtualCart:  new VirtualCart(), 
-	 // navigationMenu: new NavigationMenu(),
-	 // productPage: new ProductPage(),
-	 // profilePage: new ProfilePage(),
-      };	
+         marketplace: new MarketplacePage(),
+         secureCheckout: new SecureCheckout(),
+         virtualCart:  new VirtualCart(), 
+         navigationMenu: new NavigationMenu(),
+         productPage: new ProductPage(),
+         profilePage: new ProfilePage(),
+         sellProductsPage: new SellProductsPage()
+      };
 
-      this.#currentView = this.#views.virtualCart;
+      // Default Page set as marketplace page
+      this.#currentView = this.#views.marketplace;
    }
 
-	/**
-   * Render the AppController container and initialize the default view.
-   */
-   render() {
-      // Create the main container if not already created
-      if (!this.#container) {
-         this.#container = document.createElement('div');
-         this.#container.classList.add('app-controller');
-      }
+  render() {
+    if (!this.#container) {
+      this.#container = document.createElement('div');
+      this.#container.classList.add('app-controller');
+    }
 
-      // Render the current view (Cart for testing)
-      this.#container.innerHTML = ''; // Clear previous content
-      this.#container.appendChild(this.#currentView.render());
+    this.#container.innerHTML = '';
+    this.#container.appendChild(this.#currentView.render());
 
-      return this.#container;
-   }
+    if (this.#currentView !== this.#views.secureCheckout) {
+      this.#container.appendChild(this.#views.navigationMenu.render());
+    }
 
-    // Render the navigationMenu only if not on SecureCheckout
-    // if (this.#currentView !== this.#views.secureCheckout) {
-    //  this.#container.appendChild(this.#navigationMenu.render());
-    // }
-
+    return this.#container;
+  }
    /**
    * Public method to navigate to a different view.
    * @param {string} viewName - The name of the view to navigate to.

@@ -1,11 +1,19 @@
-class EventHub {
+export class EventHub {
   constructor() {
-    this.events = {};
+   if (EventHub.instance) return EventHub.instance;
+
+    this.events = {}; // Event listeners storage
+    EventHub.instance = this;
   }
 
-  subscribe(event, listener) {
-    if (!this.events[event]) {
-      this.events[event] = [];
+  subscribe(eventName, callback) {
+    if (!this.events[eventName]) this.events[eventName] = [];
+    this.events[eventName].push(callback);
+  }
+
+  publish(eventName, data) {
+    if (this.events[eventName]) {
+      this.events[eventName].forEach((callback) => callback(data));
     }
     this.events[event].push(listener);
     return () => this.unsubscribe(event, listener);
@@ -24,5 +32,6 @@ class EventHub {
   }
 }
 
-export default new EventHub(); // Use default export
+
+export const hub = new EventHub();
 

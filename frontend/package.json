@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Welcome to **Aquatica** – an e-commerce platform designed specifically for aquarium enthusiasts! Whether you’re a beginner looking to set up your first tank or an experienced aquarist seeking rare fish species, Aquatica is the go-to marketplace for all your aquarium needs.",
   "main": "index.js",
   "directories": {
     "test": "tests"

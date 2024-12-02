@@ -1,0 +1,96 @@
+
+/* Main Navigation Container */
+.navigation-menu {
+  background-color: #232c3c; /* Dark Blue background: theme color #232c3c */
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between; /* Separate logo and buttons to opposite ends */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 10px 40px; /* Add padding to push content inward */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+}
+
+/* Logo Button */
+.logo-button {
+  display: flex;
+  align-items: center;
+  flex: 0; /* Prevents the logo from growing */
+  margin-right: 20px; /* Add space between the logo and the navbar content */
+}
+
+.logo-image {
+  height: 50px; /* Adjust height for balance */
+  width: auto;
+}
+
+/* Navigation Buttons Container */
+.nav-buttons-container {
+  display: flex;
+  margin-right: 50px;
+  flex-direction: row; /* Keep buttons in a horizontal line */
+  align-items: center; /* Align buttons vertically in the center */
+  gap: 30px; /* Increase spacing between nav buttons */
+  flex: 0; /* Prevents the buttons container from growing */
+}
+
+/* Navigation Button */
+.nav-button {
+  display: flex;
+  flex-direction: row; /* DO NOT Stack icon and text for large screen */
+  align-items: center;
+  justify-content: center;
+  padding: 10px; /* Enough padding for a more balanced look */
+  cursor: pointer;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease; /* Smooth hover effect */
+  gap: 10px; /* Add space between the icon and the text */
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+}
+
+.nav-button:hover {
+  background-color: #ffa41e; /* Highlight on hover: theme color #ffa41e */
+  border-radius: 5px;
+}
+
+.nav-icon {
+  width: 30px; /* Icon size */
+  height: 30px;
+  margin: 0; /* Remove margin to avoid unwanted spacing */
+  /* flex-shrink: 0;    */
+}
+
+.nav-text {
+  font-family: "Inter", sans-serif;
+  font-size: 16px; /* Larger font size for better readability on larger screen  */
+  font-weight: 500; 
+  text-align: left; /* Align text properly if there's extra space */
+  color: #ffffff;
+}
+
+@media (max-width:768px) {
+  .navigation-menu{
+    padding: 10px 20px; /* Scale down for smaller screens */
+  }
+  .logo-button{
+    margin-right: 10px; /* Reduce space for smaller screens */
+  }
+  .logo-image{
+    height: 40px; /* Scale down for smaller screens */
+  }
+  .nav-buttons-container{
+    flex-direction: column; /* Stack buttons for smaller screen */
+    margin-right: 0;
+    gap: 15px;
+  }
+  .nav-button{
+    flex-direction: column; /* Stack icon and text for smaller screen */
+  }
+  .nav-text{
+    font-size: 12px; /* Readable size for smaller screens */
+  }
+}
