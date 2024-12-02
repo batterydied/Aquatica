@@ -14,6 +14,8 @@ const root = path.dirname(__dirname);
 
 // import AuthRoutes from './routes/AuthRoutes.js';
  import CartRoutes from './routes/CartRoutes.js';
+// import AuthRoutes from './routes/AuthRoutes.js';
+// import CartRoutes from './routes/CartRoutes.js';
 // import OrderRoutes from './routes/OrderRoutes.js';
 // import ProductRoutes from './routes/ProductRoutes.js';
 // import ProfileRoutes from './routes/ProfileRoutes.js';
@@ -33,17 +35,22 @@ class Server {
     this.app.use(express.urlencoded({ extended: true }));
 
     this.app.use(cors({
-      origin: 'http://10.0.0.158:8080', // Allow the frontend for communication
+      origin: ['http://10.0.0.158:8080', 'http://localhost:8000'], // Allow the frontend for communication
       methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
       credentials: true,
     }));
 
     // Serve static files
+<<<<<<< HEAD
     this.app.use(express.static(path.join(root, 'frontend')));
+=======
+    this.app.use(express.static("../frontend/main"));
+>>>>>>> main
   }
 
   // Setup routes
   setupRoutes() {
+<<<<<<< HEAD
     console.log("Registering routes...");
     // this.app.use('/api', AuthRoutes);
     // this.app.use('/api/cart', CartRoutes);
@@ -71,19 +78,37 @@ class Server {
     console.log('Registered Routes:', routes);
 }
 
+=======
+    // this.app.use('/api', AuthRoutes);
+    // this.app.use('/api', CartRoutes);
+    // this.app.use('/api', OrderRoutes);
+    // this.app.use('/api', ProductRoutes);
+    // this.app.use('/api', ProfileRoutes);
+
+    // Global error handler
+    this.app.use(handleGlobalError);
+  }
+>>>>>>> main
 
   start(port = process.env.PORT || 3000) {
     this.app.listen(port, () => {
       console.log(`Server started on port ${port}`);
     });
+<<<<<<< HEAD
     this.app.get('/', (req, res) => {
       res.sendFile(path.join(root, 'frontend', 'index.html'));
     });
+=======
+>>>>>>> main
   }
 }
 
 // Initialize and start the server
 console.log("Starting server...");
 const server = new Server();
+<<<<<<< HEAD
 server.start();
 //initializeDatabase(); 
+=======
+server.start(); 
+>>>>>>> main
