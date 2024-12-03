@@ -5,30 +5,26 @@ import { Sorts } from "./Sorts.js";
 import { products } from "./Products.js";
 import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
-//import { ProfileService } from "../../services/ProfileService.js";
 import { EventHub, hub } from "../../eventhub/EventHub.js";
 
 export class MarketplacePage extends BaseComponent {
     constructor() {
         super();
         this.container.classList.add('marketplace-page');
-        this.fullProdList = products;
-        for (let i = 0; i < this.fullProdList.length; i++) {
-            this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
-        }
+        this.fullProdList = [];
         this.prodList = this.fullProdList;
+        this.getProdList();
+
         this.marketplace = document.createElement("div");
 
-        hub.subscribe("retrievedProduct", (data) => {
-            this.fullProdList.push(data);
+        hub.subscribe("retrievedProductsList", (data) => {
+            this.fullProdList = data;
             for (let i = 0; i < this.fullProdList.length; i++) {
                 this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
             }
             this.reloadFilters();
             this.renderMarketplace();
         });
-
-        //this.getProdList();
 
         this.curCategory = "All";
         this.curBracket = "All";
@@ -400,7 +396,7 @@ export class MarketplacePage extends BaseComponent {
         this.end = 5;
     }
 
-    reStyleButtons(buttonClass) {  //__Fix_Me__: Restyle Price Buttons
+    reStyleButtons(buttonClass) {
         const buttons = document.querySelectorAll(`.${buttonClass}`);
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].style.backgroundColor = "#FFFFFF";
