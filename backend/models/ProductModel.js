@@ -1,103 +1,138 @@
-// ProductModel.js
-// A model for the product using sequelize
-
-import { Sequelize, DataTypes } from "sequelize";
-
-const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: "database.sqlite",
-});
-
-// Defines the product data model
+import sequelize from '../database.js';
+import { DataTypes } from 'sequelize';
+//
+// Define models
 const Product = sequelize.define("Product", {
-    prodid: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    sellerid: { // refers to a unique user
-        type: DataTypes.UUID,
-        allowNUll: false,
-    },
-    sellername: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    imgurl: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    description: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    price: {
-        type: DataTypes.DECIMAL,
-        allowNull: false,
-    },
-    average_rating: {
-        type: DataTypes.DECIMAL,
-        allowNull: true,
-    },
-    numreviews: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    /* other potential fields to include: 
-    scientific name, 
-    discount price, 
-    availability, 
-    tags, 
-    specifications, 
-    product types, 
-    shipping info, 
-    reviews, 
-    related products */
+  prodid: {
+    type: DataTypes.UUID,
+    primaryKey: true,
+    defaultValue: DataTypes.UUIDV4, // Automatically generate UUID
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  secondaryname: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  sellerid: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+  sellername: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  category: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  price: {
+    type: DataTypes.DECIMAL,
+    allowNull: false,
+  },
 });
+
+const Review = sequelize.define("Review", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  user: { type: DataTypes.STRING, allowNull: false },
+  rating: { type: DataTypes.FLOAT, allowNull: false },
+  comment: { type: DataTypes.TEXT, allowNull: true },
+  date: { type: DataTypes.DATE, allowNull: false },
+});
+
+const Image = sequelize.define("Image", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  url: { type: DataTypes.STRING, allowNull: false },
+  productId: { type: DataTypes.UUID, allowNull: false },
+});
+
+const ProductType = sequelize.define("ProductType", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  type: { type: DataTypes.STRING, allowNull: false },
+  price: { type: DataTypes.FLOAT, allowNull: false },
+  productId: { type: DataTypes.UUID, allowNull: false },
+});
+
+// Define relationships
+Review.belongsTo(Product, { foreignKey: "productId" });
+Product.hasMany(Review, { foreignKey: "productId" });
+
+Image.belongsTo(Product, { foreignKey: "productId" });
+Product.hasMany(Image, { foreignKey: "productId" });
+
+ProductType.belongsTo(Product, { foreignKey: "productId" });
+Product.hasMany(ProductType, { foreignKey: "productId" });
 
 class _ProductModel {
-    constructor() {}
+  constructor() {
+    this.models = { Product, Review, Image, ProductType };
+  }
 
-    async init() {
-        /* Initializes the product model by connecting to the database
-           Throws an exception on failure */
-        await sequelize.authenticate();
-        await sequelize.sync({ force: true });
+  async init() {
+    try {
+      await sequelize.authenticate();
+      await sequelize.sync({ force: true });
+      console.log("Database synced successfully.");
+    } catch (error) {
+      console.error("Failed to initialize database:", error);
+      throw error;
     }
+  }
 
-    async create(product) {
-        /* Creates a new product 
-           TODO: implement this method */
+  async create(productData) {
+    try {
+      const product = await Product.create(productData);
+      return product;
+    } catch (error) {
+      console.error("Error creating product:", error);
+      throw error;
     }
+  }
 
-    async read(id = null) {
-        /* Returns an existing product with the given id,
-           or all products if no id is given */
-        if (id) {
-            return await Product.findByPk(id);
-        } else {
-            return await Product.findAll();
-        }
+  async read(id = null, options = {}) {
+    try {
+      if (id) {
+        return await Product.findByPk(id, { ...options }); // Pass options for relationships
+      }
+      return await Product.findAll({ ...options }); // Fetch all products with options
+    } catch (error) {
+      console.error("Error reading product(s):", error);
+      throw error;
     }
+  }
+  
 
-    async update(product) {
-        /* Updates a product with the given data 
-           TODO: implement this method */
+  async update(id, updates) {
+    try {
+      const product = await Product.findByPk(id);
+      if (!product) throw new Error("Product not found");
+      await product.update(updates);
+      return product;
+    } catch (error) {
+      console.error("Error updating product:", error);
+      throw error;
     }
+  }
 
-    async delete(id) {
-        /* Deletes the product with the given id 
-           TODO: implement this method */
+  async delete(id) {
+    try {
+      const product = await Product.findByPk(id);
+      if (!product) throw new Error("Product not found");
+      await product.destroy();
+      return { message: "Product deleted successfully." };
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      throw error;
     }
+  }
 }
 
 const ProductModel = new _ProductModel();
-
 export default ProductModel;
+export { Product, Review, Image, ProductType };

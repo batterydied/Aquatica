@@ -1,18 +1,8 @@
-/* Global styles and imports */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
-
-body {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
 /* Original styles (default for tablet and up) */
+.container{
+  display: flex;
+  width: 100vw;
+}
 .cart-container {
   display: flex;
   gap: 50px;
@@ -20,8 +10,9 @@ body {
   background: #fff;
   border-radius: 8px;
   max-width: 1300px;
-  width: 100%;
-  min-height: 600px;
+  align-self: center;
+  height: 100vh;
+  width: 80vw;
 }
 
 .cart-left {
@@ -106,9 +97,9 @@ body {
 }
 
 /* Responsive Design */
-
 /* Mobile - Default styles (0em - 47.9em) */
-@media screen and (max-width: 47.9em) { /* 0px - 767px */
+/*@media screen and (max-width: 47.9em) {  0px - 767px */
+@media screen and (max-width: 1048px) {
   .cart-container {
     flex-direction: column;
     padding: 60px;

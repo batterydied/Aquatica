@@ -1,40 +1,28 @@
-// ProductRoutes
-
 import express from "express";
 import ProductController from "../controllers/ProductController.js";
 
 class ProductRoutes {
-    constructor() {
-        this.router = express.Router();
-        this.initializeRoutes();
-    }
+  constructor() {
+    this.router = express.Router();
+    this.initializeRoutes();
+  }
 
-    initializeRoutes() {
-        // Defines routes
+  initializeRoutes() {
+    // Fetch all products
+    this.router.get("/products", (req, res) => ProductController.getAllProducts(req, res));
 
-        /* GET /products/[productid] retrieve the product with the specified product id.
-           TODO: Implement this route */
+    // Fetch a single product by ID
+    this.router.get("/products/:id", (req, res) => ProductController.getProduct(req, res));
 
-        /* DESCRIPTION:
-            Get all products. Returns an object containing an array of all products.
-           REQUEST:
-            GET /products
-           RESPONSE:
-            { "tasks": [ ... ] }
-           STATUS CODES:
-            200 - OK
-            500 - Internal Server Error. */
-        this.router.get("/products", async (req, res) => {
-            await ProductController.getAllProducts(req, res);
-        });
+    // Add a new product
+    this.router.post("/products", (req, res) => ProductController.addProduct(req, res));
 
-        /* POST /products create a new product.
-           TODO: Implement this route */
+    // Update an existing product
+    this.router.put("/products/:prodid", (req, res) => ProductController.updateProduct(req, res));
 
-        /* PUT /products/[productid] update an existing product with the specified product id.
-           TODO: Implement this route */
-
-        /* DELETE /products/[productid] delete an existing product with the specified product id 
-           TODO: Implement this route */
-    }
+    // Delete a product by ID
+    this.router.delete("/products/:prodid", (req, res) => ProductController.deleteProduct(req, res));
+  }
 }
+
+export default new ProductRoutes().router; // Export the router instance

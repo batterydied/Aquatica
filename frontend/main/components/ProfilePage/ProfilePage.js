@@ -68,6 +68,7 @@ export class ProfilePage extends BaseComponent {
         input.type = "text";
         input.value = name.innerText; 
         input.classList.add("editable-input");
+        editIcon.style.display = "none";
 
         const saveButton = document.createElement("button");
         saveButton.innerText = "Save";
@@ -88,6 +89,7 @@ export class ProfilePage extends BaseComponent {
 
             parent.replaceChild(name, input);
             saveButton.remove(); 
+            editIcon.style.display = "block";
         });
 
     

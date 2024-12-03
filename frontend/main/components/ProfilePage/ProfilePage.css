@@ -23,75 +23,41 @@
   text-decoration: underline;
 }*/
 .public-info {
+    padding: 1rem;
     background-color: #5B91C8;
-    padding: 70px 100px;
-    text-align: center;
-    position: relative;
     display: flex;
-    justify-content: center; 
+    justify-content: flex-start;
   }
-  
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-  
-.info-container {
-    display: flex;
-    align-items: center; 
-    gap: 20px;
-}
-
 .profile-avatar {
     width: 100px;
     height: 100px; 
     border-radius: 50%;
     object-fit: cover; 
     border: 2px solid #232C3C;
-    position: absolute;
-    top: 17px;
-    left: 40px;
+    margin: 1rem;
+    margin-left: 4rem;
 }
 
 .user-details h1 {
     margin: 0;
     font-size: 24px;
-    position: fixed;
-    top: 20px;
-    left: 180px;
   }
   
 .user-details p:nth-child(2) {
-    position: absolute; 
-    top: 60px;
-    left: 180px;
-    margin: 0;
     font-size: 16px;
     color: #FFFFFF;
+    margin: 0;
     
 }
 .user-details p:nth-child(3) {
-  position: absolute;
-  top: 80px;
-  left: 180px;
-  margin: 0;
   font-size: 16px; 
   color: #FFFFFF;
+  margin: 0;
 }
   
   .edit-icon {
     cursor: pointer;
-    font-size: 14px;
-    margin-left: 10px;
-    color: #007bff;
-    position: fixed;
-    top: 23px;
-    left: 350px;
   }
-  
-  
   
   .private-sections .section {
     background: white;
@@ -109,6 +75,7 @@
     margin: 0;
     font-size: 18px;
     font-weight: bold;
+    cursor: pointer;
   }
   
   .section .edit-icon {
@@ -155,3 +122,25 @@
     height: 80%;
     object-fit: cover;
   }
+.name-container{
+ display: flex;
+ margin: 0 0 1rem 0;
+}
+.user-details{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width:768px) {
+  .public-info{
+    flex-direction: column;
+    align-items: center;
+  }
+  .user-details{
+    align-items: center;
+  }
+  .profile-avatar{
+    margin: 0 0 1rem 0;
+  }
+}

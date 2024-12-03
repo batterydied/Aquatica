@@ -71,7 +71,7 @@ export class MarketplacePage extends BaseComponent {
         this.container.innerHTML = "";
         //background image and logo
         const bg = document.createElement("div");
-        bg.classList.add("background");
+        //bg.classList.add("background");
         // const bgimg = document.createElement("img");
         // bgimg.classList.add("bgimg");
         // bgimg.src = "../frontend/assets/bg-dummy.png"; // TODO: site main image
@@ -282,7 +282,7 @@ export class MarketplacePage extends BaseComponent {
         curProduct.appendChild(prodIMGDiv);
 
         const prodIMG = document.createElement("img");
-        prodIMG.src = "/assets/dummy_600x400_ffffff_cccccc.png";
+        prodIMG.src = prodListItem.imgurl;
         prodIMG.classList.add("prodimg");
         //prodIMG.src = this.prodList[i].imgurl;
         prodIMGDiv.appendChild(prodIMG);
@@ -460,7 +460,7 @@ export class MarketplacePage extends BaseComponent {
     goToProductPage(prodid) {
         console.log(`going to product page for product ${prodid}`);
         const appController = AppController.getInstance();
-        appController.navigate("productPage");
+        appController.navigate("productPage", {prodid});
     }
 
     goToSellerProfile(sellid) {
