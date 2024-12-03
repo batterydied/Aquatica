@@ -1,7 +1,7 @@
 // UserModel : Haiyi
 // **Description**:  Design the `UserModel` in Sequelize, integrated with `database.sqlite` for user management.
-    // attributes: userId, email, hashedPassword, roles, & timestamps (createdAt, updatedAt). 
-    // Add model-level validation for required fields and email format.
+  // attributes: userId, email, hashedPassword, roles, & timestamps (createdAt, updatedAt). 
+  // Add model-level validation for required fields and email format.
 // **Tag**: #72
 // **Owner**: Haiyi
 // **Expected Outcome**: A functioning Sequelize model stored in SQLite, with appropriate validations. 
@@ -32,41 +32,41 @@ const User = sequelize.define("User", {
     allowNull: false,
     unique: true,                   // Required field: unique email
     validate:{ 
-      isEmail: {
-        msg: "Email address must be valid."
-      },  
-      notEmpty: {
-        msg: "Email field cannot be empty."
-      } 
-    }
+      isEmail:  { msg: "Please provide a valid email." },  
+      notEmpty: { msg: "Email cannot be empty." } 
+    },
   },
   hashedPassword: {
     type: DataTypes.STRING,
     allowNull: false,               // Required field: password
     validate:{
-      notEmpty: {
-        msg: "Password field cannot be empty."
-      },
-      len: {
-        args: [8,30],
-        msg: "Password must be between 8 and 30 characters long."
-      }
-    }
-  },
-  roles: {
-    type: DataTypes.ENUM("user", "seller"),
-    allowNull: false,               // At least 1 role is required
-    defaultValue: "user",           // Default role is 'user' once registered
-    validate:{
-      isIn:{
-        arg: [["user", "seller"]],  // Only `user` or `seller` are valid roles.
-        msg: "Role must be one of: 'user', 'seller', or both.",
-      }
+      notEmpty: { msg: "Password field cannot be empty." },
+      len: { args: [8,100], msg: "Password must be at least 8 characters long." }
     },
-  },   
+  },
+  roles: {                          // To Filter seller: SELECT * FROM Users WHERE roles @> '"seller"';
+    type: DataTypes.JSONB,          // Added flexibility: multi-roles, permission allowed for fix
+    defaultValue: "user",           // Default role is 'user' once registered
+  },    
+  verified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,            // User need to get verified by email
+  },
+  verificationToken: {
+    type: DataTypes.STRING,
+    allowNull: true,                //  Token will be generated only
+  }, 
+  resetPasswordToken:{
+    type: DataTypes.STRING,
+    allowNull: true, 
+  }, 
+  resetPasswordExpired:{
+    type: DataTypes.STRING,
+    allowNull: true, 
+  }, 
 }, {
-  tableName: "users",
-  timestamps: true,                 // TODO save or delete timestamps?  
+  tableName: "users",               // Define the table name as "users"
+  timestamps: true,                 // Enable automatic timestamp columns (createdAt, updatedAt) 
   hooks: {                          // Always hash password before saving
     beforeCreate: async (user) => {
       user.hashedPassword = await bcrypt.hash(user.hashedPassword, 10);
