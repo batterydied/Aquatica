@@ -13,6 +13,7 @@
   - Manage Tokens for user sessions. 
 */
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import nodemailer from "nodemailer";
@@ -122,28 +123,31 @@ export async function login(req, res) {
     }
 
     // Queries the UserModel.js to find the user by email.
-    const existingUser = await User.findOne({ where: {email} });
-    if(!existingUser) {
+    const user = await User.findOne({ where: {email} });
+    if(!user) {
       return res.status(401).json({error: "Invalid email."});
     }
 
     // Check if the email is verified
-    if(!existingUser.verified){
+    if(!user.verified){
       return res.status(403).json({message: "Please verify your email first."});
     }
 
     // Compares the hashed password stored in the database with the one entered by the user.
-    const validPassword = await bcrypt.compare(password, existingUser.hashedPassword);
+    const validPassword = await bcrypt.compare(password, user.hashedPassword);
     if(!validPassword){
       return res.status(401).json({error: "Invalid email or password."});
     }
 
     // Valid credentials: generates a JWT to authenticate the user for future requests.
     const token = jwt.sign(
-      { userId: existingUser.userId, roles: existingUser.roles },
+      { userId: user.userId, roles: user.roles },
       JWT_SECRET,
       { expiresIn: "1h"}
     );
+
+    user.currentToken = token;
+    await user.save();
 
     res.status(200).json({
       message: " ><> User login successfully <><",
@@ -159,11 +163,19 @@ export async function login(req, res) {
 /* 4. Logging out users: 
  *    Invalidates tokens to ensure users can securely log out.
  */
-export async function logout(req, res)  {
+export async function logout(req, res) {
   // TODO EXTRA: Involve token invalidation on multiple devices.
-  // TODO EXTRA: Implement token blacklist.
   try{
-    // Invalidates the user’s authentication token, on client-side logout, clearing tokens or session data.
+    const { userId } = req.user;
+
+    // Find the user and clear the currentToken
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+    // Invalid current token
+    await UserModel.incrementTokenVersion(userId); 
+
     res.status(200).json({ message: " ><> User logout successfully <><" });
   } catch (error) {
     // Handles invalid login attempts with appropriate error messages.
@@ -190,7 +202,7 @@ export async function requestPasswordReset(req, res)  {
     }
 
     // TODO Generate a reset token
-    const resetToken = bcrypt.randomBytes(32).toString("hex");
+    const resetToken = crypto.randomBytes(32).toString("hex");
     const tokenExpires = Date.now() + 3600000;          // 1h
     await user.save();
 
@@ -207,7 +219,7 @@ export async function requestPasswordReset(req, res)  {
     
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: newUser.email,
+      to: user.email,
       subject: '><> Password Reset Request',
       text: `You requested a password reset. Click the link to reset your password at Aquatica: ${resetLink}. This link will expire in 1 hour.`
     };
@@ -221,6 +233,7 @@ export async function requestPasswordReset(req, res)  {
     res.status(500).json({error: "Internal server error."});
   }
 }
+
 // TODO Consider Instead of email: The AuthController verifies the old password and update the new.
 export async function resetPassword(req, res) {
   try{

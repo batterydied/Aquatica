@@ -64,6 +64,10 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: true, 
   }, 
+  tokenVersion:{
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 }, {
   tableName: "users",               // Define the table name as "users"
   timestamps: true,                 // Enable automatic timestamp columns (createdAt, updatedAt) 
@@ -85,9 +89,7 @@ class _UserModel {
     this.model = User;
   }
 
-  /**
-   * Initializes the database and syncs the model.
-   */
+  /** Initializes the database and syncs the model. */
   async init() {
     try {
       await sequelize.authenticate();
@@ -99,8 +101,7 @@ class _UserModel {
     }
   }
 
-  /**
-   * Create a new user with validations and password hashing.
+  /**  Create a new user with validations and password hashing.
    * @param {Object} userData - { email, password, roles }
    * @returns {Object} - Created user.
    */
@@ -120,8 +121,7 @@ class _UserModel {
     } 
   }
 
-  /**
-   * Retrieve a user by ID.
+  /** Retrieve a user by ID.
    * @param {string} userId - User ID.
    * @returns {Object|null} User object or null if not found.
    */
@@ -134,8 +134,7 @@ class _UserModel {
     }
   }
 
-  /**
-   * Retrieve a user by email.
+  /** Retrieve a user by email.
    * @param {string} email - User email.
    * @returns {Object|null} User object or null if not found.
    */
@@ -158,13 +157,39 @@ class _UserModel {
       throw error;
     }
   }
+  
+// Increment the token version when logging out
+async incrementTokenVersion(userId) {
+  try {
+    const user = await this.model.findByPk(userId);
+    if (!user) throw new Error("User not found");
 
-  /**
-   * Check if a user has a specific role.
+    user.tokenVersion += 1;
+    await user.save();
+    
+    return user;
+  } catch (error) {
+    console.error("Error incrementing token version:", error);
+    throw error;
+  }
+}
+
+// Method to validate a token against the stored token version
+async validateTokenVersion(userId, tokenVersion) {
+  try {
+    const user = await this.model.findByPk(userId);
+    if (!user) throw new Error("User not found");
+    return user.tokenVersion === tokenVersion;  // Check if the token version matches
+  } catch (error) {
+    console.error("Error validating token version:", error);
+    throw error;
+  }
+}
+  /** Check if a user has a specific role.
    * @param {Object} user - User object.
    * @returns {boolean} True if the user has the role as seller, false otherwise.
-   */
-  isSeller(user) {
+   */ 
+  isSeller(user) { // TODO Check necessity for async/ multi-roles
     return user.roles === "seller" ;
   }
 
@@ -181,8 +206,7 @@ class _UserModel {
     }
   }
 
-  /**
-   * Update a user's information.
+  /** Update a user's information.
    * @param {string} userId - User ID.
    * @param {Object} updates - Data to update.
    * @returns {Object} Updated user.

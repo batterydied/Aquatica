@@ -19,21 +19,26 @@ const authMiddleware = async (req, res, next) => {
   - Decodes and validates the token to ensure it is valid, not expired, and issued by the server.
   */
   const token = req.headers.authorization; // TODO Assuming the token is sent in the Authorization header as "Bearer <token>"
+      // const token = req.header("authorization")?.split(" ")[1];
   if (!token) {
-      return res.status(401).json({ error: 'Unauthorized: No token provided, access denied.' });
+      return res.status(401).json({ error: 'Unauthenticated: No token provided, access denied.' });
   }
 
   try {
     // Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   /* 2. Attach User Info:
   - Extracts user details from the token.
   - Attaches them to the request object for downstream use.
   */
-    const user = await UserModel.findById(decoded.userId);
+    const user = await UserModel.getUserById(decodedToken.userId);
     if (!user) {
-        return res.status(401).json({ error: 'Unauthorized: User not found, access denied.' });
+      return res.status(401).json({ error: 'Unauthorized: User not found, access denied.' });
     }
+    if (user.tokenVersion != decodedToken.tokenVersion){
+      return res.status(401).json({ error: 'Unauthorized: Token is invalid, Please log in again.' });
+    }
+
     req.user = user;    // Attach user to the request object
     next();             // Proceed to the next middleware or route handler
   } catch (error) {
@@ -41,8 +46,8 @@ const authMiddleware = async (req, res, next) => {
   - Responds with a 401_Unauthorized error if the token is missing or invalid.
   - Responds with a 403_Forbidden error if access is denied for any other reason.
   */
-    console.error('Authentication error:', error);
-    return res.status(403).json({ error: 'Unauthorized: Invalid or expired token, access denied.' });
+    console.error("Error in RoleMiddleware:", error);
+    res.status(500).json({error:"An unexpected error occurred while verifying roles."});
   }
 };
 

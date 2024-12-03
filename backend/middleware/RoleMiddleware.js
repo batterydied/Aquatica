@@ -18,11 +18,12 @@ export function verifyRole(requiredRole){
       if(!req.user){                  // Ensure AuthMiddleware has attached a user object to the request.
         return res.status(401).json({error: 'No user found, access denied.'});
       }
-  /* 1. Role Verification:
+/* 1. Role Verification:
   - Checks the roles attribute in the user object attached by AuthMiddleware.js.
   - Confirms the user has the required role(s) for the route.
-  */
-      const userRole = req.user.roles;
+*/
+      const userRole = req.user.roles;      // Extract role from authenticated user.
+    // Check if the user has the required role
       if(userRole !== requiredRole){  // TODO Consider implement of 'both' or 'admin'. 
         return res.status(403).json({error: 'Access forbidden: unauthorized.'});
       }  
