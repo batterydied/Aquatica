@@ -1,7 +1,7 @@
 // AuthController: Haiyi
 // **Description**: Implement the logic for user authentication, handling:
-  // login, registration, password reset, and logout operations. It will also handle errors 
-  // related to: Invalid credentials, Missing fields, Failed login attempts.
+  // login, registration, password reset, and logout operations. It will also handle 
+  // errorsrelated to: Invalid credentials, Missing fields, Failed login attempts.
 // **Tag**: #67
 // **Owner**: Haiyi
 // **Expected Outcome**: A controller that manages authentication logic, including: 
@@ -12,21 +12,65 @@
   - Hash Passwords for secure storage
   - Manage Tokens for user sessions. 
 */
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import {User} from "../models/UserModel.js";
+
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key"; // Use an env var in production.
+const JWT_EXPIRES_IN = "1h";  // Token expiration
 
 // Includes logic for managing user authentication, including:
-/* 1. Registering users: Handles user registration with validations for required fields and password security.
-  - Validates the input fields (e.g., email format, password length).
-  - Hashes the password using bcrypt before storing it in the database.
-  - Stores the new user's details in the database (using **_UserModel.js_**).
-  - Generates a token or session to authorize the user for subsequent requests.
-*/
+/* 1. Registering users: Handles user registration with validations for required fields and password security. */
+export async function registerUser(req, res) {
+  try{
+    const { email, password} = req.body;
 
+    // Validates the required input fields
+    if(!email || !password){
+      return res.status(400).json({error: 'Email and password are required'});
+    }
+    // Check if the user already exists
+    const existingUser = await User.findOne({ where: {email} });
+    if(existingUser) {
+      return res.status(409).json({error: `Email is already in use.`})
+    }
+
+    // Create the user: Hashes the password using bcrypt before storing it in the database.
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Stores the new user's details in the database (using `UserModel.js`).
+    const newUser = await User.create({
+      email,
+      hashedPassword,
+      roles: ["user"],  // set default role as `user`
+    });
+
+    // Generates a token or session to authorize the user for subsequent requests.
+    const token = jwt.sign(
+      { userId: newUser.userId, roles: newUser.roles },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN}
+    );
+
+    res.status(201).json({
+      message: " ><> User registered successfully <><",
+      userId: newUser.userId,
+      token,
+    });
+  } catch (error){
+    console.error("Error during registration:", error);
+    res.status(500).json({error: "Internal server error."});
+  }
+}
 /* 2. Logging in users: Verifies credentials, generates authentication tokens, and responds with user details.
   - Queries the _**UserModel.js**_ to find the user by email.
   - Compares the hashed password stored in the database with the one entered by the user.
   - If the credentials are valid, generates a JWT to authenticate the user for future requests.
   - Handles invalid login attempts with appropriate error messages.
 */
+async function login(params) {
+  
+}
 
 /* 3. Logging out users**: Invalidates tokens to ensure users can securely log out.
   - Invalidates the user’s authentication token, effectively logging the user out.
