@@ -97,3 +97,4 @@ class _ProductModel {
 const ProductModel = new _ProductModel();
 
 export default ProductModel;
+

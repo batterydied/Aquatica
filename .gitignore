@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 node_modules/
 .idea
+=======
+.idea
+/node_modules
+/node_modules/
+backend/node_modules
+backend/node_modules/
+>>>>>>> virtual-cart

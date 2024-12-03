@@ -1,44 +1,58 @@
+// Imports
 import { BaseComponent } from "../../app/BaseComponent.js";
-import { AppController } from "../../app/AppController.js";
-import { hub } from "../../eventhub/EventHub.js";
+import CartEvents from "../../eventhub/CartEvents.js";
+import EventHub from "../../eventhub/EventHub.js";
 
 export class VirtualCart extends BaseComponent {
   #container = null;
   #cartItems = [];
   #savedForLater = [];
 
-  constructor() {
-    super();
-    this.loadCSS("VirtualCart");
+constructor() {
+  super();
+  this.loadCSS("VirtualCart");
 
-    // Temporary placeholder data for the cart
-    this.#cartItems = [
-      {
-        id: 1,
-        name: "Sample Product 1",
-        description: "This is a placeholder product.",
-        quantity: 2,
-        price: 19.99,
-      },
-      {
-        id: 2,
-        name: "Sample Product 2",
-        description: "Another placeholder product.",
-        quantity: 1,
-        price: 39.99,
-      },
-    ];
+  // Subscribe to cart-related events
+  EventHub.subscribe("cartFetched", (cartItems) => {
+    this.#cartItems = cartItems;
+    this.#refreshCart();
+  });
 
-    // Temporary placeholder data for Save for Later
-    this.#savedForLater = [
-      {
-        id: 3,
-        name: "Sample Product 3",
-        description: "This product is saved for later.",
-        price: 9.99,
-      },
-    ];
-  }
+  EventHub.subscribe("savedItemsFetched", (savedItems) => {
+    this.#savedForLater = savedItems;
+    this.#refreshCart();
+  });
+
+  EventHub.subscribe("cartItemRemoved", (itemId) => {
+    this.#cartItems = this.#cartItems.filter((item) => item.id !== itemId);
+    this.#refreshCart();
+  });
+
+  EventHub.subscribe("itemSavedForLater", (savedItem) => {
+    this.#savedForLater.push(savedItem);
+    this.#cartItems = this.#cartItems.filter((item) => item.id !== savedItem.id);
+    this.#refreshCart();
+  });
+
+  EventHub.subscribe("itemMovedToCart", (movedItem) => {
+    this.#cartItems.push(movedItem);
+    this.#savedForLater = this.#savedForLater.filter((item) => item.id !== movedItem.id);
+    this.#refreshCart();
+  });
+
+  // Subscribe to cart item updates
+  EventHub.subscribe("cartItemUpdated", (updatedItem) => {
+    const index = this.#cartItems.findIndex((item) => item.id === updatedItem.id);
+    if (index !== -1) {
+      this.#cartItems[index] = updatedItem; // Update the item in the local array
+      this.#refreshCart(); // Refresh the UI
+    }
+  });
+
+  EventHub.subscribe("cartError", (errorMessage) => {
+    console.error("Cart Error:", errorMessage);
+  });
+}
 
   render() {
     if (!this.#container) {
@@ -50,19 +64,11 @@ export class VirtualCart extends BaseComponent {
           <a href="#" class="back-link">← Marketplace</a>
           <h1>Your Cart</h1>
           <div id="cart-items">
-            ${
-              this.#cartItems.length > 0
-                ? this.#generateCartItems()
-                : '<p class="empty-cart">Your cart is empty.</p>'
-            }
+            <p class="loading-message">Loading cart items...</p>
           </div>
           <h2>Save for Later</h2>
           <div id="saved-items">
-            ${
-              this.#savedForLater.length > 0
-                ? this.#generateSavedItems()
-                : '<p class="empty-saved">No items saved for later.</p>'
-            }
+            <p class="loading-message">Loading saved items...</p>
           </div>
         </div>
         <div class="cart-right">
@@ -79,7 +85,8 @@ export class VirtualCart extends BaseComponent {
       `;
 
       this.#attachEventListeners();
-      this.#updateCartTotals();
+      CartEvents.fetchCart(); // Fetch cart data on render
+      CartEvents.fetchSavedItems(); // Fetch saved-for-later items on render
     }
 
     return this.#container;
@@ -91,37 +98,32 @@ export class VirtualCart extends BaseComponent {
     const checkoutButton = this.#container.querySelector(".checkout-button");
 
     // Handle cart item actions
-    cartItemsContainer.addEventListener("click", (e) => {
-      const index = e.target.dataset.index;
-      if (e.target.classList.contains("increment")) {
-        this.#cartItems[index].quantity++;
-        this.#refreshCart();
-      } else if (e.target.classList.contains("decrement")) {
-        if (this.#cartItems[index].quantity > 1) {
-          this.#cartItems[index].quantity--;
-        } else {
-          this.#cartItems.splice(index, 1);
-        }
-        this.#refreshCart();
-      } else if (e.target.classList.contains("delete")) {
-        this.#cartItems.splice(index, 1);
-        this.#refreshCart();
-      } else if (e.target.classList.contains("save-later")) {
-        const item = this.#cartItems[index];
-        this.#savedForLater.push({ ...item });
-        this.#cartItems.splice(index, 1);
-        this.#refreshCart();
-      }
-    });
+cartItemsContainer.addEventListener("click", (e) => {
+  const index = e.target.dataset.index;
+  if (e.target.classList.contains("increment")) {
+    this.#cartItems[index].quantity++;
+    CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
+  } else if (e.target.classList.contains("decrement")) {
+    if (this.#cartItems[index].quantity > 1) {
+      this.#cartItems[index].quantity--;
+      CartEvents.updateCartItem(this.#cartItems[index].id, this.#cartItems[index].quantity);
+    } else {
+      // Prevent direct removal and update the quantity to 1
+      console.warn("Cannot decrement below 1. Quantity remains at 1.");
+    }
+  } else if (e.target.classList.contains("delete")) {
+    CartEvents.removeFromCart(this.#cartItems[index].id);
+  } else if (e.target.classList.contains("save-later")) {
+    CartEvents.saveForLater(this.#cartItems[index].id);
+  }
+});
+
 
     // Handle saved-for-later actions
     savedItemsContainer.addEventListener("click", (e) => {
       const index = e.target.dataset.index;
       if (e.target.classList.contains("add-to-cart")) {
-        const item = this.#savedForLater[index];
-        this.#cartItems.push({ ...item, quantity: item.quantity || 1 });
-        this.#savedForLater.splice(index, 1);
-        this.#refreshCart();
+        CartEvents.moveToCart(this.#savedForLater[index].id);
       }
     });
 
@@ -136,81 +138,87 @@ export class VirtualCart extends BaseComponent {
     // Handle navigation to checkout
     checkoutButton.addEventListener("click", (e) => {
       e.preventDefault();
-      hub.publish("cartData", {
+      const cartData = {
         cartItems: this.#cartItems,
         totals: this.#calculateTotals(),
-      });
-      const appController = AppController.getInstance();
-      appController.navigate("secureCheckout");
+      };
+      console.log("Proceeding to checkout with:", cartData);
+      // Trigger navigation or send data to backend
     });
-  }
-
-  #calculateTotals() {
-    const subtotal = this.#cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
-    const tax = subtotal * 0.1;
-    const total = subtotal + shipping + tax;
-
-    return { subtotal, shipping, tax, total };
   }
 
   #refreshCart() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
 
-    cartItemsContainer.innerHTML = this.#generateCartItems();
-    savedItemsContainer.innerHTML = this.#generateSavedItems();
+    cartItemsContainer.innerHTML =
+      this.#cartItems.length > 0 ? this.#generateCartItems() : '<p class="empty-cart">Your cart is empty.</p>';
+    savedItemsContainer.innerHTML =
+      this.#savedForLater.length > 0
+        ? this.#generateSavedItems()
+        : '<p class="empty-saved">No items saved for later.</p>';
 
     this.#updateCartTotals();
   }
 
-  #generateCartItems() {
-    return this.#cartItems
-      .map(
-        (item, index) => `
-        <div class="cart-item">
-          <div class="item-details">
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-          </div>
-          <div class="item-quantity">
-            <button class="decrement" data-index="${index}">-</button>
-            <span>${item.quantity}</span>
-            <button class="increment" data-index="${index}">+</button>
-          </div>
-          <div class="item-price">$${(item.price * item.quantity).toFixed(2)}</div>
-          <div class="item-actions">
-            <button class="save-later" data-index="${index}">Save</button>
-            <button class="delete" data-index="${index}">Delete</button>
-          </div>
+#generateCartItems() {
+  return this.#cartItems
+    .map(
+      (item, index) => `
+      <div class="cart-item">
+        <div class="item-details">
+          <h4>${item.productId}</h4>
+          <p>${item.description}</p> <!-- Display description -->
+          <p>Price: $${item.price.toFixed(2)}</p> <!-- Display price -->
         </div>
-      `
-      )
-      .join("");
-  }
+        <div class="item-quantity">
+          <button class="decrement" data-index="${index}">-</button>
+          <span>${item.quantity}</span>
+          <button class="increment" data-index="${index}">+</button>
+        </div>
+        <div class="item-actions">
+          <button class="save-later" data-index="${index}">Save for Later</button>
+          <button class="delete" data-index="${index}">Delete</button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
 
-  #generateSavedItems() {
-    return this.#savedForLater
-      .map(
-        (item, index) => `
-        <div class="saved-item">
-          <div class="item-details">
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-            <p>Quantity: ${item.quantity || 1}</p>
-            <p>Price: $${item.price.toFixed(2)}</p>
-          </div>
-          <div class="item-actions">
-            <button class="add-to-cart" data-index="${index}">Add to Cart</button>
-          </div>
+
+#generateSavedItems() {
+  return this.#savedForLater
+    .map(
+      (item, index) => `
+      <div class="saved-item">
+        <div class="item-details">
+          <h4>${item.productId}</h4>
+          <p>${item.description}</p> <!-- Display description -->
+          <p>Price: $${item.price.toFixed(2)}</p> <!-- Display price -->
         </div>
-      `
-      )
-      .join("");
-  }
+        <div class="item-actions">
+          <button class="add-to-cart" data-index="${index}">Add to Cart</button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
+
+
+#calculateTotals() {
+  const subtotal = this.#cartItems.reduce(
+    (total, item) => total + item.price * item.quantity, // Use the price field
+    0
+  );
+  const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
+  const tax = subtotal * 0.1;
+  const total = subtotal + shipping + tax;
+
+  return { subtotal, shipping, tax, total };
+}
+
 
   #updateCartTotals() {
     const totals = this.#calculateTotals();
