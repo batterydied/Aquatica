@@ -5,6 +5,7 @@ export class Service {
         this.addSubscriptions();
     }
 
+
     addSubscriptions() {
         throw new Error("addSubscriptions not implemented");
     }
