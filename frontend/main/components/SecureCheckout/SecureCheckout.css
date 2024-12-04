@@ -70,15 +70,12 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 1200px;
   width: 100%;
-  margin-left: 15%;
-  margin-top: 3%;
 }
 
 }
 
 .left-panel {
   width: 600px;
-
   padding-right: 30px;
   border-right: 1px solid #ddd;
   display: flex;
@@ -163,7 +160,6 @@ label {
   text-decoration: none;
   color: black;
   cursor: pointer;
-  max-height: 25px;
 }
 
 .pay-now {
