@@ -59,7 +59,7 @@ class CartModel {
    * Initialize the database schema for Cart.
    */
   static async init() {
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log("Cart and Product tables synced successfully.");
   }
 

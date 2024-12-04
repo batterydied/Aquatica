@@ -77,7 +77,7 @@ class _ProductModel {
   async init() {
     try {
       await sequelize.authenticate();
-      await sequelize.sync({ alter: true });
+      await sequelize.sync();
       console.log("Database synced successfully.");
     } catch (error) {
       console.error("Failed to initialize database:", error);
