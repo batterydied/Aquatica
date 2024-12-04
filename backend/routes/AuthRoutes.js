@@ -18,8 +18,9 @@
 
 import express from "express";
 import { registerUser, verifyEmail, login, logout, requestPasswordReset, resetPassword, becomeSeller } from "../controllers/AuthController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
-import roleMiddleware from "../middlewares/roleMiddleware.js";
+import authMiddleware from "../middleware/AuthMiddleware.js";
+import { verifyRole } from "../middleware/roleMiddleware.js";
+
 
 // Create API routes for user authentication, including:
 const router = express.Router();
@@ -72,7 +73,8 @@ router.post("/reset-password", resetPassword);
 */
 // Route to update the user's role to 'seller':
   // TODO Add more roles here for other access levels if needed.
-router.post("/become-seller", authMiddleware, roleMiddleware(["user"]), becomeSeller); 
+router.post("/become-seller", authMiddleware, verifyRole("user"), becomeSeller);
+
 
 export default router;
 

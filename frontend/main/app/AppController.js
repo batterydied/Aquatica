@@ -1,82 +1,88 @@
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
-import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
-import { ProductPage } from '../components/ProductPage/ProductPage.js';
 import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
+import { ProductPage } from '../components/ProductPage/ProductPage.js';
+import { AuthPage } from '../components/Auth/AuthPage.js';
+import { authService } from '../services/AuthService.js'; // Handles user authentication state
 
 export class AppController {
-   #container = null;
-   #currentView = null; // Track the currently rendered view
-   #views = {}; // Store initialized views
-   #navigationMenu = null; // Navigation menu component
-   static instance = null; // Singleton instance
+  #container = null; // Main container
+  #viewContainer = null; // View-specific container
+  #currentView = null; // Current active view
+  #views = {}; // Available views
 
-   constructor() {
-     // Initialize components
-     this.#views = {
-       marketplace: new MarketplacePage(),
-       secureCheckout: new SecureCheckout(),
-       virtualCart: new VirtualCart(),
-       navigationMenu: new NavigationMenu(),
-       productPage: new ProductPage(), // ProductPage is dynamically initialized when needed
-       profilePage: new ProfilePage(),
-       sellProductsPage: new SellProductsPage(),
-     };
+  static instance = null;
 
-     // Set the default page as the marketplace
-     this.#currentView = this.#views.marketplace;
-   }
+  constructor() {
+    // Define all views
+    this.#views = {
+      auth: new AuthPage(),
+      marketplace: new MarketplacePage(),
+      secureCheckout: new SecureCheckout(),
+      virtualCart: new VirtualCart(),
+      navigationMenu: new NavigationMenu(),
+      productPage: new ProductPage(),
+      profilePage: new ProfilePage(),
+      sellProductsPage: new SellProductsPage(),
+    };
 
-   async render(id=null) {
-     if (!this.#container) {
-       this.#container = document.createElement('div');
-       this.#container.classList.add('app-controller');
-       this.#container.style.display = 'flex';
-       this.#container.style.flexDirection = 'column';
-       this.#container.style.justifyContent = 'center';
-     }
+    // Set initial view to `auth` if not authenticated
+    this.#currentView = authService.isLoggedIn() ? this.#views.marketplace : this.#views.auth;
+  }
 
-     this.#container.innerHTML = ''; // Clear previous content
-     let content;
-     if(!id){
-      content = await this.#currentView.render();
-     }else{
-      content = await this.#currentView.render(id);
-     }
-     this.#container.appendChild(content); // Render the current view
+  /**
+   * Renders the main container and the current view.
+   */
+  async render() {
+    if (!this.#container) {
+      this.#container = document.createElement('div');
+      this.#container.classList.add('app-controller');
 
-     // Add navigation menu except for specific views
-     if (this.#currentView !== this.#views.secureCheckout) {
-       this.#container.prepend(this.#views.navigationMenu.render());
-     }
+      this.#viewContainer = document.createElement('div');
+      this.#viewContainer.classList.add('view-container');
 
-     return this.#container;
-   }
+      this.#container.appendChild(this.#viewContainer);
+    }
 
-   /**
-    * Navigate to a specific view.
-    * @param {string} viewName - The name of the view to navigate to.
-    * @param {Object} params - Additional parameters to pass to the view.
-    */
-   async navigate(viewName, params = {}) {
-     if (!this.#views[viewName]) {
-       throw new Error(`View "${viewName}" not found.`);
-     }
+    this.#viewContainer.innerHTML = ''; // Clear previous view
+    const content = await this.#currentView.render();
+    this.#viewContainer.appendChild(content);
+
+    return this.#container;
+  }
+
+  /**
+   * Navigates to a specific view after checking access.
+   * @param {string} viewName - The name of the view to navigate to.
+   * @param {Object} params - Additional parameters for the view.
+   */
+  async navigate(viewName, params = {}) {
+    if (!this.#views[viewName]) {
+      throw new Error(`View "${viewName}" not found.`);
+    }
+
+    // Restrict access to certain views based on authentication
+    if (!authService.isLoggedIn() && viewName !== 'auth') {
+      console.warn(`Access denied to "${viewName}". Redirecting to AuthPage.`);
+      this.#currentView = this.#views.auth;
+    } else if (viewName === 'sellProductsPage' && !authService.isSeller()) {
+      console.warn(`Access denied to "${viewName}". Only sellers can access this page.`);
+      this.#currentView = this.#views.marketplace;
+    } else {
       this.#currentView = this.#views[viewName];
-     if(viewName === 'productPage'){
-      this.render(params.prodid);
-     }else{
-      this.render();
-     }
-   }
+    }
 
-   static getInstance() {
-     if (!AppController.instance) {
-       AppController.instance = new AppController();
-     }
-     return AppController.instance;
-   }
+    await this.render();
+  }
+
+  static getInstance() {
+    if (!AppController.instance) {
+      AppController.instance = new AppController();
+    }
+    return AppController.instance;
+  }
 }
+
