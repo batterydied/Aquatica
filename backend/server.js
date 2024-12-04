@@ -6,15 +6,17 @@ import { handleGlobalError } from './utils/ErrorHandler.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import './database.js';
+// import initializeDatabase from './tests/ProductPageDatabase.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.dirname(__dirname);
 
 // import AuthRoutes from './routes/AuthRoutes.js';
- import CartRoutes from './routes/CartRoutes.js';
-// import OrderRoutes from './routes/OrderRoutes.js';
- import ProductRoutes from './routes/ProductRoutes.js';
+import CartRoutes from './routes/CartRoutes.js';
+import ProductRoutes from './routes/ProductRoutes.js';
+import OrderRoutes from './routes/OrderRoutes.js';
 // import ProfileRoutes from './routes/ProfileRoutes.js';
 
 dotenv.config();
@@ -45,15 +47,20 @@ class Server {
   setupRoutes() {
     console.log("Registering routes...");
     // this.app.use('/api', AuthRoutes);
-    // this.app.use('/api/cart', CartRoutes);
-    // this.app.use('/api', OrderRoutes);
-     this.app.use('/api', ProductRoutes);
+    this.app.use('/api/', (req, res, next) => {
+        console.log(`Route hit: ${req.method} ${req.url}`);
+        next();
+    }, ProductRoutes);
     // this.app.use('/api', ProfileRoutes);
     // Add /api/cart prefix to all CartRoutes
     this.app.use('/api/cart', (req, res, next) => {
         console.log(`Route hit: ${req.method} ${req.url}`);
         next();
     }, CartRoutes);
+    this.app.use('/api/order', (req, res, next) => {
+        console.log(`Route hit: ${req.method} ${req.url}`);
+        next();
+    }, OrderRoutes);
 
     console.log("Routes successfully registered.");
     // Global error handler
