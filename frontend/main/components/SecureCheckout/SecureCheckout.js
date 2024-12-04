@@ -6,28 +6,17 @@
   Issue: #50
   Owner: Devin
   Expected Outcome: A fully functional checkout page that:
-                    - Displays cart details fetched from VirtualCart.
+                    - Fetches cart details directly from the backend.
                     - Validates user input for shipping and payment details.
                     - Sends valid orders to the backend upon submission.
-
-  Integrates with:
-  - VirtualCart: Receives cart data published on checkout.
-  - Backend: Sends order data to the API for processing.
-
-  - Method: render(): Creates the checkout page layout.
-  - Method: #updateCartReview(): Updates the UI with cart details.
-  - Method: #validateAndSubmit(): Validates user input and triggers order submission.
-  - Method: #submitOrder(): Sends order data to the backend.
 */
 
 // Imports
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { AppController } from "../../app/AppController.js";
-import { hub } from "../../eventhub/EventHub.js";
 
 // SecureCheckout Class
 export class SecureCheckout extends BaseComponent {
-  // Private Variables
   #container = null;
   #prices = {
     subtotal: 0,
@@ -35,29 +24,13 @@ export class SecureCheckout extends BaseComponent {
     discount: 0,
     total: 0,
   };
+  #cartItems = []; // Private field to store cart items
 
-  /**
-   * Constructor for SecureCheckout.
-   * Subscribes to cart data updates and loads necessary styles.
-   */
   constructor() {
     super();
     this.loadCSS("SecureCheckout");
-
-    // Subscribe to cart data updates
-    hub.subscribe("cartData", (data) => {
-      if (this.#container) {
-        this.#updateCartReview(data.cartItems, data.totals);
-      } else {
-        setTimeout(() => this.#updateCartReview(data.cartItems, data.totals), 0);
-      }
-    });
   }
 
-  /**
-   * Render the checkout page layout.
-   * @returns {HTMLElement} - The checkout container element.
-   */
   render() {
     if (this.#container) return this.#container;
 
@@ -65,13 +38,11 @@ export class SecureCheckout extends BaseComponent {
     this.#container.classList.add("checkout-container");
     this.#setupContainerContent();
     this.#attachEventListeners();
+    this.#fetchCartData();
 
     return this.#container;
   }
 
-  /**
-   * Setup the initial HTML content for the checkout page.
-   */
   #setupContainerContent() {
     this.#container.innerHTML = `
       <a href="#" class="back-link">← Cart</a>
@@ -117,30 +88,20 @@ export class SecureCheckout extends BaseComponent {
     `;
   }
 
-  /**
-   * Attach event listeners to the checkout page elements.
-   */
   #attachEventListeners() {
     const shippingTab = this.#container.querySelector("#shipping-tab");
     const paymentTab = this.#container.querySelector("#payment-tab");
     const payNowButton = this.#container.querySelector(".pay-now");
     const backLink = this.#container.querySelector(".back-link");
 
-    // Tab switching logic
-    shippingTab.addEventListener("click", () => {
-      this.#toggleForm("shipping");
-    });
-    paymentTab.addEventListener("click", () => {
-      this.#toggleForm("payment");
-    });
+    shippingTab.addEventListener("click", () => this.#toggleForm("shipping"));
+    paymentTab.addEventListener("click", () => this.#toggleForm("payment"));
 
-    // Handle Pay Now button
     payNowButton.addEventListener("click", (event) => {
       event.preventDefault();
       this.#validateAndSubmit();
     });
 
-    // Navigate back to cart
     backLink.addEventListener("click", (event) => {
       event.preventDefault();
       const appController = AppController.getInstance();
@@ -148,10 +109,6 @@ export class SecureCheckout extends BaseComponent {
     });
   }
 
-  /**
-   * Toggle between shipping and payment forms.
-   * @param {string} form - The form to display ("shipping" or "payment").
-   */
   #toggleForm(form) {
     const shippingForm = this.#container.querySelector("#shipping-form");
     const paymentForm = this.#container.querySelector("#payment-form");
@@ -171,9 +128,51 @@ export class SecureCheckout extends BaseComponent {
     }
   }
 
-  /**
-   * Validate the user input and submit the order if valid.
-   */
+  async #fetchCartData() {
+    try {
+      const response = await fetch("http://localhost:3000/api/cart");
+      if (!response.ok) throw new Error("Failed to fetch cart data");
+
+      const { items } = await response.json();
+      this.#cartItems = items; // Assign cart items to the private field
+      const totals = this.#calculateTotalsFromItems(items);
+      this.#updateCartReview(items, totals);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      alert("Failed to load cart data.");
+    }
+  }
+
+  #calculateTotalsFromItems(items) {
+    const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+    const shipping = items.length > 0 ? 5.99 : 0;
+    const tax = subtotal * 0.1;
+    const total = subtotal + shipping + tax;
+    return { subtotal, shipping, tax, total };
+  }
+
+  #updateCartReview(cartItems, totals) {
+    const reviewItemsContainer = this.#container.querySelector(".review-items");
+    const subtotalEl = this.#container.querySelector("#subtotal");
+    const shippingEl = this.#container.querySelector("#shipping");
+    const totalEl = this.#container.querySelector("#total");
+
+    reviewItemsContainer.innerHTML = cartItems
+      .map(
+        (item) => `
+        <div class="review-item">
+          <p><strong>${item.name}</strong> x ${item.quantity}</p>
+          <p>$${(item.price * item.quantity).toFixed(2)}</p>
+        </div>
+      `
+      )
+      .join("");
+
+    subtotalEl.textContent = totals.subtotal.toFixed(2);
+    shippingEl.textContent = totals.shipping.toFixed(2);
+    totalEl.textContent = totals.total.toFixed(2);
+  }
+
   #validateAndSubmit() {
     const requiredFields = [
       "#full-name",
@@ -203,78 +202,25 @@ export class SecureCheckout extends BaseComponent {
     }
   }
 
-/**
- * Submit the order data to the backend.
- */
-#submitOrder() {
-  const orders = this.#container.querySelectorAll(".review-item");
-  const orderItems = Array.from(orders).map((order) => {
-    const productIdEl = order.querySelector("h4");
-    const descriptionEl = order.querySelector("p");
-    const priceEl = order.querySelector("p + p");
-    const quantityEl = order.querySelector(".item-quantity span");
+  #submitOrder() {
+    const orderItems = this.#cartItems.map((item) => ({
+      productId: item.productId,
+      description: item.description,
+      price: item.price,
+      quantity: item.quantity,
+    }));
 
-    // Check for missing elements
-    if (!productIdEl || !descriptionEl || !priceEl || !quantityEl) {
-      console.error("Order item structure is incorrect or missing elements:", order);
-      return null; // Skip this item if structure is invalid
-    }
-
-    return {
-      productId: productIdEl.textContent,
-      description: descriptionEl.textContent,
-      price: parseFloat(priceEl.textContent.replace("$", "")),
-      quantity: parseInt(quantityEl.textContent),
-    };
-  });
-
-  // Filter out invalid items
-  const validOrderItems = orderItems.filter((item) => item !== null);
-
-  if (validOrderItems.length === 0) {
-    alert("No valid order items to submit.");
-    return;
-  }
-
-  fetch("http://localhost:3000/api/order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(validOrderItems),
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error("Failed to place order");
-      return response.json();
+    fetch("http://localhost:3000/api/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orders: orderItems }), // Send as an array of orders
     })
-    .then(() => alert("Order placed successfully!"))
-    .catch((error) => alert("Failed to place order: " + error.message));
-}
-
-
-  /**
-   * Update the cart review section with cart details.
-   * @param {Array} cartItems - Items in the cart.
-   * @param {Object} totals - Totals (subtotal, shipping, total).
-   */
-  #updateCartReview(cartItems, totals) {
-    const reviewItemsContainer = this.#container.querySelector(".review-items");
-    const subtotalEl = this.#container.querySelector("#subtotal");
-    const shippingEl = this.#container.querySelector("#shipping");
-    const totalEl = this.#container.querySelector("#total");
-
-    reviewItemsContainer.innerHTML = cartItems
-      .map(
-        (item) => `
-        <div class="review-item">
-          <p><strong>${item.name}</strong> x ${item.quantity}</p>
-          <p>$${(item.price * item.quantity).toFixed(2)}</p>
-        </div>
-      `
-      )
-      .join("");
-
-    subtotalEl.textContent = totals.subtotal.toFixed(2);
-    shippingEl.textContent = totals.shipping.toFixed(2);
-    totalEl.textContent = totals.total.toFixed(2);
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to place order");
+        return response.json();
+      })
+      .then(() => alert("Order placed successfully!"))
+      .catch((error) => alert("Failed to place order: " + error.message));
   }
 }
 

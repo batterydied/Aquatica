@@ -58,29 +58,28 @@ class OrderController {
    * @param {Object} req - Express request object containing order data.
    * @param {Object} res - Express response object.
    */
-  async addOrder(req, res) {
-    try {
-      console.log("OrderController: addOrder called.");
-      const userId = req.user?.id || "test-user-id"; // Default userId for testing
+async addOrder(req, res) {
+  try {
+    console.log("Request body:", req.body); // Log the incoming request body
+    const userId = req.user?.id || "test-user-id"; // Default userId for testing
 
-      // Data from the request body
-      const { productId, quantity, price, description } = req.body;
-
-      // Use manual addition for testing without ProductModel
-      const newOrder = await OrderModel.addOrderManually(
-        productId,
-        price,
-        description,
-        quantity,
-        userId
-      );
-
-      res.status(201).json(newOrder);
-    } catch (error) {
-      console.error("Error in addOrder:", error);
-      res.status(500).json({ error: "Failed to add order." });
+    const { orders } = req.body; // Expecting an array of order items
+    if (!orders || !Array.isArray(orders) || orders.length === 0) {
+      return res.status(400).json({ error: "Invalid or missing order data." });
     }
+
+    const orderPromises = orders.map(({ productId, price, description, quantity }) => {
+      return OrderModel.addOrderManually(productId, price, description, quantity, userId);
+    });
+
+    const newOrders = await Promise.all(orderPromises);
+    res.status(201).json(newOrders);
+  } catch (error) {
+    console.error("Error in addOrder:", error);
+    res.status(500).json({ error: "Failed to add order." });
   }
+}
+
 }
 
 export default new OrderController();

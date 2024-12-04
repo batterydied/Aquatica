@@ -59,7 +59,7 @@ class CartController {
    */
   async getSavedItems(req, res) {
     try {
-      
+      const userId = req.user?.id || "test-user-id"; // Using a default userId for testing
       const items = await CartModel.getItems(userId, true);
       res.json({ items });
     } catch (error) {
