@@ -1,7 +1,11 @@
-import sequelize from '../database.js';
-import { DataTypes } from 'sequelize';
-//
-// Define models
+import { Sequelize, DataTypes } from "sequelize";
+
+const sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: "database.sqlite",
+});
+
+// Defines the product data model
 const Product = sequelize.define("Product", {
   prodid: {
     type: DataTypes.UUID,
@@ -133,6 +137,6 @@ class _ProductModel {
   }
 }
 
-const ProductModel = new _ProductModel();
 export default ProductModel;
 export { Product, Review, Image, ProductType };
+
