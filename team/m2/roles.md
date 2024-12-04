@@ -4,9 +4,9 @@
 - **Role**: Reviews team submissions and ensures that all deliverables meet the necessary quality standards. Benson is responsible for proofreading and ensuring the accuracy of all documents before submission.
 
 - **Top 3 Commits**:
-   1. **October 18, 2024**: [Initial Repository Setup](https://github.com/batterydied/Aquatica/commit/48e9c9e28af274d026659d49c735a3daf2118f46) Set up the initial project repository for Aquatica and invited teammates as collaborators.
-   2. **October 19, 2024**: [Update users.md](https://github.com/batterydied/Aquatica/commit/b148286321d5930a7b7c9348db42249470693653) Refined the target audience descriptions to ensure the app’s user focus aligns with quality standards.
-   3. **October 20, 2024**: [Update README.md](https://github.com/batterydied/Aquatica/commit/a0beebac2a1c6827ff828c367b9a443465c3f5df) Updated README.md for the Aquatica application, providing an overview of the project and its objectives.
+   1. **Nov 17, 2024**: [Split Product Page Structure](https://github.com/batterydied/Aquatica/commit/d6478b9f445428b5281a80acac34a3ddda763f4f) Divided the Product Page into distinct sections: the Image Gallery and the Product Information Panel to enhance modularity and maintainability.
+   2. **Nov 17, 2024**: [Refactor Product Page to Use Classes](https://github.com/batterydied/Aquatica/commit/f102bb4dc8596de9ef2e14b658dd8a5982aa2c05) Refactored the Product Page from functional components to class-based components, extending the BaseComponent for better modularity and consistency.
+   3. **Nov 17, 2024**: [Add Main Image to Image Gallery](https://github.com/batterydied/Aquatica/commit/fba53b1867b0941ff797730bf6708aa36cfc5872) Added a main image to the Image Gallery, displaying the first thumbnail by default and dynamically updating on hover over other thumbnails.
 
 ## Winifred Nauda - Project Manager
 - **Role**: Oversees the overall project timeline, ensures that milestones are met, and coordinates the team’s efforts. Responsible for setting meeting agendas and ensuring that the team stays focused on project goals.
@@ -39,9 +39,9 @@
 ## Yukun Yang - Timekeeper
 - **Role**: Manages the timing of all team activities. Ensures that meetings start and end on time, keeps track of deadlines, and reminds the team of upcoming due dates.
 - **Top 3 Commits**:
-  1. [Commit 1] Brainstorm the project ideas and features with team members.
-  2. [Commit 2](https://github.com/batterydied/Aquatica/commit/5b38b306448e11840188f90ce8ffe7ac55322b3d) Created yukun-yang.md file.
-  3. [Commit 3](https://github.com/batterydied/Aquatica/commit/1484d6c69ed920df8ba4a49561c4827b79db0c67): Updated the problem.md file.
+  1. [Commit 1] Design UI for profile page.
+  2. [Commit 2](https://github.com/batterydied/Aquatica/tree/profile-page) Implement profile feature.
+  3. [Commit 3](https://github.com/batterydied/Aquatica/blob/profile-page/team/m2/features.md): Updated the feature.md file.
 
 ## Asritha Bodepudi - Note taker 
 - **Role**: Takes detailed notes during meetings and publishes them to the team in an accessible format. Asritha will also make sure that the Github commit history is up to date in a detailed manner, and all relevant documentation to the project is done properly
