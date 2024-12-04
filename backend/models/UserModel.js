@@ -1,242 +1,173 @@
-// UserModel : Haiyi
-// **Description**:  Design the `UserModel` in Sequelize, integrated with `database.sqlite` for user management.
-  // attributes: userId, email, hashedPassword, roles, & timestamps (createdAt, updatedAt). 
-  // Add model-level validation for required fields and email format.
-// **Tag**: #72
-// **Owner**: Haiyi
-// **Expected Outcome**: A functioning Sequelize model stored in SQLite, with appropriate validations. 
-
-/* Integration:
-  *- AuthController.js:     For authentication, user registration, and login/logout functionalities.
-  *- AuthMiddleware.js:     For token validation and user access control.
-  *- RoleMiddleware.js:     For enforcing role-based access permissions.
-  *- ProfileController.js:  For fetching and updating user profile information.
-  *- OrderController.js:    For associating user data with orders.
-  *- Password Reset.js:  For managing password recovery and secure updates.
-*/
-
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 
 // Define the User model. Design the database schema for user management:
-  // *1 {Fields} userId, email, hashedPassword, roles, +_timestamps_+.
 const User = sequelize.define("User", {
-  userId: {                         // Universal Unique ID
-    type: DataTypes.UUID,           
+  userId: {
+    type: DataTypes.UUID,
     primaryKey: true,
-    defaultValue: DataTypes.UUIDV4, // Automatically generate UUID
+    defaultValue: DataTypes.UUIDV4,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,                   // Required field: unique email
-    validate:{ 
-      isEmail:  { msg: "Please provide a valid email." },  
-      notEmpty: { msg: "Email cannot be empty." } 
+    unique: true,
+    validate: {
+      isEmail: { msg: "Please provide a valid email." },
+      notEmpty: { msg: "Email cannot be empty." },
     },
   },
   hashedPassword: {
     type: DataTypes.STRING,
-    allowNull: false,               // Required field: password
-    validate:{
+    allowNull: false,
+    validate: {
       notEmpty: { msg: "Password field cannot be empty." },
-      len: { args: [8,100], msg: "Password must be at least 8 characters long." }
+      len: { args: [8, 100], msg: "Password must be at least 8 characters long." },
     },
   },
-  roles: {                          // To Filter seller: SELECT * FROM Users WHERE roles @> '"seller"';
-    type: DataTypes.JSONB,          // Added flexibility: multi-roles, permission allowed for fix
-    defaultValue: "user",           // Default role is 'user' once registered
-  },    
+  roles: {
+    type: DataTypes.JSONB,
+    defaultValue: ["user"],
+  },
   verified: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,            // User need to get verified by email
+    defaultValue: false,
   },
   verificationToken: {
     type: DataTypes.STRING,
-    allowNull: true,                //  Token will be generated only
-  }, 
-  resetPasswordToken:{
+    allowNull: true,
+  },
+  resetPasswordToken: {
     type: DataTypes.STRING,
-    allowNull: true, 
-  }, 
-  resetPasswordExpired:{
-    type: DataTypes.STRING,
-    allowNull: true, 
-  }, 
-  tokenVersion:{
+    allowNull: true,
+  },
+  resetPasswordExpired: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  tokenVersion: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
 }, {
-  tableName: "users",               // Define the table name as "users"
-  timestamps: true,                 // Enable automatic timestamp columns (createdAt, updatedAt) 
-  hooks: {                          // Always hash password before saving
-    beforeCreate: async (user) => {
-      user.hashedPassword = await bcrypt.hash(user.hashedPassword, 10);
-    },
-    beforeUpdate: async (user) => {
-      if(user.changed("hashedPassword")){
-        user.hashedPassword = await bcrypt.hash(user.hashedPassword, 10);
-      }
-    },
-  },
+  tableName: "users",
+  timestamps: true,
 });
 
-  // *2 {Methods} createUser, getUserByEmail, updatePassword, and validateCredentials.
-class _UserModel {
-  constructor() {
-    this.model = User;
-  }
 
-  /** Initializes the database and syncs the model. */
-  async init() {
-    try {
-      await sequelize.authenticate();
-      await sequelize.sync();
-      console.log("Database synced successfully.");
-    } catch (error) {
-      console.error("Database initialization failed:", error);
-      throw error;
-    }
-  }
+export default User;
 
-  /**  Create a new user with validations and password hashing.
-   * @param {Object} userData - { email, password, roles }
-   * @returns {Object} - Created user.
+/**
+ * Encapsulated class for User-related database operations.
+ */
+class UserModel {
+  /**
+   * Find a user by email.
+   * @param {string} email - The email to search for.
+   * @returns {Promise<User|null>}
    */
-  async createUser(userData) {
-    try{
-      const {email, password, roles} = userData;
-      // Check for duplicate email
-      const unique = await this.model.findOne({ where: { email } });
-      if (unique) {
-        throw new Error("A user with this email already exists.");
-      }
-
-      return await this.model.create(userData);
-    }catch (error){
-      console.error("Error creating user:", error);
-      throw error;
-    } 
+  static async findByEmail(email) {
+    return await User.findOne({ where: { email } });
   }
 
-  /** Retrieve a user by ID.
-   * @param {string} userId - User ID.
-   * @returns {Object|null} User object or null if not found.
+  /**
+   * Create a new user.
+   * @param {object} userData - The user data (email, password, etc.).
+   * @returns {Promise<User>}
    */
-  async getUserById(userId) {
-    try {
-      return await this.model.findByPk(userId);
-    } catch (error) {
-      console.error("Error retrieving user by ID:", error);
-      throw error;
+  static async createUser(userData) {
+    const { email, password } = userData;
+
+    console.log("UserModel.createUser: Checking if user already exists for email:", email);
+    const existingUser = await UserModel.findByEmail(email);
+
+    if (existingUser) {
+      console.log("UserModel.createUser: User already exists with email:", email);
+      throw new Error("User with this email already exists.");
     }
+
+    console.log("UserModel.createUser: Hashing password...");
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("UserModel.createUser: Hashed password generated.");
+
+    const newUser = await User.create({
+      email,
+      hashedPassword,
+      roles: ["user"],
+      verificationToken: null,
+    });
+
+    console.log("UserModel.createUser: New user created:", newUser.toJSON());
+    return newUser;
   }
 
-  /** Retrieve a user by email.
-   * @param {string} email - User email.
-   * @returns {Object|null} User object or null if not found.
+  /**
+   * Validate a user's credentials.
+   * @param {string} email - The user's email.
+   * @param {string} password - The user's plain password.
+   * @returns {Promise<User|null>}
    */
-  async getUserByEmail(email) {
-    try {
-        return await this.model.findOne({ where: {email} }); // Find a user with the specified email
-    } catch (error) {
-      console.error("Error retrieving user by email:", error);
-      throw error;
-    }
+  static async validateCredentials(email, password) {
+    const user = await UserModel.findByEmail(email);
+
+    if (!user) return null;
+
+    const isValidPassword = await bcrypt.compare(password, user.hashedPassword);
+    return isValidPassword ? user : null;
   }
-  
-  async validateCredentials(email, passwordHash) {
-    try {
-      const user = await this.getUserByEmail(email);  // Retrieve the user by email
-      if (!user) return null;                         // Return null if the user isn't found
-      return user.hashedPassword === passwordHash ? user: null; // Return null if the password isn't right
-    } catch (error) {
-      console.error("Error validating credentials:", error);
-      throw error;
-    }
+
+  /**
+   * Find a user by their reset password token.
+   * @param {string} token - The reset token.
+   * @returns {Promise<User|null>}
+   */
+  static async findByResetToken(token) {
+    return await User.findOne({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpired: { [sequelize.Op.gt]: new Date() }, // Check token expiration
+      },
+    });
   }
-  
-// Increment the token version when logging out
-async incrementTokenVersion(userId) {
-  try {
-    const user = await this.model.findByPk(userId);
-    if (!user) throw new Error("User not found");
+
+  /**
+   * Increment the token version (used for invalidating sessions).
+   * @param {string} userId - The user ID.
+   * @returns {Promise<User>}
+   */
+  static async incrementTokenVersion(userId) {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      throw new Error("User not found.");
+    }
 
     user.tokenVersion += 1;
     await user.save();
-    
+
     return user;
-  } catch (error) {
-    console.error("Error incrementing token version:", error);
-    throw error;
-  }
-}
-
-// Method to validate a token against the stored token version
-async validateTokenVersion(userId, tokenVersion) {
-  try {
-    const user = await this.model.findByPk(userId);
-    if (!user) throw new Error("User not found");
-    return user.tokenVersion === tokenVersion;  // Check if the token version matches
-  } catch (error) {
-    console.error("Error validating token version:", error);
-    throw error;
-  }
-}
-  /** Check if a user has a specific role.
-   * @param {Object} user - User object.
-   * @returns {boolean} True if the user has the role as seller, false otherwise.
-   */ 
-  isSeller(user) { // TODO Check necessity for async/ multi-roles
-    return user.roles === "seller" ;
   }
 
-  async updatePassword(userId, newPassword) {
-    try {
-      const user = await this.model.findByPk(userId); // Find the user by ID
-      if (!user) {throw new Error("User not found");}
-      user.hashedPassword = newPassword; // New password should already be hashed before set.
-      await user.save();
-      return user;
-    } catch (error) {
-      console.error("Error updating password:", error);
-      throw error;
-    }
-  }
-
-  /** Update a user's information.
-   * @param {string} userId - User ID.
-   * @param {Object} updates - Data to update.
-   * @returns {Object} Updated user.
+  /**
+   * Update a user's password.
+   * @param {string} userId - The user ID.
+   * @param {string} newPassword - The new plain password.
+   * @returns {Promise<User>}
    */
-  async updateUser(userId, updates) {
-    try {
-      const user = await this.model.findByPk(userId);
-      if (!user) throw new Error("User not found");
-      await user.update(updates);
-      return user;
-    } catch (error) {
-      console.error("Error updating user:", error);
-      throw error;
-    }
-  }
+  static async updatePassword(userId, newPassword) {
+    const user = await User.findByPk(userId);
 
-  //TODO DELETE/ MORE functions
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    user.hashedPassword = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    return user;
+  }
 }
 
-const UserModel = new _UserModel();
-export default UserModel;
-export { User };
+export { UserModel };
 
-
-/* Coder Note 
-  *1* Start with the Database Schema: UserModel
-    The UserModel is the foundation of the authentication system. 
-    All authentication logic and middleware depend on the structure and data of the UserModel.
-  *Logic:
-    - Define fields like username, email, passwordHash, role, and timestamps.
-    - Add methods like validatePassword() or hooks for password hashing.
-    - Output: A schema that integrates with the database and supports authentication workflows.
-*/

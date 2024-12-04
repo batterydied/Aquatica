@@ -1,33 +1,27 @@
-class AuthService {
+export class AuthService {
   constructor() {
-    this.token = localStorage.getItem('authToken');
-    this.user = JSON.parse(localStorage.getItem('user')) || null;
-  }
-
-  login(token, user) {
-    this.token = token;
-    this.user = user;
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('user', JSON.stringify(user));
-  }
-
-  logout() {
-    this.token = null;
-    this.user = null;
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    try {
+      const storedUser = localStorage.getItem("user");
+      this.user = storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      this.user = null;
+    }
   }
 
   isLoggedIn() {
-    return !!this.token;
+    return !!this.user; // Return true if user is defined and not null
   }
 
-  isSeller() {
-    return this.user?.roles?.includes('seller');
+  login(token, userId) {
+    const user = { token, userId };
+    this.user = user;
+    localStorage.setItem("user", JSON.stringify(user)); // Store user in localStorage
   }
 
-  getUserId() {
-    return this.user?.userId || null;
+  logout() {
+    this.user = null;
+    localStorage.removeItem("user"); // Clear user data from localStorage
   }
 }
 
