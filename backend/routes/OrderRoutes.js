@@ -15,7 +15,7 @@ initializeRoutes() {
     // Get all orders
     this.router.get("/", (req, res) => {
         console.log("GET /api/order called.");
-        CartController.getOrders(req, res);
+        OrderController.getOrders(req, res);
     });
 
     // Make a new order

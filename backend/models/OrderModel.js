@@ -12,7 +12,7 @@ const Order = sequelize.define("Order", {
 });
 
 // Define the class
-class CartModel {
+class OrderModel {
   static async getModel() {
     // Ensure the database schema is synchronized
     await sequelize.sync({ force: true }); // Force sync drops existing tables
