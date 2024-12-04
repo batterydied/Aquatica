@@ -5,9 +5,15 @@ export class Service {
         this.addSubscriptions();
     }
 
-    addSubscriptions() {
-        throw new error("addSubscriptions not implemented");
+  addSubscriptions() {
+    try {
+      // Add your subscription logic here
+      console.log("Adding subscriptions...");
+    } catch (error) { // Ensure the variable 'error' is defined
+      console.error("Error adding subscriptions:", error); // Log the error
+      throw error; // Rethrow to propagate the error up
     }
+  }
 
     subscribe(event, listener) {
         return hub.subscribe(event, listener);
