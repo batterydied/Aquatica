@@ -1,12 +1,12 @@
 import { Service } from "./Service.js";
+
 export class ProductService extends Service {
     constructor() {
         super();
-        this.controller = ProductController;
     }
 
     async retrieveAllProducts() {
-        const response = await fetch("/products", {
+        const response = await fetch("/api/products", {
             method: "GET",
         });
 
@@ -14,6 +14,14 @@ export class ProductService extends Service {
             throw new Error("Failed to retrieve products.");
         }
 
-        this.publish("retrievedProductsList", response.products);
+        console.log(response);
+
+        const products = await response.json();
+
+        this.publish("retrievedProductsList", products);
+    }
+
+    addSubscriptions() {
+        // TODO: implement this method
     }
 }
