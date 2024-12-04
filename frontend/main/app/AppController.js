@@ -1,7 +1,3 @@
-// This will render all of our app's features.
-
-// Imports
-
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
 import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
@@ -11,64 +7,76 @@ import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
 
-
 export class AppController {
    #container = null;
-   #currentView = null; // Track the currently rendered views
+   #currentView = null; // Track the currently rendered view
    #views = {}; // Store initialized views
-   #navigationMenu = null; // Store the navigation menu separately and add on views
+   #navigationMenu = null; // Navigation menu component
+   static instance = null; // Singleton instance
 
    constructor() {
-      // Initialize components
-      this.#views = {
-         marketplace: new MarketplacePage(),
-         secureCheckout: new SecureCheckout(),
-         virtualCart:  new VirtualCart(), 
-         navigationMenu: new NavigationMenu(),
-         productPage: new ProductPage(),
-         profilePage: new ProfilePage(),
-         sellProductsPage: new SellProductsPage()
-      };
+     // Initialize components
+     this.#views = {
+       marketplace: new MarketplacePage(),
+       secureCheckout: new SecureCheckout(),
+       virtualCart: new VirtualCart(),
+       navigationMenu: new NavigationMenu(),
+       productPage: new ProductPage(), // ProductPage is dynamically initialized when needed
+       profilePage: new ProfilePage(),
+       sellProductsPage: new SellProductsPage(),
+     };
 
-      // Default Page set as marketplace page
-      this.#currentView = this.#views.marketplace;
+     // Set the default page as the marketplace
+     this.#currentView = this.#views.marketplace;
    }
 
-  render() {
-    if (!this.#container) {
-      this.#container = document.createElement('div');
-      this.#container.classList.add('app-controller');
-    }
+   async render(id=null) {
+     if (!this.#container) {
+       this.#container = document.createElement('div');
+       this.#container.classList.add('app-controller');
+       this.#container.style.display = 'flex';
+       this.#container.style.flexDirection = 'column';
+       this.#container.style.justifyContent = 'center';
+     }
 
-    this.#container.innerHTML = '';
-    this.#container.appendChild(this.#currentView.render());
+     this.#container.innerHTML = ''; // Clear previous content
+     let content;
+     if(!id){
+      content = await this.#currentView.render();
+     }else{
+      content = await this.#currentView.render(id);
+     }
+     this.#container.appendChild(content); // Render the current view
 
-    if (this.#currentView !== this.#views.secureCheckout) {
-      this.#container.appendChild(this.#views.navigationMenu.render());
-    }
+     // Add navigation menu except for specific views
+     if (this.#currentView !== this.#views.secureCheckout) {
+       this.#container.prepend(this.#views.navigationMenu.render());
+     }
 
-    return this.#container;
-  }
+     return this.#container;
+   }
+
    /**
-   * Public method to navigate to a different view.
-   * @param {string} viewName - The name of the view to navigate to.
-   */
-   navigate(viewName) {
-      // Check if the view exists
-      if (!this.#views[viewName]) {
-      throw new Error(`View "${viewName}" not found.`);
-      }
-
-      // Switch to the new view
+    * Navigate to a specific view.
+    * @param {string} viewName - The name of the view to navigate to.
+    * @param {Object} params - Additional parameters to pass to the view.
+    */
+   async navigate(viewName, params = {}) {
+     if (!this.#views[viewName]) {
+       throw new Error(`View "${viewName}" not found.`);
+     }
       this.#currentView = this.#views[viewName];
-      // Re-render the app controller with the new view
+     if(viewName === 'productPage'){
+      this.render(params.prodid);
+     }else{
       this.render();
+     }
    }
 
    static getInstance() {
-      if (!AppController.instance) {
-         AppController.instance = new AppController;
-      }
-      return AppController.instance;
+     if (!AppController.instance) {
+       AppController.instance = new AppController();
+     }
+     return AppController.instance;
    }
 }

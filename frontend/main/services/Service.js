@@ -6,7 +6,7 @@ export class Service {
     }
 
     addSubscriptions() {
-        throw new error("addSubscriptions not implemented");
+        throw new Error("addSubscriptions not implemented");
     }
 
     subscribe(event, listener) {

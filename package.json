@@ -8,11 +8,20 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server ./ -c-1"
+    "start": "nodemon ./backend/server.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "path": "^0.12.7",
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7",
+    "url": "^0.11.4"
   }
 }

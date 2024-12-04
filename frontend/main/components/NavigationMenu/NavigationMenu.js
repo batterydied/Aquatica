@@ -4,7 +4,6 @@ export class NavigationMenu extends BaseComponent {
   constructor() {
     super();
     this.container = document.createElement("div");
-    this.container.classList.add("navigation-menu");
     this.loadCSS("NavigationMenu");
     this.createHeader();
     this.attachEventListeners();
@@ -26,7 +25,7 @@ export class NavigationMenu extends BaseComponent {
     logoButton.dataset.target = "marketplace";
 
     const logoImage = document.createElement("img");
-    logoImage.src = "../../../assets/navigation-menu/logo-light.png";
+    logoImage.src = "../../../assets/navigation-menu/new-logo.svg";
     logoImage.alt = "Logo";
     logoImage.classList.add("logo-image");
     logoButton.appendChild(logoImage);
