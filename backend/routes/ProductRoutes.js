@@ -25,6 +25,4 @@ class ProductRoutes {
   }
 }
 
-
 export default new ProductRoutes().router; // Export the router instance
-
