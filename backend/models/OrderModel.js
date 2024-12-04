@@ -52,7 +52,7 @@ class OrderModel {
    * Initialize the database schema for Orders.
    */
   static async init() {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     console.log("Order table synced successfully.");
   }
 
