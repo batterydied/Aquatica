@@ -7,17 +7,18 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import './database.js';
 
+import AuthRoutes from './routes/AuthRoutes.js';
+import CartRoutes from './routes/CartRoutes.js';
+import OrderRoutes from './routes/OrderRoutes.js';
+import ProductRoutes from './routes/ProductRoutes.js';
+import ProfileRoutes from './routes/ProfileRoutes.js';
+
+dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.dirname(__dirname);
 
-// import AuthRoutes from './routes/AuthRoutes.js';
-// import CartRoutes from './routes/CartRoutes.js';
-// import OrderRoutes from './routes/OrderRoutes.js';
- import ProductRoutes from './routes/ProductRoutes.js';
-// import ProfileRoutes from './routes/ProfileRoutes.js';
-
-dotenv.config();
 
 class Server {
   constructor() {
@@ -32,7 +33,7 @@ class Server {
     this.app.use(express.urlencoded({ extended: true }));
 
     this.app.use(cors({
-      origin: 'http://localhost:8000', // Allow the frontend for communication
+      origin: 'http://10.0.0.158:8080', // TODO Allow the frontend for communication
       methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
       credentials: true,
     }));
@@ -43,11 +44,11 @@ class Server {
 
   // Setup routes
   setupRoutes() {
-    // this.app.use('/api', AuthRoutes);
-    // this.app.use('/api', CartRoutes);
-    // this.app.use('/api', OrderRoutes);
-     this.app.use('/api', ProductRoutes);
-    // this.app.use('/api', ProfileRoutes);
+    this.app.use('/api', AuthRoutes);
+    this.app.use('/api', CartRoutes);
+    this.app.use('/api', OrderRoutes);
+    this.app.use('/api', ProductRoutes);
+    this.app.use('/api', ProfileRoutes);
 
     // Global error handler
     this.app.use(handleGlobalError);
