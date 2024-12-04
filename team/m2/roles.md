@@ -29,7 +29,7 @@
    2. **October 18, 2024**: [Create devin-bowler.md](https://github.com/batterydied/Aquatica/commit/1d0e3a3434ed1932d9cb45c440eb1c1e8732962c) Initial creation of contribution log for self.
    3. **October 21, 2024**: [Update data.md](https://github.com/batterydied/Aquatica/compare/913e87a88901a5289041e08ec2847c4fdef5c66b...c6b2439a2e77fda953a336aa9facd8969e711f17) Refined the description of target users, focusing on their specific needs and how the app will address them. Added detailed user personas to ensure the team has a clear understanding of the intended application and its functionality.
 
-## Haiyi Cai - Communication Lead
+## Haiyi Cai - Communication Lead & Note-taker
 - **Role**: Facilitates communication within the team. Haiyi is responsible for maintaining and managing the team’s Message workspace, ensuring that all members stay informed and engaged; Listening to the members' challenges and reaching out to experts;
 - **Top 3 Commits**:
   1. [Commit 1](https://github.com/batterydied/Aquatica/commit/b017b82f73ff77ceb859ee9930123520cc09baa4): Brainstorm for project ideas with initial team members. Recorded and distributed project ideas brainstorm.
@@ -43,8 +43,8 @@
   2. [Commit 2](https://github.com/batterydied/Aquatica/tree/profile-page) Implement profile feature.
   3. [Commit 3](https://github.com/batterydied/Aquatica/blob/profile-page/team/m2/features.md): Updated the feature.md file.
 
-## Asritha Bodepudi - Note taker 
-- **Role**: Takes detailed notes during meetings and publishes them to the team in an accessible format. Asritha will also make sure that the Github commit history is up to date in a detailed manner, and all relevant documentation to the project is done properly
+## Asritha Bodepudi - Code Helper 
+- **Role**: Checking through Git Feature Issues and look for any Help-wanted labels. Ensures anyone who needs extra help received necessary support and felt more confident on professional growth. As a code helper, Asritha is also responsible to help on testing and fixing bugs or merge conflicts.
 - **Top 3 Commits**: 
    1. [Commit 1] Brainstorm the project ideas and features with team members.
    2. [Commit 2](https://github.com/batterydied/Aquatica/commit/c4459765bb2fb5f2b7840b1e495481f8be1a06b8) Contributed to ui-diagrams.md 
