@@ -1,16 +1,10 @@
 // This will render all of our app's features.
 
 // Imports
-<<<<<<< HEAD
-// import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
-// import { ProductService } from '../services/ProductService.js';
-// import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
-=======
 
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
 import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
->>>>>>> issue-#55-cart-model
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
 import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
@@ -27,17 +21,6 @@ export class AppController {
    constructor() {
       // Initialize components
       this.#views = {
-<<<<<<< HEAD
-         // marketplace: new MarketplacePage(),
-	 // secureCheckout: new SecureCheckout(),
-  	 virtualCart:  new VirtualCart(), 
-	 // navigationMenu: new NavigationMenu(),
-	 // productPage: new ProductPage(),
-	 // profilePage: new ProfilePage(),
-      };	
-
-      this.#currentView = this.#views.virtualCart;
-=======
          marketplace: new MarketplacePage(),
          secureCheckout: new SecureCheckout(),
          virtualCart:  new VirtualCart(), 
@@ -49,7 +32,6 @@ export class AppController {
 
       // Default Page set as marketplace page
       this.#currentView = this.#views.marketplace;
->>>>>>> issue-#55-cart-model
    }
 
   render() {

@@ -1,13 +1,13 @@
-class EventHub {
+export class EventHub {
+  static instance = null;
+
   constructor() {
-    this.events = {};
+    if (EventHub.instance) return EventHub.instance;
+
+    this.events = {}; // Event listeners storage
+    EventHub.instance = this;
   }
 
-<<<<<<< HEAD
-  subscribe(event, listener) {
-    if (!this.events[event]) {
-      this.events[event] = [];
-=======
   
   subscribe(eventName, callback) {
     if (!this.events[eventName]) this.events[eventName] = [];
@@ -17,28 +17,14 @@ class EventHub {
   publish(eventName, data) {
     if (this.events[eventName]) {
       this.events[eventName].forEach((callback) => callback(data));
->>>>>>> issue-#55-cart-model
     }
-    this.events[event].push(listener);
-    return () => this.unsubscribe(event, listener);
   }
 
-  publish(event, data) {
-    if (!this.events[event]) return;
-    this.events[event].forEach((listener) => listener(data));
-  }
-
-  unsubscribe(event, listenerToRemove) {
-    if (!this.events[event]) return;
-    this.events[event] = this.events[event].filter(
-      (listener) => listener !== listenerToRemove
-    );
+  unsubscribe(eventName, callback) {
+    if (this.events[eventName]) {
+      this.events[eventName] = this.events[eventName].filter((cb) => cb !== callback);
+    }
   }
 }
 
-<<<<<<< HEAD
-export default new EventHub(); // Use default export
-
-=======
 export const hub = new EventHub();
->>>>>>> issue-#55-cart-model
