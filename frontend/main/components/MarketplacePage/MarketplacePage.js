@@ -282,7 +282,7 @@ export class MarketplacePage extends BaseComponent {
         curProduct.appendChild(prodIMGDiv);
 
         const prodIMG = document.createElement("img");
-        prodIMG.src = prodListItem.imgurl;
+        prodIMG.src = prodListItem.Images?.[0]?.url || '';
         prodIMG.classList.add("prodimg");
         //prodIMG.src = this.prodList[i].imgurl;
         prodIMGDiv.appendChild(prodIMG);
@@ -321,30 +321,38 @@ export class MarketplacePage extends BaseComponent {
         sellName.addEventListener("click", () => this.goToSellerProfile(prodListItem.sellerid));
         prodInfo.appendChild(sellName);
 
-        if (prodListItem.numreviews > 0 && prodListItem.average_rating !== null) {
+        const numReviews = prodListItem.Reviews?.length || 0;
+
+        if (numReviews > 0) {
+            let ratingSum = 0;
+            for (let i = 0; i < numReviews; i++) {
+                ratingSum += prodListItem.Reviews[i].rating;
+            }
+
+            const averageRating = ratingSum / numReviews;
             const starIMGDiv = document.createElement("div");
             starIMGDiv.classList.add("stars-container");
             prodInfo.appendChild(starIMGDiv);
 
             const starIMG = document.createElement("img");
             starIMG.classList.add("stars");
-            starIMG.src = this.getStarIMG(prodListItem.average_rating); // star image based on rating
-            starIMG.alt = `${prodListItem.average_rating.toPrecision(2)} Stars`;
+            starIMG.src = this.getStarIMG(averageRating); // star image based on rating
+            starIMG.alt = `${averageRating.toPrecision(2)} Stars`;
             starIMGDiv.appendChild(starIMG);
 
             const starText = document.createElement("span");
             starText.classList.add("star-text");
-            starText.innerText = `${prodListItem.average_rating} Stars`;
+            starText.innerText = `${averageRating} Stars`;
             starIMGDiv.appendChild(starText);
 
-            const numReviews = document.createElement("span");
-            numReviews.classList.add("reviews-text");
-            numReviews.classList.add("prodlink");
-            numReviews.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
+            const numReviewsText = document.createElement("span");
+            numReviewsText.classList.add("reviews-text");
+            numReviewsText.classList.add("prodlink");
+            numReviewsText.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
 
-            const reviews = prodListItem.numreviews === 1 ? "Review" : "Reviews";
-            numReviews.innerText = ` ${prodListItem.numreviews} ${reviews}\n`;
-            prodInfo.appendChild(numReviews);
+            const reviews = numReviews === 1 ? "Review" : "Reviews";
+            numReviewsText.innerText = ` ${numReviews} ${reviews}\n`;
+            prodInfo.appendChild(numReviewsText);
         } else {
             const noRatingText = document.createElement("span");
             noRatingText.classList.add("reviews-text");
