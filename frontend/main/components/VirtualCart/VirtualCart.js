@@ -77,6 +77,8 @@ export class VirtualCart extends BaseComponent {
     });
   }
 
+  
+
   /**
    * Renders the virtual cart UI.
    */
@@ -117,6 +119,8 @@ export class VirtualCart extends BaseComponent {
 
     return this.#container;
   }
+
+
 
   /**
    * Attaches event listeners for cart interactions.
@@ -205,7 +209,7 @@ export class VirtualCart extends BaseComponent {
         (item, index) => `
         <div class="cart-item">
           <div class="item-details">
-            <h4>${item.productId}</h4>
+            <h4>${item.name}</h4>
             <p>${item.description}</p>
             <p>Price: $${item.price.toFixed(2)}</p>
           </div>
