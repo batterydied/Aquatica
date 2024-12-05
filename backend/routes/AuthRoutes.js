@@ -68,9 +68,7 @@ router.post("/reset-password", resetPassword);
   - Authorize the user as seller.
 */
 // Route to update the user's role to 'seller':
-  // TODO Add more roles here for other access levels if needed.
 router.post("/become-seller", authMiddleware, verifyRole("user"), becomeSeller); 
-
 
 export default router;
 
