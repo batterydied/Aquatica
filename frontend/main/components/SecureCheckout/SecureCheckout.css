@@ -46,6 +46,16 @@
     font-size: 14px;
     line-height: 1.4; /* Adjust spacing between lines */
   }
+
+  .order-confirmation button {
+    padding: 13px;
+    background-color: #FFA41E;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
 }
 
 /* Tablet (48em - 71.9em) */
@@ -183,5 +193,16 @@ label {
 .checkout-summary p {
   margin: 10px 0;
   font-size: 16px;
+}
+
+
+.order-confirmation button {
+  padding: 13px;
+  background-color: #FFA41E;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 

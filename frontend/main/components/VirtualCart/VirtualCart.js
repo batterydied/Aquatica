@@ -180,6 +180,7 @@ export class VirtualCart extends BaseComponent {
   #refreshCart() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
+    const checkoutButton = this.#container.querySelector(".checkout-button");
 
     cartItemsContainer.innerHTML =
       this.#cartItems.length > 0 ? this.#generateCartItems() : '<p class="empty-cart">Your cart is empty.</p>';
@@ -188,8 +189,12 @@ export class VirtualCart extends BaseComponent {
         ? this.#generateSavedItems()
         : '<p class="empty-saved">No items saved for later.</p>';
 
+    // Disable checkout button if cart is empty
+    checkoutButton.disabled = this.#cartItems.length === 0;
+
     this.#updateCartTotals();
   }
+
 
   /**
    * Generates the HTML for cart items.
