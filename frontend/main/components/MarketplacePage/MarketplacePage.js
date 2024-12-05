@@ -2,7 +2,6 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
-import { products } from "./Products.js";
 import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
 import { EventHub, hub } from "../../eventhub/EventHub.js";
