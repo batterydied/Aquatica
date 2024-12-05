@@ -66,20 +66,20 @@ const User = sequelize.define("User", {
 });
 
 class _UserModel {      
-  constructor() {   // TODO delete or init()
-    this.model = User;
-  }
-
-  /** Initializes the database and syncs the model. */
+    /** Initializes the database schema for AuthSystem. */
   async init() {
     try {
       await sequelize.authenticate();
-      await sequelize.sync({ alter: true });
+      await sequelize.sync();
       console.log("Database synced successfully.");
     } catch (error) {
       console.error("Database initialization failed:", error);
       throw error;
     }
+  }
+
+  constructor() {   // TODO delete or init()
+    this.model = User;
   }
 
   /**  Create a new user with validations and password hashing.
