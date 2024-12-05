@@ -19,17 +19,14 @@
 import express from "express";
 import { registerUser, verifyEmail, login, logout, requestPasswordReset, resetPassword, becomeSeller } from "../controllers/AuthController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
-import { verifyRole} from "../middleware/roleMiddleware.js";
+import { verifyRole } from "../middleware/roleMiddleware.js";
 
 // Create API routes for user authentication, including:
 const router = express.Router();
 
 /* 1. POST/ auth/register:
-  - Create a new user account with email, password, and optional profile data.
-  - Ensure email uniqueness and secure password hashing. 
-  - Create user in the database and generate a JWT to authenticate the user on subsequent requests.
+ * Route to register a new user:
 */
-// Route to register a new user:
 router.post("/register", registerUser);
 
 /* 2. POST/ auth/login:
@@ -39,16 +36,15 @@ router.post("/register", registerUser);
   - Generate a token for successful login.
   - Return a response with the token for client-side storage (e.g., in cookies or localStorage).
 */
-// Route to verify the email address of a user after they register:
-router.get("/verify-email", verifyEmail);
+// TODO Route to verify the email address of a user after they register:
+// router.get("/verify-email", verifyEmail);
 
 // Route for users to log in:
 router.post("/login", login);
 
 /* 3. POST/ auth/logout:
-  - Invalidate the token to log the user out.
+ * Route to log out the user (invalidates the versionToken):
 */
-// Route to log out the user (invalidates the session on the client side):
 router.post("/logout", authMiddleware, logout);
 
 /* 4. POST/ auth/request-password-reset:
@@ -63,7 +59,6 @@ router.post("/logout", authMiddleware, logout);
 */
 // Route to request a password reset (via email):
 router.post("/request-password-reset", requestPasswordReset);
-
 // Route to reset the user's password:
 router.post("/reset-password", resetPassword);
 

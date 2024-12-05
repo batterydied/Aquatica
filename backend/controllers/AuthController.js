@@ -15,7 +15,7 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import { UserModel } from "../models/UserModel.js";
+import UserModel  from "../models/UserModel.js";
 import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 
@@ -86,24 +86,24 @@ export async function registerUser(req, res) {  // TODO Change name as register(
   }
 }
 
-/* 2. Email verification: Verifies authentication tokens and save only verified user. 
+/* 2. Email verification: Verifies authentication tokens and save only verified user. */
 export async function verifyEmail(req, res) {
   try {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).json({ error: "Verification token is required."} );
+      return res.status(400).json({ error: "Verification token is required." });
     }
-    // Find the user with the provided token.
-    const user = await UserModel.getUserByVerificationToken(token); // TODO Implement getUserByVerificationToken() in UserModel
-    if (!user) {
-      return res.status(404).json({ error: "Invalid or expired token." });
-    }
+    // // Find the user with the provided token.
+    // const user = await UserModel.getUserByVerificationToken(token); // TODO Implement getUserByVerificationToken() in UserModel
+    // if (!user) {
+    //   return res.status(404).json({ error: "Invalid or expired token." });
+    // }
 
-    // Update the user's status to verified and clear the verification token
-    user.verified = true;
-    user.verificationToken = null;      // Remove the token after verification
-    await user.save();
+    // // Update the user's status to verified and clear the verification token
+    // user.verified = true;
+    // user.verificationToken = null;      // Remove the token after verification
+    // await user.save();
 
     res.status(200).json({ message: " ><> Email verified successfully. <><" });
   } catch (error) {
@@ -111,7 +111,7 @@ export async function verifyEmail(req, res) {
     res.status(500).json({ error: "Internal server error."} );
   }
 } 
-*/
+
 
 /* 3. Log in a user: Verifies credentials, generates authentication tokens, and responds with user details.*/
 export async function login(req, res) {
@@ -131,8 +131,9 @@ export async function login(req, res) {
 
     console.log("Validating credentials...");
     // Queries the UserModel.js to validate email and password.
-    const validCredentials = await UserModel.validateCredentials(email, password) ; // TODO is the password: hashed? comparable?
-    console.log("Log in user:", validCredentials);  // TODO implement validPassword()
+    const validCredentials = await UserModel.validateCredentials(email, password);
+    console.log("Log in user:", validCredentials);
+    // isValid = user, null;
 
     if (validCredentials === null) {
       console.log("Invalid email or password.");
@@ -142,8 +143,8 @@ export async function login(req, res) {
     console.log("Credential validated. Generating JWT now...");
     // Valid credentials: generates a JWT to authenticate the user for future requests.
     const tokenPayload = { 
-      userId: user.userId, 
-      tokenVersion: user.tokenVersion 
+      userId: validCredentials.userId, 
+      tokenVersion: validCredentials.tokenVersion 
     };
       // Sign JWT with tokenVersion for easy logout
     const token = jwt.sign(
@@ -275,9 +276,7 @@ export async function resetPassword(req, res) {
   }
 }
 
-/* 6.  Updating user Role as seller:
- *    Requires authentication and sufficient permissions.
- */
+/* 6.  Become a seller: Requires authentication and sufficient permissions. */
 export async function becomeSeller(req, res) {
   try {
     const { userId }  = req.user; 
@@ -296,7 +295,7 @@ export async function becomeSeller(req, res) {
     }
 
     // Update the user's role (as seller)
-    user.roles = [newRole];
+    user.roles = newRole;
     await user.save();
 
     res.status(200).json({ message: " ><> Hello, Seller <><", roles: user.roles });

@@ -4,16 +4,16 @@ import bcrypt from 'bcrypt';
 
 
 const User = sequelize.define("User", {
-  userId: {                         // Universal Unique ID
+  userId: {                         
     type: DataTypes.UUID,           
     primaryKey: true,
-    defaultValue: DataTypes.UUIDV4, // Automatically generate UUID
+    defaultValue: DataTypes.UUIDV4,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,                   // Required field: unique email
-    validate:{ 
+    validate: { 
       isEmail:  { msg: "Please provide a valid email." },  
       notEmpty: { msg: "Email cannot be empty." } 
     },
@@ -21,18 +21,18 @@ const User = sequelize.define("User", {
   hashedPassword: {
     type: DataTypes.STRING,
     allowNull: false,               // Required field: password
-    validate:{
+    validate: {
       notEmpty: { msg: "Password field cannot be empty." },
-      len: { args: [8,100], msg: "Password must be at least 8 characters long." }
+      len: { args: [8, 100], msg: "Password must be at least 8 characters long." },
     },
   },
   roles: {                          // To Filter seller: SELECT * FROM Users WHERE roles @> '"seller"';
     type: DataTypes.JSONB,          // Added flexibility: multi-roles, permission allowed for fix
     defaultValue: "user",           // Default role is 'user' once registered
   },    
-  // verified: {
+  // verified: {  // TODO User need to get verified by email after using email verification for register/login
   //   type: DataTypes.BOOLEAN,
-  //   defaultValue: false,            // TODO User need to get verified by email after using email verification for register/login
+  //   defaultValue: false,            
   // },
   // verificationToken: {
   //   type: DataTypes.STRING,
@@ -53,7 +53,7 @@ const User = sequelize.define("User", {
 }, {
   tableName: "users",               // Define the table name as "users"
   timestamps: true,                 // Enable automatic timestamp columns (createdAt, updatedAt) 
-  hooks: {                          // Always hash password before saving
+  hooks: {                          // Always hash password before saving for security
     beforeCreate: async (user) => {
       user.hashedPassword = await bcrypt.hash(user.hashedPassword, 10);
     },
@@ -66,7 +66,7 @@ const User = sequelize.define("User", {
 });
 
 class _UserModel {      
-  constructor() {
+  constructor() {   // TODO delete or init()
     this.model = User;
   }
 
@@ -74,7 +74,7 @@ class _UserModel {
   async init() {
     try {
       await sequelize.authenticate();
-      await sequelize.sync();
+      await sequelize.sync({ alter: true });
       console.log("Database synced successfully.");
     } catch (error) {
       console.error("Database initialization failed:", error);
@@ -92,18 +92,22 @@ class _UserModel {
         // , verified = false, verificationToken = null  // TODO after email verification
 
       // Check for duplicate email
+      console.log("UserModel.createUser() check duplicate email:", email);
       const existingUser = await this.getUserByEmail(email);
+      
       if (existingUser) {
+        console.log("UserModel.createUser uses duplicate email:", email);
         throw new Error("A user with this email already exists.");
       }
 
-      const newUser = await this.model.create({
+      const newUser = await this.model.create({ // TODO Change this.model all into User later
         email,
         hashedPassword: password,   // Pass raw password for hook to hash before saving
         roles,
-        // verified   // TODO After Email Verification
+        // verified,   // TODO After Email Verification
         // verificationToken,
       });
+      console.log("UserModel.createUser(): New user created");
       return newUser;
     }catch (error){
       console.error("Error creating user:", error);
@@ -126,7 +130,7 @@ class _UserModel {
 
   /** Retrieve a user by email.
    * @param {string} email - User email.
-   * @returns {Object|null} User object or null if not found.
+   * @returns {Promise<User|null>} User object or null if not found.
    */
   async getUserByEmail(email) {
     try {
@@ -137,11 +141,11 @@ class _UserModel {
     }
   }
   
-   /** Retrieve a user by resetToken.
+  /** Retrieve a user by resetToken.
    * @param {string} resetToken - resetToken sent to email for password reset.
    * @returns {Object|null} User object or null if not found.
    */
-   async getUserByResetPassToken(resetPassToken) {
+  async getUserByResetPassToken(resetPassToken) {
     try {
         return await this.model.findOne({ where: { resetPassToken } }); // Find a user with the specified email
     } catch (error) {
@@ -164,45 +168,45 @@ class _UserModel {
   }
   
   /** Increment the token version when logging out*/ 
-async incrementTokenVersion(userId) {
-  try {
-    const user = await this.getUserById(userId);
-    if (!user) throw new Error("User not found");
+  async incrementTokenVersion(userId) {
+    try {
+      const user = await this.getUserById(userId);
+      if (!user) throw new Error("User not found");
 
-    user.tokenVersion += 1;
-    await user.save();
-    return user;
-  } catch (error) {
-    console.error("Error incrementing token version:", error);
-    throw error;
-  }
-}
-
-/** Validate token against the stored token version for logout. */ 
-async validateTokenVersion(userId, tokenVersion) {
-  try {
-    const user = await this.getUserById(userId);
-    if (!user) throw new Error("User not found");
-    return user.tokenVersion === tokenVersion;  // Check if the token version matches
-  } catch (error) {
-    console.error("Error validating token version:", error);
-    throw error;
-  }
-}
-
-async updatePassword(userId, newPassword) {
-  try {
-    const user = await this.getUserById(userId); // Find the user by ID
-    if (!user) throw new Error("User not found");
-
-    user.hashedPassword = newPassword; // Hook will rehash the new password before update.
-    await user.save();
-    return user;
-  } catch (error) {
-      console.error("Error updating password:", error);
+      user.tokenVersion += 1;
+      await user.save();
+      return user;
+    } catch (error) {
+      console.error("Error incrementing token version:", error);
       throw error;
+    }
   }
-}
+
+  /** Validate token against the stored token version for logout. */ 
+  async validateTokenVersion(userId, tokenVersion) {
+    try {
+      const user = await this.getUserById(userId);
+      if (!user) throw new Error("User not found");
+      return user.tokenVersion === tokenVersion;  // Check if the token version matches
+    } catch (error) {
+      console.error("Error validating token version:", error);
+      throw error;
+    }
+  }
+
+  async updatePassword(userId, newPassword) {
+    try {
+      const user = await this.getUserById(userId); // Find the user by ID
+      if (!user) throw new Error("User not found");
+
+      user.hashedPassword = newPassword; // Hook will rehash the new password before update.
+      await user.save();
+      return user;
+    } catch (error) {
+        console.error("Error updating password:", error);
+        throw error;
+    }
+  }
 
   /** Update a user's information.
    * @param {string} userId - User ID.
