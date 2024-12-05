@@ -65,20 +65,17 @@
   display: flex;
   gap: 50px;
   padding: 40px;
-  background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   max-width: 1200px;
   width: 100%;
-  margin-left: 15%;
-  margin-top: 3%;
+  margin-top: 100px !important;
+  margin: auto;
 }
 
 }
 
 .left-panel {
   width: 600px;
-
   padding-right: 30px;
   border-right: 1px solid #ddd;
   display: flex;
