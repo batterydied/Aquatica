@@ -1,5 +1,5 @@
 import { MarketplacePage } from "./MarketplacePage.js";
-import { products } from "./Products.js";
+import products from "./Products.js";
 
 export class SellProductsPage extends MarketplacePage {
     constructor() {

@@ -36,6 +36,12 @@ class CartRoutes {
       CartController.getCartItems(req, res); // Fetch user's cart items
     });
 
+    // Add a route to clear all cart items
+    this.router.delete("/", (req, res) => {
+      console.log("DELETE /api/cart called.");
+      CartController.clearCart(req, res); // Calls the controller method to clear the cart
+    });
+
     // Add a new item to the cart
     this.router.post("/", (req, res) => {
       console.log("POST /api/cart called.");

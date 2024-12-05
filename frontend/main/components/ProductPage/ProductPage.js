@@ -311,13 +311,21 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
     productSelection.appendChild(quantityForm);
 
     // Add to Cart Button
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'btn-container';
+
     const addToCartBtn = document.createElement('button');
+    const buyNowBtn = document.createElement('button');
+    buyNowBtn.className = 'buy-now';
+    buyNowBtn.innerText = 'Buy Now';
+    buyNowBtn.addEventListener('click', handleAddToCart);
     addToCartBtn.className = 'add-to-cart';
     addToCartBtn.innerText = 'Add to Cart';
     addToCartBtn.addEventListener('click', handleAddToCart);
-
+    buttonContainer.appendChild(addToCartBtn);
+    buttonContainer.appendChild(buyNowBtn)
     // Append Add to Cart Button to product selection
-    productSelection.appendChild(addToCartBtn);
+    productSelection.appendChild(buttonContainer);
 
     return productSelection;
 }

@@ -1,3 +1,4 @@
+
 /*
   CartModel: Devin
   Description: This file handles making a template for each item in cart, and
@@ -86,6 +87,15 @@ class CartModel {
     });
   }
 
+  /**
+  * Clear all items in the cart for a user.
+  * @param {string} userId - The user's ID.
+  */
+  static async clearCart(userId) {
+    await Cart.destroy({ where: { userId, isSaved: false } });
+  }
+  
+
   // This will be uncommented when productModel is implemented.
   /**
    * Add a new item to the cart.
@@ -163,6 +173,22 @@ class CartModel {
     await item.save();
     return item;
   }
+
+  /**
+   * Update the cart item quantity.
+   */
+  static async updateQuantity(itemId, quantity, userId) {
+    const item = await Cart.findOne({ where: { id: itemId, userId } });
+
+    if (!item) {
+      throw new Error(`Item with ID ${itemId} not found for user.`);
+    }
+
+    item.quantity = quantity;
+    await item.save();
+    return item;
+  }
+  
 }
 
 export default CartModel;
