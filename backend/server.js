@@ -34,7 +34,7 @@ class Server {
     this.app.use(express.urlencoded({ extended: true }));
 
     this.app.use(cors({
-      origin: 'http://10.0.0.158:8080', // Allow the frontend for communication
+      origin: ['http://10.0.0.158:8080', 'http://192.168.56.1:8080'], // Allow the frontend for communication
       methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
       credentials: true,
     }));
