@@ -38,7 +38,7 @@ export class AppController {
    /**
     * Renders the main container, navigation menu, and the current view.
     */
-   async render() {
+   async render(id=null) {
      if (!this.#container) {
        this.#container = document.createElement('div');
        this.#container.classList.add('app-controller');
@@ -61,7 +61,12 @@ export class AppController {
      }
 
      this.#viewContainer.innerHTML = ''; // Clear previous content
-     const content = await this.#currentView.render(); // authenticated
+     let content;
+     if (id) {
+      content = await this.#currentView.render(id);
+     } else {
+      content = await this.#currentView.render(); // authenticated
+     }
      this.#viewContainer.appendChild(content); // Render the current view
 
      // TODO Add navigation menu except for specific views
@@ -93,7 +98,12 @@ export class AppController {
         this.#currentView = this.#views[viewName];
      }
 
-     await this.render();
+    if (viewName === 'productPage') {
+      console.log(params.prodid);
+      await this.render(params.prodid);
+    } else {
+      await this.render();
+    }
    }
 
    static getInstance() {
