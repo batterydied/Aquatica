@@ -14,7 +14,7 @@ export class AuthService {
         return !!this.user && !this.isTokenExpired(this.user.token); 
     }
 
-    isTokenExpired() {
+    isTokenExpired(token) {
         //  Check if the token is expired
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
@@ -50,3 +50,5 @@ export class AuthService {
       }
     }
 }
+
+export const authService = new AuthService();
