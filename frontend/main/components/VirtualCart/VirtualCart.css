@@ -7,7 +7,6 @@
   display: flex;
   gap: 50px;
   padding: 40px;
-  background: #fff;
   border-radius: 8px;
   max-width: 1300px;
   align-self: center;
@@ -26,6 +25,14 @@
   padding-top: 25px;
   padding-left: 30px;
   border-left: 1px solid #ddd;
+}
+
+.cart-right h2 {
+  margin-bottom: 44px;
+}
+
+.subtotal {
+  margin-bottom: 44px;
 }
 
 .cart-item {
@@ -67,7 +74,7 @@
   color: black;
   border: none;
   border-radius: 5px;
-  padding: 4px;
+  padding: 8px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
