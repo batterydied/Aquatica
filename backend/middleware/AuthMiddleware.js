@@ -19,8 +19,8 @@ const authMiddleware = async (req, res, next) => {
   - Decodes and validates the token to ensure it is valid, not expired, and issued by the server.
   */
   try {
-    const token = req.headers.authorization; // TODO Assuming the token is sent in the Authorization header as "Bearer <token>"
-        // const token = req.header("authorization")?.split(" ")[1];
+    // const token = req.headers.authorization; // TODO Assuming the token is sent in the Authorization header as "Bearer <token>"
+        const token = req.header("authorization")?.split(" ")[1];
     if (!token) {
         return res.status(401).json({ error: "Unauthenticated: No token provided, access denied." });
     }
@@ -45,7 +45,6 @@ const authMiddleware = async (req, res, next) => {
 
     // Attach user info to request object for next middleware or route
     req.user = { userId: user.userId };   
-
     next();
   } catch (error) {
     console.error("Authentication Error:", error);
