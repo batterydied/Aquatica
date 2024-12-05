@@ -110,6 +110,7 @@ export class MarketplacePage extends BaseComponent {
             if (this.curCategory !== "All") {
                 this.curCategory = "All";
                 this.reloadFilters();
+                this.applySort();
                 this.renderMarketplace();
                 this.reStyleButtons("category-button");
             }
@@ -154,6 +155,7 @@ export class MarketplacePage extends BaseComponent {
         searchInput.addEventListener("keyup", () => {
             this.regex = new RegExp(searchInput.value, "ig");
             this.reloadFilters();
+            this.applySort();
             this.renderMarketplace();
         });
         searchBar.appendChild(searchInput);
@@ -267,6 +269,7 @@ export class MarketplacePage extends BaseComponent {
                 }
                 this.reloadFilters();
             }
+            this.applySort();
             this.renderMarketplace();
             this.reStyleButtons(buttonClass);
         });
