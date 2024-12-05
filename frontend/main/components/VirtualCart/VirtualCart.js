@@ -98,7 +98,7 @@ export class VirtualCart extends BaseComponent {
           </div>
         </div>
         <div class="cart-right">
-          <h3>Cart Totals</h3>
+          <h2>Cart Totals</h2>
           <div class="cart-totals">
             <p class="totals-row"><span class="text">Shipping:</span> <span id="shipping" class="prices">$5.99</span></p>
             <p class="totals-row"><span class="text">Tax:</span> <span id="tax" class="prices">$0.00</span></p>
