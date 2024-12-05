@@ -13,7 +13,7 @@ export class ProductPage extends BaseComponent {
 
   // Fetch product data from the backend API
   async fetchProductData(productId) {
-    console.log("I am here, productID is:" + productId);
+    console.log("ProductID is: " + productId);
     try {
       const response = await fetch(`/api/products/${productId}`);
       if (!response.ok) {
@@ -232,7 +232,6 @@ export class ProductPage extends BaseComponent {
 const dropdownContainer = document.createElement('div');
 dropdownContainer.className = 'dropdown-container';
 
-if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0) {
     const typeDropdown = document.createElement('select');
     typeDropdown.className = 'type-dropdown';
 
@@ -259,7 +258,6 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
 
     dropdownContainer.appendChild(typeDropdown);
     productTypes.appendChild(dropdownContainer);
-}
 
 
     // Append product types to product selection
@@ -314,14 +312,16 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'btn-container';
 
-    const addToCartBtn = document.createElement('button');
     const buyNowBtn = document.createElement('button');
     buyNowBtn.className = 'buy-now';
     buyNowBtn.innerText = 'Buy Now';
-    buyNowBtn.addEventListener('click', handleAddToCart);
+    buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+    
+    const addToCartBtn = document.createElement('button');
     addToCartBtn.className = 'add-to-cart';
     addToCartBtn.innerText = 'Add to Cart';
-    addToCartBtn.addEventListener('click', handleAddToCart);
+    addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+
     buttonContainer.appendChild(addToCartBtn);
     buttonContainer.appendChild(buyNowBtn)
     // Append Add to Cart Button to product selection
