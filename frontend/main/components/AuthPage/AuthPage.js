@@ -45,3 +45,118 @@
     - Use API calls to connect with the AuthRoutes.
     - Dependencies: The AuthPage interacts with the AuthRoutes to send and receive data for authentication processes.
 */
+
+import { BaseComponent } from '../../app/BaseComponent.js';
+import { authService } from '../../services/AuthService.js';
+import { AppController } from '../../app/AppController.js';
+
+export class AuthPage extends BaseComponent {
+  constructor() {
+    super();
+    this.loadCSS('AuthPage');
+  }
+
+  async render() {
+    this.container.innerHTML = ''; // Clear container
+    this.container.appendChild(this.#createAccountForm()); // Start with Create Account form
+
+    return this.container;
+  }
+
+  /**
+   * Creates the "Create Account" form and handles submission.
+   */
+  #createAccountForm() {
+    const formContainer = document.createElement('div');
+    formContainer.innerHTML = `
+      <h2>Create Account</h2>
+      <form id="create-account-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Create Account</button>
+      </form>
+      <button id="switch-to-login">Already have an account? Login</button>
+    `;
+
+    formContainer.querySelector('#create-account-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Registration failed');
+        }
+
+        alert('Registration successful. Please log in.');
+        this.container.innerHTML = ''; // Clear the container
+        this.container.appendChild(this.#loginForm()); // Switch to Login form
+      } catch (error) {
+        alert('Registration failed: ' + error.message);
+      }
+    });
+
+    formContainer.querySelector('#switch-to-login').addEventListener('click', () => {
+      this.container.innerHTML = ''; // Clear the container
+      this.container.appendChild(this.#loginForm()); // Switch to Login form
+    });
+
+    return formContainer;
+  }
+
+  /**
+   * Creates the "Login" form and handles submission.
+   */
+  #loginForm() {
+    const formContainer = document.createElement('div');
+    formContainer.innerHTML = `
+      <h2>Login</h2>
+      <form id="login-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+      <button id="switch-to-create-account">Don't have an account? Create one</button>
+    `;
+
+    formContainer.querySelector('#login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Login failed');
+        }
+
+        const { token, userId } = await response.json();
+        authService.login(token, userId);
+
+        alert('Login successful');
+        AppController.getInstance().navigate('marketplace'); // Redirect to the marketplace
+      } catch (error) {
+        alert('Login failed: ' + error.message);
+      }
+    });
+
+    formContainer.querySelector('#switch-to-create-account').addEventListener('click', () => {
+      this.container.innerHTML = ''; // Clear the container
+      this.container.appendChild(this.#createAccountForm()); // Switch to Create Account form
+    });
+
+    return formContainer;
+  }
+}
+
