@@ -36,10 +36,10 @@ export class NavigationMenu extends BaseComponent {
 
 
     const links = [
-      { text: "Marketplace", src: "../../../assets/navigation-menu/sell-0.svg", className: "marketplace-button", target: "marketplace" },
-      { text: "Seller Page", src: "../../../assets/navigation-menu/save-0.svg", className: "sell-button", target: "sellProductsPage" },
-      { text: "Virtual Cart", src: "../../../assets/navigation-menu/cart-0.svg", className: "cart-button", target: "virtualCart" },
-      { text: "User Center", src: "../../../assets/navigation-menu/profile-0.svg", className: "profile-button", target: "profilePage" },
+      { text: "Marketplace", iconName: "fa-shop", className: "marketplace-button", target: "marketplace" },
+      { text: "Seller Page", iconName: "fa-money-bill", className: "sell-button", target: "sellProductsPage" },
+      { text: "Virtual Cart", iconName: "fa-cart-shopping", className: "cart-button", target: "virtualCart" },
+      { text: "User Center", iconName: "fa-user", className: "profile-button", target: "profilePage" },
     ];
 
 
@@ -57,10 +57,8 @@ export class NavigationMenu extends BaseComponent {
       button.appendChild(textElement);
 
       // Add icon second
-      const icon = document.createElement("img");
-      icon.src = link.src;
-      icon.alt = `${link.text} icon`;
-      icon.classList.add("nav-icon");
+      const icon = document.createElement("i");
+      icon.classList.add("fa-solid", link.iconName, "fa-lg");
       button.appendChild(icon);
 
       navButtonsContainer.appendChild(button);
