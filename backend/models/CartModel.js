@@ -27,6 +27,7 @@ import sequelize from "../database.js";
 
 // Define the Cart model
 const Cart = sequelize.define("Cart", {
+  name: { type: DataTypes.STRING, allowNull: false },
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   productId: { type: DataTypes.UUID, allowNull: false },
   // This will be uncommented when productModel is implemented.
@@ -73,7 +74,7 @@ class CartModel {
   static async getItems(userId, isSaved) {
     return await Cart.findAll({
       where: { userId, isSaved },
-      attributes: ["id", "productId", "price", "description", "quantity", "isSaved", "userId"],
+      attributes: ["name", "id", "productId", "price", "description", "quantity", "isSaved", "userId"],
 
       // This will be uncommented when productModel is implemented.
       /*
@@ -124,8 +125,9 @@ class CartModel {
   /**
    * For testing: Add a cart item without Product reference.
    */
-  static async addCartItemManually(productId, price, description, quantity, userId) {
+  static async addCartItemManually(name, productId, price, description, quantity, userId) {
     return await Cart.create({
+      name,
       productId,
       price,
       description,

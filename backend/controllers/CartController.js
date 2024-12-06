@@ -94,9 +94,10 @@ class CartController {
       const { productId, quantity } = req.body;
       const newItem = await CartModel.addCartItem(productId, quantity, userId);
       */
-      const { productId, price, description, quantity } = req.body;
+      const { name, productId, price, description, quantity } = req.body;
 
       const newItem = await CartModel.addCartItemManually(
+        name,
         productId,
         price,
         description,

@@ -25,6 +25,7 @@ function handleDecrease() {
 
 async function handleAddToCart(product, quantity) {
     const cartItem = {
+      name: product.name,
       productId: product.prodid,
       price: product.price, // Assuming a static price for demonstration; replace with actual data
       description: product.description, // Replace with actual product description
