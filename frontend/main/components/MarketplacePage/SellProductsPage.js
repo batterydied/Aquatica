@@ -24,7 +24,13 @@ export class SellProductsPage extends MarketplacePage {
         this.fullProdList = this.getProdList();
         this.prodList = this.fullProdList;
 
-        this.container = super.render();
+        const categories = super.renderCategoryFilters();
+        this.container.appendChild(categories);
+
+        const searchBar = super.renderSearchBar();
+        this.container.appendChild(searchBar);
+
+        this.renderMarketplace();
 
         const addItem = document.createElement('div');
         addItem.classList.add("add-item")
@@ -39,7 +45,7 @@ export class SellProductsPage extends MarketplacePage {
         addItemIcon.src = "/assets/plus-icon.svg";
         addItem.appendChild(addItemIcon);
 
-        addItem.addEventListener("click", () => this.goToProductPage("new product"))
+        addItem.addEventListener("click", () => this.createProduct());
 
         this.marketplace.childNodes[0].appendChild(addItem);
         
@@ -55,8 +61,16 @@ export class SellProductsPage extends MarketplacePage {
         const editButton = document.createElement('img');
         editButton.classList.add("edit-button");
         editButton.src = "/assets/edit-icon.svg";
-        editButton.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
+        editButton.addEventListener("click", () => this.editProduct(prodListItem.prodid));
         product.childNodes[1].appendChild(editButton);
         return product;
+    }
+
+    createProduct() {
+        //TODO
+    }
+
+    editProduct(id) {
+        //TODO
     }
 }

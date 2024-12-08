@@ -218,6 +218,18 @@ export class MarketplacePage extends BaseComponent {
         return this.container;
     }
 
+    renderCategoryFilters() {
+        //TODO
+    }
+
+    renderBracketFilters() {
+        //TODO
+    }
+
+    renderSearchBar() {
+        //TODO
+    }
+
     /**
      * Helper method that renders the marketplace. Creates product list and page buttons.
      * Nothing is returned from this method.
