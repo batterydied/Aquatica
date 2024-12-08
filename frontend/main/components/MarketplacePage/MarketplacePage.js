@@ -2,7 +2,6 @@ import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
-import { products } from "./Products.js";
 import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
 import { EventHub, hub } from "../../eventhub/EventHub.js";
@@ -499,9 +498,9 @@ export class MarketplacePage extends BaseComponent {
                 this.prodList.sort((a, b) => b.average_rating - a.average_rating);
                 break;
             default:
-                // in the case where this.sort is an unknown value, it will default to sorting by prodID
-                console.log("Unknown sort order, defaulting to ID");
-                this.prodList.sort((a, b) => a.prodid - b.prodid);
+                // in the case where this.sort is an unknown value, it will default to sorting by average rating
+                console.log("Unknown sort order, defaulting to average rating");
+                this.prodList.sort((a, b) => b.average_rating - a.average_rating);
         }
 
         // go back to the first page of products
@@ -542,6 +541,7 @@ export class MarketplacePage extends BaseComponent {
     /**
      * Takes a rating in [1, 5] and returns the corresponding star image.
      * NOTE: This method expects an input in [1, 5]. It will not work correctly if given inputs outside of that range.
+     * Ratings are rounded up if they are within 0.1 of the next rating and down otherwise
      * @param {number} rating 
      * @returns image url
      */
@@ -572,10 +572,9 @@ export class MarketplacePage extends BaseComponent {
      */
     goToNextPage() {
         if (this.end < this.prodList.length - 1) { // if there are any more products to display
-            // increase start and end
+            // increase start and end by pageLength to go to next "page"
             this.start += this.pageLength;
             this.end += this.pageLength;
-            // re-render marketplace
             this.renderMarketplace();
         }
     }
@@ -585,10 +584,9 @@ export class MarketplacePage extends BaseComponent {
      */
     goToPrevPage() {
         if (this.start >= this.pageLength) { // if we are not already on the first page
-            // increase start and end
+            // decrease start and end by pageLength to go to previous "page"
             this.start -= this.pageLength;
             this.end -= this.pageLength;
-            // re-render marketplace
             this.renderMarketplace();
         }
     }
@@ -612,6 +610,6 @@ export class MarketplacePage extends BaseComponent {
     goToSellerProfile(sellid) {
         console.log(`going to profile page for seller ${sellid}`);
         const appController = AppController.getInstance();
-        appController.navigate("profilePage"); // TODO: go to specific profile page.
+        appController.navigate("profilePage", sellid);
     }
 }
