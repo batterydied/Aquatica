@@ -8,14 +8,39 @@ export class ProfilePage extends BaseComponent {
         super();
         this.container.classList.add('profile-page');
         
-        this.currentUser = userinfo[0]; //only shows the first user now, but will change later
+        this.currentUser = null;
 
         this.profileContainer = document.createElement("div");
         this.profileContainer.classList.add("profile-container");
 
         this.privateInfoVisible = false; 
         this.loadCSS("ProfilePage");
+        this.loadProfileData();
         this.render();
+    }
+
+    async loadProfileData() {
+        const profileService = new ProfileService();
+        try {
+            this.currentUser = await profileService.retrieveProfileById(1); // set default profile id = 1
+            this.render();
+        } catch (error) {
+            console.error("Failed to load profile data:", error);
+            alert("Error loading profile data.");
+        }
+    }
+    
+    //save the profile page if something changed in the profile    
+    async saveProfileUpdate(updates) {
+        const profileService = new ProfileService();
+        try {
+            await profileService.updateProfile(this.currentUser.id, updates);
+            alert("Profile updated successfully!");
+            this.loadProfileData();
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Failed to update profile.");
+        }
     }
 
     async getProfileList() {
@@ -86,6 +111,7 @@ export class ProfilePage extends BaseComponent {
             }
 
             name.innerText = newValue;
+            this.saveProfileUpdate({ name: newValue });
 
             parent.replaceChild(name, input);
             saveButton.remove(); 
@@ -157,48 +183,53 @@ export class ProfilePage extends BaseComponent {
         return section;
     }
 
-    renderOrderHistory() {
+    async renderOrderHistory() {
         const orderHistoryContainer = document.createElement("div");
         orderHistoryContainer.classList.add("order-history");
-    
+
         const header = document.createElement("h2");
         header.innerText = "Order History";
         orderHistoryContainer.appendChild(header);
-    
+
         const orderList = document.createElement("div");
         orderList.classList.add("order-list");
-    
-        if (this.currentUser.order.length === 0) {
-            //no order
-            const noOrders = document.createElement("p");
-            noOrders.innerText = "No orders found.";
-            orderList.appendChild(noOrders);
-        } else {
-            this.currentUser.order.forEach(order => {
-                const orderItem = document.createElement("div");
-                orderItem.classList.add("order-item");
-    
-                //order id
-                const orderId = document.createElement("p");
-                orderId.innerText = `Order ID: ${order.id}`;
-                orderItem.appendChild(orderId);
-                //date of order
-                const orderDate = document.createElement("p");
-                orderDate.innerText = `Date: ${order.date}`;
-                orderItem.appendChild(orderDate);
-                //total amount
-                const orderTotal = document.createElement("p");
-                orderTotal.innerText = `Total: $${order.total}`;
-                orderItem.appendChild(orderTotal);
-                //products
-                const orderItems = document.createElement("p");
-                orderItems.innerText = `Items: ${order.items}`;
-                orderItem.appendChild(orderItems);
-    
-                orderList.appendChild(orderItem);
-            });
+
+        try {
+            const profileService = new ProfileService();
+            const orders = await profileService.getOrderHistory(this.currentUser.id);
+
+            if (orders.length === 0) {
+                const noOrders = document.createElement("p");
+                noOrders.innerText = "No orders found.";
+                orderList.appendChild(noOrders);
+            } else {
+                orders.forEach(order => {
+                    const orderItem = document.createElement("div");
+                    orderItem.classList.add("order-item");
+
+                    const orderId = document.createElement("p");
+                    orderId.innerText = `Order ID: ${order.id}`;
+                    orderItem.appendChild(orderId);
+
+                    const orderDate = document.createElement("p");
+                    orderDate.innerText = `Date: ${order.orderDate}`;
+                    orderItem.appendChild(orderDate);
+
+                    const orderTotal = document.createElement("p");
+                    orderTotal.innerText = `Total: $${order.total}`;
+                    orderItem.appendChild(orderTotal);
+
+                    const orderItems = document.createElement("p");
+                    orderItems.innerText = `Items: ${order.items.join(", ")}`;
+                    orderItem.appendChild(orderItems);
+
+                    orderList.appendChild(orderItem);
+                });
+            }
+        } catch (error) {
+            console.error("Error loading order history:", error);
         }
-    
+
         orderHistoryContainer.appendChild(orderList);
     
         return orderHistoryContainer;
