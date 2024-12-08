@@ -358,7 +358,7 @@ export class MarketplacePage extends BaseComponent {
 
         // main image for the product
         const prodIMG = document.createElement("img");
-        prodIMG.src = prodListItem.images?.[0]?.url || '';
+        prodIMG.src = prodListItem.Images?.[0]?.url || '';
         prodIMG.classList.add("prodimg");
         prodIMGDiv.appendChild(prodIMG);
 
@@ -400,21 +400,17 @@ export class MarketplacePage extends BaseComponent {
         prodInfo.appendChild(sellName);
 
         // find out how many reviews the item has
-        const numReviews = prodListItem.reviews?.length || 0;
+        const numReviews = prodListItem.Reviews?.length || 0;
 
-<<<<<<< HEAD
-        if (numReviews > 0) {
-=======
         if (numReviews > 0) { // if there are reviews...
             // determine the average rating across all reviews
             let ratingSum = 0;
             for (let i = 0; i < numReviews; i++) {
-                ratingSum += prodListItem.reviews[i].rating;
+                ratingSum += prodListItem.Reviews[i].rating;
             }
             const averageRating = ratingSum / numReviews;
 
             // this container is for the star rating
->>>>>>> issue-#118-add-marketplace-comments
             const starIMGDiv = document.createElement("div");
             starIMGDiv.classList.add("stars-container");
             prodInfo.appendChild(starIMGDiv);
@@ -422,23 +418,14 @@ export class MarketplacePage extends BaseComponent {
             // this image displays the rating of the review on a scale of 1-5 stars
             const starIMG = document.createElement("img");
             starIMG.classList.add("stars");
-<<<<<<< HEAD
             starIMG.src = this.getStarIMG(prodListItem.average_rating); // star image based on rating
             starIMG.alt = `${prodListItem.average_rating.toPrecision(2)} Stars`;
-=======
-            starIMG.src = this.getStarIMG(averageRating); // star image based on rating
-            starIMG.alt = `${averageRating.toPrecision(2)} Stars`; // display one decimal point
->>>>>>> issue-#118-add-marketplace-comments
             starIMGDiv.appendChild(starIMG);
 
             // text saying how many stars the product has
             const starText = document.createElement("span");
             starText.classList.add("star-text");
-<<<<<<< HEAD
-            starText.innerText = `${prodListItem.average_rating} Stars`;
-=======
-            starText.innerText = `${averageRating.toPrecision(2)} Stars`; // display one decimal point
->>>>>>> issue-#118-add-marketplace-comments
+            starText.innerText = `${prodListItem.average_rating.toPrecision(2)} Stars`;
             starIMGDiv.appendChild(starText);
 
             // text displaying how many reviews the product has
@@ -585,7 +572,6 @@ export class MarketplacePage extends BaseComponent {
         }
     }
 
-<<<<<<< HEAD
     calculateAverageRating(reviews) {
         const numReviews = reviews.length;
         let ratingSum = 0;
@@ -596,12 +582,9 @@ export class MarketplacePage extends BaseComponent {
         const averageRating = ratingSum / numReviews;
         return averageRating;
     }
-
-=======
     /**
      * Renders the next page of products.
      */
->>>>>>> issue-#118-add-marketplace-comments
     goToNextPage() {
         if (this.end < this.prodList.length - 1) { // if there are any more products to display
             // increase start and end by pageLength to go to next "page"
