@@ -20,8 +20,10 @@ export class MarketplacePage extends BaseComponent {
             this.fullProdList = data;
             for (let i = 0; i < this.fullProdList.length; i++) {
                 this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+                this.fullProdList[i].average_rating = this.calculateAverageRating(this.fullProdList[i].Reviews);
             }
             this.reloadFilters();
+            this.applySort();
             this.renderMarketplace();
         });
 
@@ -108,6 +110,7 @@ export class MarketplacePage extends BaseComponent {
             if (this.curCategory !== "All") {
                 this.curCategory = "All";
                 this.reloadFilters();
+                this.applySort();
                 this.renderMarketplace();
                 this.reStyleButtons("category-button");
             }
@@ -152,6 +155,7 @@ export class MarketplacePage extends BaseComponent {
         searchInput.addEventListener("keyup", () => {
             this.regex = new RegExp(searchInput.value, "ig");
             this.reloadFilters();
+            this.applySort();
             this.renderMarketplace();
         });
         searchBar.appendChild(searchInput);
@@ -265,6 +269,7 @@ export class MarketplacePage extends BaseComponent {
                 }
                 this.reloadFilters();
             }
+            this.applySort();
             this.renderMarketplace();
             this.reStyleButtons(buttonClass);
         });
@@ -323,25 +328,19 @@ export class MarketplacePage extends BaseComponent {
         const numReviews = prodListItem.Reviews?.length || 0;
 
         if (numReviews > 0) {
-            let ratingSum = 0;
-            for (let i = 0; i < numReviews; i++) {
-                ratingSum += prodListItem.Reviews[i].rating;
-            }
-
-            const averageRating = ratingSum / numReviews;
             const starIMGDiv = document.createElement("div");
             starIMGDiv.classList.add("stars-container");
             prodInfo.appendChild(starIMGDiv);
 
             const starIMG = document.createElement("img");
             starIMG.classList.add("stars");
-            starIMG.src = this.getStarIMG(averageRating); // star image based on rating
-            starIMG.alt = `${averageRating.toPrecision(2)} Stars`;
+            starIMG.src = this.getStarIMG(prodListItem.average_rating); // star image based on rating
+            starIMG.alt = `${prodListItem.average_rating.toPrecision(2)} Stars`;
             starIMGDiv.appendChild(starIMG);
 
             const starText = document.createElement("span");
             starText.classList.add("star-text");
-            starText.innerText = `${averageRating} Stars`;
+            starText.innerText = `${prodListItem.average_rating} Stars`;
             starIMGDiv.appendChild(starText);
 
             const numReviewsText = document.createElement("span");
@@ -446,6 +445,17 @@ export class MarketplacePage extends BaseComponent {
         } else {
             return "/assets/five-star.png";
         }
+    }
+
+    calculateAverageRating(reviews) {
+        const numReviews = reviews.length;
+        let ratingSum = 0;
+        for (let i = 0; i < numReviews; i++) {
+            ratingSum += reviews[i].rating;
+        }
+
+        const averageRating = ratingSum / numReviews;
+        return averageRating;
     }
 
     goToNextPage() {
