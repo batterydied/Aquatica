@@ -70,22 +70,6 @@ export class MarketplacePage extends BaseComponent {
 
     render() {
         this.container.innerHTML = "";
-        //background image and logo
-        const bg = document.createElement("div");
-        //bg.classList.add("background");
-        // const bgimg = document.createElement("img");
-        // bgimg.classList.add("bgimg");
-        // bgimg.src = "../frontend/assets/bg-dummy.png"; // TODO: site main image
-        // bg.appendChild(bgimg);
-        // const iconContainer = document.createElement("div");
-        // iconContainer.classList.add("icon-container");
-        // const icon = document.createElement("img");
-        // icon.src = "../frontend/assets/logo-dummy.png"; // TODO: icon
-        // icon.classList.add("icon");
-        // iconContainer.appendChild(icon);
-        // bg.appendChild(iconContainer);
-        this.container.appendChild(bg);
-
         const mainPage = document.createElement("div");
         mainPage.classList.add("main-page");
         this.container.appendChild(mainPage);
@@ -192,15 +176,15 @@ export class MarketplacePage extends BaseComponent {
     renderMarketplace() {
         // empty marketplace
         this.marketplace.innerHTML = "";
-        // empty div at the top for SellProductsPage to use :)
-        const dontMindMe = document.createElement('div');
-        this.marketplace.appendChild(dontMindMe);
         // render products list
+        const productContainer = document.createElement('div');
+        productContainer.classList.add('product-container');
+        this.marketplace.appendChild(productContainer);
         for (let i = this.start; i < this.end && i < this.prodList.length; i++) {
             // create html to display product
             const curProduct = this.createProduct(this.prodList[i]);
 
-            this.marketplace.appendChild(curProduct);
+            productContainer.appendChild(curProduct);
         }
 
         if (this.prodList.length > 0) {
@@ -280,6 +264,7 @@ export class MarketplacePage extends BaseComponent {
         // create html to display product
         const curProduct = document.createElement('div');
         curProduct.classList.add('product');
+        curProduct.classList.add("prodlink");
 
         const prodIMGDiv = document.createElement("div");
         prodIMGDiv.classList.add("prodimg-container");
@@ -312,17 +297,12 @@ export class MarketplacePage extends BaseComponent {
         prodLink.classList.add("prodlink");
         prodLink.innerText = prodListItem.name + '\n';
         prodName.appendChild(prodLink);
-        prodName.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
+        curProduct.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
         prodInfo.appendChild(prodName);
 
         const sellName = document.createElement("span");
         sellName.classList.add("sellname");
-        const sellLink = document.createElement("span");
-        sellLink.classList.add("prodtext");
-        sellLink.classList.add("prodlink");
-        sellLink.innerText = prodListItem.sellername;
-        sellName.appendChild(sellLink);
-        sellName.addEventListener("click", () => this.goToSellerProfile(prodListItem.sellerid));
+        sellName.innerText = prodListItem.sellername;
         prodInfo.appendChild(sellName);
 
         const numReviews = prodListItem.Reviews?.length || 0;
@@ -338,30 +318,23 @@ export class MarketplacePage extends BaseComponent {
             starIMG.alt = `${prodListItem.average_rating.toPrecision(2)} Stars`;
             starIMGDiv.appendChild(starIMG);
 
+            const reviewContainer = document.createElement("div");
             const starText = document.createElement("span");
             starText.classList.add("star-text");
             starText.innerText = `${prodListItem.average_rating.toPrecision(2)} Stars`;
-            starIMGDiv.appendChild(starText);
+            reviewContainer.append(starText);
+            starIMGDiv.appendChild(reviewContainer);
 
             const numReviewsText = document.createElement("span");
             numReviewsText.classList.add("reviews-text");
-            numReviewsText.classList.add("prodlink");
-            numReviewsText.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
-
-            const reviews = numReviews === 1 ? "Review" : "Reviews";
-            numReviewsText.innerText = ` ${numReviews} ${reviews}\n`;
-            prodInfo.appendChild(numReviewsText);
+            numReviewsText.innerText = ` (${formatReviewCount(numReviews)})`;
+            reviewContainer.appendChild(numReviewsText);
         } else {
             const noRatingText = document.createElement("span");
             noRatingText.classList.add("reviews-text");
             noRatingText.innerText = "No reviews.\n";
             prodInfo.appendChild(noRatingText);
         }
-
-        const desc = document.createElement("span");
-        desc.classList.add("desc");
-        desc.innerText = prodListItem.description;
-        prodDesc.appendChild(desc);
 
         return curProduct;
     }
@@ -484,4 +457,13 @@ export class MarketplacePage extends BaseComponent {
         const appController = AppController.getInstance();
         appController.navigate("profilePage");
     }
+}
+
+function formatReviewCount(reviews) {
+    if (reviews >= 1_000_000) {
+        return (reviews / 1_000_000).toFixed(1) + 'M'; // Format as millions
+    } else if (reviews >= 1_000) {
+        return (reviews / 1_000).toFixed(1) + 'k'; // Format as thousands
+    }
+    return reviews.toString(); // Return as is if less than 1000
 }

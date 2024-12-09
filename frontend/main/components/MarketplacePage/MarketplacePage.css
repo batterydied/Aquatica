@@ -24,10 +24,21 @@
     margin: 20px;
 }
 
+.product-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    grid-auto-rows: 300px;
+    gap: 16px;
+}
+
 .icon {
     object-fit:fill;
     width: 100%;
     height: 100%;
+}
+
+.sellname{
+    color: gray;
 }
 
 .main-page {
@@ -111,7 +122,7 @@
 .sorter {
     background-color: #FFA41E;
     margin-top:10px;
-    margin-bottom:5px;
+    margin-bottom: 10px;
     padding:5px;
     border: none;
     color: #232C3C;
@@ -130,46 +141,32 @@
 }
 
 .product {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    height: 170px;
-    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
 }
 
 .prodimg-container {
     overflow:hidden;
-    border-radius: 5%;
-    background-color:#CDCDCD;
-    margin: 10px;
-    margin-left:0px;
+    height: 60%;
+    width: 100%
 }
 
 .prodimg {
     object-fit: cover;
     width: 100%;
     height: 100%;
-    object-position: 50% 50%;
+    border-radius: 5%;
 }
 
 .proddesc {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    background-color: #5B91C8;
     border-radius: 1% / 5%;
-    color: #FFFFFF;
+    color: #5B91C8;
     font-size: 55%;
-    padding: 10px;
-    margin: 10px;
-    margin-right:0px;
     overflow: hidden;
 }
 
-.prodinfo {
-    max-width: 80%;
-}
-
 .prodtext {
-    color: #FFFFFF;
+    color: black;
     text-decoration: none;
     font-weight: bold;
     text-transform: uppercase;
@@ -196,7 +193,7 @@
 }
 
 .reviews-text {
-    color: #FFFFFF;
+    color: black;
     text-decoration: none;
 }
 
@@ -213,6 +210,7 @@
 }
 
 .star-text {
+    color: black;
     font-size: 80%;
 }
 
@@ -286,19 +284,14 @@
         margin: 0px;
         height: 80px;
     }
-    .proddesc {
-        margin: 5px;
-        padding: 5px;
-        overflow: hidden;
-    }
     .desc {
         font-size: 6px;
     }
     .prodinfo {
+        height: 20%;
         font-size: 3.5px;
     }
     .prodimg-container {
-        margin: 5px;
         overflow: hidden;
     }
     .page-button {

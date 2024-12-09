@@ -1,7 +1,7 @@
 export const Category = {
-    Tanks: "Tanks",
+    Freshwater: "Freshwater",
+    Saltwater: "Saltwater",
     Plants: "Plants",
-    Rocks: "Rocks",
-    Fish: "Fish",
+    Care: "Care",
     Misc: "Misc"
 }
