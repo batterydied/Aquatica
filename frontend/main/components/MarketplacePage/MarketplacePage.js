@@ -271,9 +271,8 @@ export class MarketplacePage extends BaseComponent {
 
     /**
      * Helper method that renders the marketplace. Creates product list and page buttons.
-     * @returns marketplace div
+     * Has no return value
      */
-
     renderMarketplace() {
         // empty marketplace
         this.marketplace.innerHTML = "";
@@ -653,7 +652,7 @@ export class MarketplacePage extends BaseComponent {
     /**
      * Navigate to the product page for the specified product.
      * Has no return value.
-     * @param {number} prodid 
+     * @param {string} prodid 
      */
     goToProductPage(prodid) {
         console.log(`going to product page for product ${prodid}`);
@@ -664,7 +663,7 @@ export class MarketplacePage extends BaseComponent {
     /**
      * Navigate to the profile page for the specified seller
      * Has no return value.
-     * @param {number} sellid 
+     * @param {string} sellid 
      */
     goToSellerProfile(sellid) {
         console.log(`going to profile page for seller ${sellid}`);

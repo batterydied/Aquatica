@@ -31,6 +31,10 @@ export class SellProductsPage extends MarketplacePage {
         return this.container;
     }
 
+    /**
+     * Helper method that renders the marketplace. Creates product list and page buttons.
+     * Has no return value
+     */
     renderMarketplace() {
         super.renderMarketplace();
         const addItem = document.createElement('div');
@@ -55,6 +59,12 @@ export class SellProductsPage extends MarketplacePage {
         }
     }
 
+    /**
+     * Sets this.fullProdList and this.prodList to the given list, filters for current seller,
+     * calculates brackets and average ratings, and applies sorts and filters.
+     * No return value.
+     * @param {array} list 
+     */
     setProdList(list) {
         this.fullProdList = list.filter(e => e.sellerid === this.curSeller);
         this.prodList = this.fullProdList;
@@ -68,6 +78,11 @@ export class SellProductsPage extends MarketplacePage {
         this.renderMarketplace();
     }
 
+    /**
+     * This method takes a product object and returns a div representing that object's render on the page. Includes edit button
+     * @param {{ prodname, name, sellerid, sellername, category, price, description, images: [{url}...], reviews: [{rating}...] }} prodListItem 
+     * @returns div Element
+     */
     createProduct(prodListItem) {
         const product = super.createProduct(prodListItem);
         const editButton = document.createElement('img');
@@ -78,6 +93,10 @@ export class SellProductsPage extends MarketplacePage {
         return product;
     }
 
+    /**
+     * Adds a new product to the database, and navigates to the seller product page for that product.
+     * No return value.
+     */
     async addProduct() {
         const newProduct = {
             "name": "New Product",
@@ -104,6 +123,10 @@ export class SellProductsPage extends MarketplacePage {
         }
     }
 
+    /**
+     * Navigates the seller product page for the given product id.
+     * @param {string} prodid 
+     */
     goToProductPage(prodid) {
         console.log(`going to seller product page for product ${prodid}`);
         // const appController = AppController.getInstance();
