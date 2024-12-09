@@ -340,7 +340,7 @@ export class MarketplacePage extends BaseComponent {
 
             const starText = document.createElement("span");
             starText.classList.add("star-text");
-            starText.innerText = `${prodListItem.average_rating} Stars`;
+            starText.innerText = `${prodListItem.average_rating.toPrecision(2)} Stars`;
             starIMGDiv.appendChild(starText);
 
             const numReviewsText = document.createElement("span");
