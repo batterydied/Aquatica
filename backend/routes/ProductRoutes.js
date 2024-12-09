@@ -1,3 +1,16 @@
+/*
+ ProductRoutes: Benson
+ Description: This file defines the API endpoints for managing product-related 
+              operations. It maps HTTP requests to the corresponding methods 
+              in the `ProductController`, enabling interaction between the frontend 
+              and backend for product functionality.
+ Issue: #90, #104, #105, #106, #107
+ Owner: Benson
+ Expected Outcome: A fully functional and modular routing system that 
+                   handles product-related requests such as fetching, adding, 
+                   updating, and deleting products.
+ */
+
 import express from "express";
 import ProductController from "../controllers/ProductController.js";
 

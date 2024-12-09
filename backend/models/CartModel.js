@@ -1,3 +1,4 @@
+
 /*
   CartModel: Devin
   Description: This file handles making a template for each item in cart, and
@@ -26,6 +27,7 @@ import sequelize from "../database.js";
 
 // Define the Cart model
 const Cart = sequelize.define("Cart", {
+  name: { type: DataTypes.STRING, allowNull: false },
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   productId: { type: DataTypes.UUID, allowNull: false },
   // This will be uncommented when productModel is implemented.
@@ -59,7 +61,7 @@ class CartModel {
    * Initialize the database schema for Cart.
    */
   static async init() {
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     console.log("Cart and Product tables synced successfully.");
   }
 
@@ -72,7 +74,7 @@ class CartModel {
   static async getItems(userId, isSaved) {
     return await Cart.findAll({
       where: { userId, isSaved },
-      attributes: ["id", "productId", "price", "description", "quantity", "isSaved", "userId"],
+      attributes: ["name", "id", "productId", "price", "description", "quantity", "isSaved", "userId"],
 
       // This will be uncommented when productModel is implemented.
       /*
@@ -85,6 +87,15 @@ class CartModel {
       */
     });
   }
+
+  /**
+  * Clear all items in the cart for a user.
+  * @param {string} userId - The user's ID.
+  */
+  static async clearCart(userId) {
+    await Cart.destroy({ where: { userId, isSaved: false } });
+  }
+  
 
   // This will be uncommented when productModel is implemented.
   /**
@@ -114,8 +125,9 @@ class CartModel {
   /**
    * For testing: Add a cart item without Product reference.
    */
-  static async addCartItemManually(productId, price, description, quantity, userId) {
+  static async addCartItemManually(name, productId, price, description, quantity, userId) {
     return await Cart.create({
+      name,
       productId,
       price,
       description,
@@ -163,6 +175,22 @@ class CartModel {
     await item.save();
     return item;
   }
+
+  /**
+   * Update the cart item quantity.
+   */
+  static async updateQuantity(itemId, quantity, userId) {
+    const item = await Cart.findOne({ where: { id: itemId, userId } });
+
+    if (!item) {
+      throw new Error(`Item with ID ${itemId} not found for user.`);
+    }
+
+    item.quantity = quantity;
+    await item.save();
+    return item;
+  }
+  
 }
 
 export default CartModel;

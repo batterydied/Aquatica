@@ -1,3 +1,23 @@
+/*
+  ProductModel: Benson
+  Description: This file defines and manages the Product model along with its 
+               associated Review, Image, and ProductType models. It also provides 
+               CRUD methods for interacting with these models, enabling seamless 
+               database operations.
+  Issue: #92
+  Owner: Benson
+  Expected Outcome: A fully functional product model that handles creation, 
+                    retrieval, updating, and deletion of product records, 
+                    including related reviews, images, and types.
+
+Interface with the database to manage products and related entities.
+  - Method: init(): Initializes the database connection and syncs all models.
+  - Method: create(productData): Creates a new product record with provided data.
+  - Method: read(id, options): Fetches a product by its ID or all products, supporting relationships.
+  - Method: update(id, updates): Updates a product's information by its ID.
+  - Method: delete(id): Deletes a product record by its ID.
+*/
+
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 //
@@ -77,7 +97,7 @@ class _ProductModel {
   async init() {
     try {
       await sequelize.authenticate();
-      await sequelize.sync({ force: true });
+      await sequelize.sync();
       console.log("Database synced successfully.");
     } catch (error) {
       console.error("Failed to initialize database:", error);

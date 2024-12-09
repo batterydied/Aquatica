@@ -14,6 +14,8 @@
 // Imports
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { AppController } from "../../app/AppController.js";
+import CartEvents from "../../eventhub/CartEvents.js";
+
 
 // SecureCheckout Class
 export class SecureCheckout extends BaseComponent {
@@ -32,7 +34,10 @@ export class SecureCheckout extends BaseComponent {
   }
 
   render() {
-    if (this.#container) return this.#container;
+    if (this.#container) {
+      this.#fetchCartData();
+      return this.#container;
+    }
 
     this.#container = document.createElement("div");
     this.#container.classList.add("checkout-container");
@@ -41,6 +46,14 @@ export class SecureCheckout extends BaseComponent {
     this.#fetchCartData();
 
     return this.#container;
+  }
+
+  // Method to call after order is placed and you leave the page.
+  #resetCheckoutView() {
+    this.#container.innerHTML = "";
+    this.#setupContainerContent();
+    this.#attachEventListeners();
+    this.#fetchCartData();
   }
 
   #setupContainerContent() {
@@ -88,6 +101,7 @@ export class SecureCheckout extends BaseComponent {
     `;
   }
 
+  // Listens for any events on click we need.
   #attachEventListeners() {
     const shippingTab = this.#container.querySelector("#shipping-tab");
     const paymentTab = this.#container.querySelector("#payment-tab");
@@ -109,6 +123,7 @@ export class SecureCheckout extends BaseComponent {
     });
   }
 
+  // Handles view rendering from shipping to payment.
   #toggleForm(form) {
     const shippingForm = this.#container.querySelector("#shipping-form");
     const paymentForm = this.#container.querySelector("#payment-form");
@@ -128,13 +143,14 @@ export class SecureCheckout extends BaseComponent {
     }
   }
 
+  // Gets the info needed from cart to make a review, and order.
   async #fetchCartData() {
     try {
       const response = await fetch("http://localhost:3000/api/cart");
       if (!response.ok) throw new Error("Failed to fetch cart data");
 
       const { items } = await response.json();
-      this.#cartItems = items; // Assign cart items to the private field
+      this.#cartItems = items;
       const totals = this.#calculateTotalsFromItems(items);
       this.#updateCartReview(items, totals);
     } catch (error) {
@@ -143,6 +159,7 @@ export class SecureCheckout extends BaseComponent {
     }
   }
 
+  // Finds the cart review numbers.
   #calculateTotalsFromItems(items) {
     const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
     const shipping = items.length > 0 ? 5.99 : 0;
@@ -151,11 +168,13 @@ export class SecureCheckout extends BaseComponent {
     return { subtotal, shipping, tax, total };
   }
 
+  // Sets the cart review numbers.
   #updateCartReview(cartItems, totals) {
     const reviewItemsContainer = this.#container.querySelector(".review-items");
     const subtotalEl = this.#container.querySelector("#subtotal");
     const shippingEl = this.#container.querySelector("#shipping");
     const totalEl = this.#container.querySelector("#total");
+    const payNowButton = this.#container.querySelector(".pay-now");
 
     reviewItemsContainer.innerHTML = cartItems
       .map(
@@ -171,8 +190,13 @@ export class SecureCheckout extends BaseComponent {
     subtotalEl.textContent = totals.subtotal.toFixed(2);
     shippingEl.textContent = totals.shipping.toFixed(2);
     totalEl.textContent = totals.total.toFixed(2);
+
+    // Disable "Pay Now" if cart is empty
+    payNowButton.disabled = cartItems.length === 0;
   }
 
+
+  // Makes sure every feild (I want filled) is filled out (could be more strict).
   #validateAndSubmit() {
     const requiredFields = [
       "#full-name",
@@ -202,6 +226,7 @@ export class SecureCheckout extends BaseComponent {
     }
   }
 
+  // Handles the backend logic for making a new order.
   #submitOrder() {
     const orderItems = this.#cartItems.map((item) => ({
       productId: item.productId,
@@ -213,14 +238,46 @@ export class SecureCheckout extends BaseComponent {
     fetch("http://localhost:3000/api/order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orders: orderItems }), // Send as an array of orders
+      body: JSON.stringify({ orders: orderItems }),
     })
       .then((response) => {
         if (!response.ok) throw new Error("Failed to place order");
         return response.json();
       })
-      .then(() => alert("Order placed successfully!"))
+      .then(() => this.#showOrderConfirmation())
       .catch((error) => alert("Failed to place order: " + error.message));
   }
+
+  // Render a confirmation after purchase.
+  #showOrderConfirmation() {
+    this.#container.innerHTML = `
+      <div class="order-confirmation">
+        <h1>Thanks for ordering from Aquatica</h1>
+        <p>Your order was successfully placed.</p>
+        <button class="return-marketplace">Return to Marketplace</button>
+      </div>
+    `;
+
+    const returnButton = this.#container.querySelector(".return-marketplace");
+    returnButton.addEventListener("click", () => {
+      this.#clearCart(); // Clear cart not saved items
+      const appController = AppController.getInstance();
+      this.#resetCheckoutView(); // Reset the view
+      appController.navigate("marketplace");
+    });
+  }
+
+  // Used for clearing cart after purchase.
+  #clearCart() {
+    fetch("http://localhost:3000/api/cart", {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to clear cart");
+        CartEvents.fetchCart(); // Ensure the frontend updates as well
+      })
+      .catch((error) => console.error("Failed to clear cart:", error));
+  }
+
 }
 

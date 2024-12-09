@@ -32,8 +32,10 @@ export class MarketplacePage extends BaseComponent {
             // price brackets aren't included in the database, so I quickly calculate them for the filters
             for (let i = 0; i < this.fullProdList.length; i++) {
                 this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+                this.fullProdList[i].average_rating = this.calculateAverageRating(this.fullProdList[i].Reviews);
             }
             this.reloadFilters();
+            this.applySort();
             this.renderMarketplace();
         });
 
@@ -123,6 +125,7 @@ export class MarketplacePage extends BaseComponent {
             if (this.curCategory !== "All") {
                 this.curCategory = "All";
                 this.reloadFilters();
+                this.applySort();
                 this.renderMarketplace();
                 this.reStyleButtons("category-button");
             }
@@ -176,6 +179,7 @@ export class MarketplacePage extends BaseComponent {
         searchInput.addEventListener("keyup", () => {
             this.regex = new RegExp(searchInput.value, "ig");
             this.reloadFilters();
+            this.applySort();
             this.renderMarketplace();
         });
         searchBar.appendChild(searchInput);
@@ -330,6 +334,7 @@ export class MarketplacePage extends BaseComponent {
                 }
                 this.reloadFilters();
             }
+            this.applySort();
             this.renderMarketplace();
             this.reStyleButtons(buttonClass);
         });
@@ -396,7 +401,7 @@ export class MarketplacePage extends BaseComponent {
 
         // find out how many reviews the item has
         const numReviews = prodListItem.reviews?.length || 0;
-
+      
         if (numReviews > 0) { // if there are reviews...
             // determine the average rating across all reviews
             let ratingSum = 0;
@@ -404,7 +409,8 @@ export class MarketplacePage extends BaseComponent {
                 ratingSum += prodListItem.reviews[i].rating;
             }
             const averageRating = ratingSum / numReviews;
-
+          
+        if (numReviews > 0) {
             // this container is for the star rating
             const starIMGDiv = document.createElement("div");
             starIMGDiv.classList.add("stars-container");
@@ -413,14 +419,16 @@ export class MarketplacePage extends BaseComponent {
             // this image displays the rating of the review on a scale of 1-5 stars
             const starIMG = document.createElement("img");
             starIMG.classList.add("stars");
-            starIMG.src = this.getStarIMG(averageRating); // star image based on rating
-            starIMG.alt = `${averageRating.toPrecision(2)} Stars`; // display one decimal point
+            starIMG.src = this.getStarIMG(prodListItem.average_rating); // star image based on rating
+            starIMG.alt = `${prodListItem.average_rating.toPrecision(2)} Stars`; // display one decimal point
             starIMGDiv.appendChild(starIMG);
 
             // text saying how many stars the product has
             const starText = document.createElement("span");
             starText.classList.add("star-text");
+
             starText.innerText = `${averageRating.toPrecision(2)} Stars`; // display one decimal point
+            starText.innerText = `${prodListItem.average_rating.toPrecision(2)} Stars`; // display one decimal point
             starIMGDiv.appendChild(starText);
 
             // text displaying how many reviews the product has
@@ -567,9 +575,20 @@ export class MarketplacePage extends BaseComponent {
         }
     }
 
-    /**
-     * Renders the next page of products.
-     */
+    calculateAverageRating(reviews) {
+        const numReviews = reviews.length;
+        let ratingSum = 0;
+        for (let i = 0; i < numReviews; i++) {
+            ratingSum += reviews[i].rating;
+        }
+
+        const averageRating = ratingSum / numReviews;
+        return averageRating;
+    }
+      
+   /**
+   * Renders the next page of products.
+   */
     goToNextPage() {
         if (this.end < this.prodList.length - 1) { // if there are any more products to display
             // increase start and end by pageLength to go to next "page"

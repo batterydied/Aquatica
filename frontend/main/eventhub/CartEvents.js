@@ -99,12 +99,15 @@ export default class CartEvents {
    * Update the quantity of a cart item and notify listeners.
    */
   static async updateCartItem(itemId, quantity) {
-    try {
-      const updatedItem = await CartService.updateCartItem(itemId, quantity);
-      hub.publish("cartItemUpdated", updatedItem);
-    } catch (error) {
-      hub.publish("cartError", error.message);
-    }
+  try {
+    const updatedItem = await CartService.updateCartItem(itemId, quantity);
+    hub.publish("cartItemUpdated", updatedItem);
+
+    // Re-fetch the cart to ensure data is synchronized
+    this.fetchCart();
+  } catch (error) {
+    hub.publish("cartError", error.message);
   }
+}
 }
 
