@@ -77,6 +77,8 @@ export class VirtualCart extends BaseComponent {
     });
   }
 
+  
+
   /**
    * Renders the virtual cart UI.
    */
@@ -98,7 +100,7 @@ export class VirtualCart extends BaseComponent {
           </div>
         </div>
         <div class="cart-right">
-          <h3>Cart Totals</h3>
+          <h2>Cart Totals</h2>
           <div class="cart-totals">
             <p class="totals-row"><span class="text">Shipping:</span> <span id="shipping" class="prices">$5.99</span></p>
             <p class="totals-row"><span class="text">Tax:</span> <span id="tax" class="prices">$0.00</span></p>
@@ -117,6 +119,8 @@ export class VirtualCart extends BaseComponent {
 
     return this.#container;
   }
+
+
 
   /**
    * Attaches event listeners for cart interactions.
@@ -180,6 +184,7 @@ export class VirtualCart extends BaseComponent {
   #refreshCart() {
     const cartItemsContainer = this.#container.querySelector("#cart-items");
     const savedItemsContainer = this.#container.querySelector("#saved-items");
+    const checkoutButton = this.#container.querySelector(".checkout-button");
 
     cartItemsContainer.innerHTML =
       this.#cartItems.length > 0 ? this.#generateCartItems() : '<p class="empty-cart">Your cart is empty.</p>';
@@ -188,8 +193,12 @@ export class VirtualCart extends BaseComponent {
         ? this.#generateSavedItems()
         : '<p class="empty-saved">No items saved for later.</p>';
 
+    // Disable checkout button if cart is empty
+    checkoutButton.disabled = this.#cartItems.length === 0;
+
     this.#updateCartTotals();
   }
+
 
   /**
    * Generates the HTML for cart items.
@@ -200,7 +209,7 @@ export class VirtualCart extends BaseComponent {
         (item, index) => `
         <div class="cart-item">
           <div class="item-details">
-            <h4>${item.productId}</h4>
+            <h4>${item.name}</h4>
             <p>${item.description}</p>
             <p>Price: $${item.price.toFixed(2)}</p>
           </div>

@@ -55,6 +55,21 @@ class CartController {
   }
 
   /**
+   * Delete all cart items for the signed-in user.
+   */
+  async clearCart(req, res) {
+    try {
+      const userId = req.user?.id || "test-user-id"; // Placeholder for userId
+      await CartModel.clearCart(userId); // Calls the model method to clear cart
+      res.status(200).json({ message: "Cart cleared successfully" });
+    } catch (error) {
+      console.error("Error in clearCart:", error);
+      res.status(500).json({ error: "Failed to clear cart" });
+    }
+  }
+  
+
+  /**
    * Fetch all saved-for-later items for the signed-in user.
    */
   async getSavedItems(req, res) {
@@ -79,9 +94,10 @@ class CartController {
       const { productId, quantity } = req.body;
       const newItem = await CartModel.addCartItem(productId, quantity, userId);
       */
-      const { productId, price, description, quantity } = req.body;
+      const { name, productId, price, description, quantity } = req.body;
 
       const newItem = await CartModel.addCartItemManually(
+        name,
         productId,
         price,
         description,
@@ -140,6 +156,28 @@ class CartController {
       res.status(500).json({ error: "Failed to move item to cart" });
     }
   }
+
+  /**
+   * Update an item in the cart.
+   */
+  async updateCartItem(req, res) {
+    try {
+      const userId = req.user?.id || "test-user-id"; // Placeholder for testing
+      const itemId = req.params.id;
+      const { quantity } = req.body;
+
+      if (!quantity || quantity < 1) {
+        return res.status(400).json({ error: "Invalid quantity." });
+      }
+
+      const updatedItem = await CartModel.updateQuantity(itemId, quantity, userId);
+      res.status(200).json(updatedItem);
+    } catch (error) {
+      console.error("Error in updateCartItem:", error);
+      res.status(500).json({ error: "Failed to update item quantity" });
+    }
+  }
+  
 }
 
 export default new CartController();
