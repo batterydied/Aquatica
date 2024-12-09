@@ -23,7 +23,7 @@ export class SecureCheckout extends BaseComponent {
   #prices = {
     subtotal: 0,
     shipping: 0,
-    discount: 0,
+    tax: 0,
     total: 0,
   };
   #cartItems = []; // Private field to store cart items
@@ -91,10 +91,10 @@ export class SecureCheckout extends BaseComponent {
         <h3>Review</h3>
         <div class="review-items"><p>No items in the cart yet.</p></div>
         <div class="checkout-summary">
-          <p>Subtotal: $<span id="subtotal">${this.#prices.subtotal.toFixed(2)}</span></p>
-          <p>Shipping: $<span id="shipping">${this.#prices.shipping.toFixed(2)}</span></p>
-          <p>Discount: $<span id="discount">${this.#prices.discount.toFixed(2)}</span></p>
           <p>Total: $<span id="total">${this.#prices.total.toFixed(2)}</span></p>
+          <p>Shipping: $<span id="shipping">${this.#prices.shipping.toFixed(2)}</span></p>
+          <p>Tax: $<span id="tax">${this.#prices.tax.toFixed(2)}</span></p>
+          <p>Subtotal: $<span id="subtotal">${this.#prices.subtotal.toFixed(2)}</span></p>
           <button class="pay-now">Pay Now</button>
         </div>
       </div>
@@ -161,10 +161,10 @@ export class SecureCheckout extends BaseComponent {
 
   // Finds the cart review numbers.
   #calculateTotalsFromItems(items) {
-    const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+    const total = items.reduce((subtotal, item) => subtotal + item.price * item.quantity, 0);
     const shipping = items.length > 0 ? 5.99 : 0;
-    const tax = subtotal * 0.1;
-    const total = subtotal + shipping + tax;
+    const tax = total * 0.1;
+    const subtotal = total + shipping + tax;
     return { subtotal, shipping, tax, total };
   }
 
@@ -173,6 +173,7 @@ export class SecureCheckout extends BaseComponent {
     const reviewItemsContainer = this.#container.querySelector(".review-items");
     const subtotalEl = this.#container.querySelector("#subtotal");
     const shippingEl = this.#container.querySelector("#shipping");
+    const taxEl = this.#container.querySelector("#tax");
     const totalEl = this.#container.querySelector("#total");
     const payNowButton = this.#container.querySelector(".pay-now");
 
@@ -187,6 +188,7 @@ export class SecureCheckout extends BaseComponent {
       )
       .join("");
 
+    taxEl.textContent = totals.tax.toFixed(2);
     subtotalEl.textContent = totals.subtotal.toFixed(2);
     shippingEl.textContent = totals.shipping.toFixed(2);
     totalEl.textContent = totals.total.toFixed(2);

@@ -100,13 +100,10 @@ export class VirtualCart extends BaseComponent {
           </div>
         </div>
         <div class="cart-right">
-          <h2>Cart Totals</h2>
+          <h2>Cart Total</h2>
           <div class="cart-totals">
-            <p class="totals-row"><span class="text">Shipping:</span> <span id="shipping" class="prices">$5.99</span></p>
-            <p class="totals-row"><span class="text">Tax:</span> <span id="tax" class="prices">$0.00</span></p>
-            <p class="totals-row subtotal"><span class="text">Subtotal:</span> <span id="subtotal" class="prices">$0.00</span></p>
             <hr class="total-divider" />
-            <p class="totals-row total"><span class="text">Total:</span> <span id="total" class="prices">$0.00</span></p>
+            <p class="totals-row subtotal"><span class="text">Total:</span> <span id="total" class="prices">$0.00</span></p>
           </div>
           <button class="checkout-button">Proceed to Checkout</button>
         </div>
@@ -237,7 +234,7 @@ export class VirtualCart extends BaseComponent {
         (item, index) => `
         <div class="saved-item">
           <div class="item-details">
-            <h4>${item.productId}</h4>
+            <h4>${item.name}</h4>
             <p>${item.description}</p>
             <p>Price: $${item.price.toFixed(2)}</p>
           </div>
@@ -254,15 +251,15 @@ export class VirtualCart extends BaseComponent {
    * Calculates the cart totals (subtotal, shipping, tax, total).
    */
   #calculateTotals() {
-    const subtotal = this.#cartItems.reduce(
+    const newTotal = this.#cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
-    const shipping = this.#cartItems.length > 0 ? 5.99 : 0;
-    const tax = subtotal * 0.1;
-    const total = subtotal + shipping + tax;
 
-    return { subtotal, shipping, tax, total };
+
+    const total = newTotal;
+
+    return { total };
   }
 
   /**
@@ -270,9 +267,6 @@ export class VirtualCart extends BaseComponent {
    */
   #updateCartTotals() {
     const totals = this.#calculateTotals();
-    this.#container.querySelector("#subtotal").textContent = `$${totals.subtotal.toFixed(2)}`;
-    this.#container.querySelector("#shipping").textContent = `$${totals.shipping.toFixed(2)}`;
-    this.#container.querySelector("#tax").textContent = `$${totals.tax.toFixed(2)}`;
     this.#container.querySelector("#total").textContent = `$${totals.total.toFixed(2)}`;
   }
 }
