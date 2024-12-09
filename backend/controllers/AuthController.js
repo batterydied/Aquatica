@@ -157,6 +157,7 @@ export async function login(req, res) {
     res.status(200).json({
       message: " ><> Login successful. <><",
       token,
+      userId: validCredentials.userId
     });
   } catch (error) {
     // Handles invalid login attempts with appropriate error messages.
