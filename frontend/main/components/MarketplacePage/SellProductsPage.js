@@ -1,37 +1,38 @@
 import { MarketplacePage } from "./MarketplacePage.js";
-import products from "./Products.js";
+import { hub } from "../../eventhub/EventHub.js";
+import { Category } from "../shared/Category.js";
 
 export class SellProductsPage extends MarketplacePage {
     constructor() {
         super();
-        this.curSeller = 7905; // to be changed
+        this.curSeller = "1234-5678"; // TODO: get curSeller from auth
+        this.curSellerName = "Ocean Wonders";
         this.pageLength = 4, this.end = this.start + this.pageLength;
     }
 
-    getProdList() {
-        const list = products.filter(e => e.sellerid === this.curSeller);
-        
-        for (let i = 0; i < list.length; i++) {
-            list[i].bracket = this.calculateBracket(list[i].price);
-        }
- 
-        return list;
-    }
-
     render() {
-        this.container.innerHTML = "";
+        this.getProdList(); // call to ProductService
+        hub.subscribe("retrievedProductsList", (data) => this.setProdList(data)); // callback for eventhub
 
-        this.fullProdList = this.getProdList();
-        this.prodList = this.fullProdList;
+        const mainPage = super.prepareForRender();
 
         const categories = super.renderCategoryFilters();
-        this.container.appendChild(categories);
+        mainPage.appendChild(categories);
 
         const searchBar = super.renderSearchBar();
-        this.container.appendChild(searchBar);
+        mainPage.appendChild(searchBar);
 
         this.renderMarketplace();
 
+        this.marketplace.classList.add("marketplace");
+
+        mainPage.appendChild(this.marketplace);
+
+        return this.container;
+    }
+
+    renderMarketplace() {
+        super.renderMarketplace();
         const addItem = document.createElement('div');
         addItem.classList.add("add-item")
         
@@ -45,15 +46,26 @@ export class SellProductsPage extends MarketplacePage {
         addItemIcon.src = "/assets/plus-icon.svg";
         addItem.appendChild(addItemIcon);
 
-        addItem.addEventListener("click", () => this.createProduct());
+        addItem.addEventListener("click", () => this.addProduct());
 
         this.marketplace.childNodes[0].appendChild(addItem);
         
         if (this.prodList.length < 1) { // remove no items found text
             this.marketplace.childNodes[1].innerHTML = "";
         }
+    }
 
-        return this.container;
+    setProdList(list) {
+        this.fullProdList = list.filter(e => e.sellerid === this.curSeller);
+        this.prodList = this.fullProdList;
+        // price brackets and ratings aren't included in the database, so I quickly calculate them for the filters
+        for (let i = 0; i < this.fullProdList.length; i++) {
+            this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+            this.fullProdList[i].average_rating = this.calculateAverageRating(this.fullProdList[i].Reviews);
+        }
+        this.reloadFilters();
+        this.applySort();
+        this.renderMarketplace();
     }
 
     createProduct(prodListItem) {
@@ -61,16 +73,41 @@ export class SellProductsPage extends MarketplacePage {
         const editButton = document.createElement('img');
         editButton.classList.add("edit-button");
         editButton.src = "/assets/edit-icon.svg";
-        editButton.addEventListener("click", () => this.editProduct(prodListItem.prodid));
+        editButton.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
         product.childNodes[1].appendChild(editButton);
         return product;
     }
 
-    createProduct() {
-        //TODO
+    async addProduct() {
+        const newProduct = {
+            "name": "New Product",
+            "sellerid": this.curSeller,
+            "sellername": this.curSellerName,
+            "category": Category.Misc,
+            "description": "Product Description",
+            "price": 1,
+            "images": [],
+        };
+
+        const response = await fetch("/api/products", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newProduct),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add product.");
+        } else {
+            const product = await response.json();
+            const prodid = product.prodid;
+            this.goToProductPage(prodid);
+        }
     }
 
-    editProduct(id) {
-        //TODO
+    goToProductPage(prodid) {
+        console.log(`going to seller product page for product ${prodid}`);
+        // const appController = AppController.getInstance();
+        // appController.navigate("productPage", {prodid});
+        // TODO: go to seller product page
     }
 }

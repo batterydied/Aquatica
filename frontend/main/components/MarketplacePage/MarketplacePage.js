@@ -4,7 +4,7 @@ import { PriceBrackets } from "./PriceBrackets.js";
 import { Sorts } from "./Sorts.js";
 import { AppController } from "../../app/AppController.js";
 import { ProductService} from "../../services/ProductService.js";
-import { EventHub, hub } from "../../eventhub/EventHub.js";
+import { hub } from "../../eventhub/EventHub.js";
 
 /**
  * The Marketplace Page is the main page of the app. It contains a list of all products available on the site.
@@ -23,21 +23,8 @@ export class MarketplacePage extends BaseComponent {
         // prodList contains only the products visible with the current filters, and it is sorted.
         this.fullProdList = []; // initialized to [], will be populated by the callback from getProdList()
         this.prodList = this.fullProdList;
-        this.getProdList(); // call to ProductService
 
         this.marketplace = document.createElement("div");
-
-        hub.subscribe("retrievedProductsList", (data) => { // callback for the event hub
-            this.fullProdList = data;
-            // price brackets aren't included in the database, so I quickly calculate them for the filters
-            for (let i = 0; i < this.fullProdList.length; i++) {
-                this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
-                this.fullProdList[i].average_rating = this.calculateAverageRating(this.fullProdList[i].Reviews);
-            }
-            this.reloadFilters();
-            this.applySort();
-            this.renderMarketplace();
-        });
 
         // set filters to defaults
         this.curCategory = "All";
@@ -64,6 +51,24 @@ export class MarketplacePage extends BaseComponent {
         const list = await productService.retrieveAllProducts();
     }
 
+    /**
+     * Sets this.fullProdList and this.prodList to the given list, calculates brackets and average ratings, and applies sorts and filters.
+     * No return value.
+     * @param {array} list 
+     */
+    setProdList(list) {
+        this.fullProdList = list;
+        this.prodList = this.fullProdList;
+        // price brackets and ratings aren't included in the database, so I quickly calculate them for the filters
+        for (let i = 0; i < this.fullProdList.length; i++) {
+            this.fullProdList[i].bracket = this.calculateBracket(this.fullProdList[i].price);
+            this.fullProdList[i].average_rating = this.calculateAverageRating(this.fullProdList[i].Reviews);
+        }
+        this.reloadFilters();
+        this.applySort();
+        this.renderMarketplace();
+    }
+
    /**
     * This method takes the price of an item and returns which price bracket it falls into.
     * This allows sorting by price range.
@@ -87,102 +92,23 @@ export class MarketplacePage extends BaseComponent {
     }
 
     render() {
-        this.container.innerHTML = "";
-
-        // bg is just an empty div that sits underneath the navigation bar.
-        // this prevents the navigation bar from overlapping the screen.
-        const bg = document.createElement("div");
-        this.container.appendChild(bg);
-
-        // this div contains all content in the actual page.
-        const mainPage = document.createElement("div");
-        mainPage.classList.add("main-page");
-        this.container.appendChild(mainPage);
+        this.getProdList(); // call to ProductService
+        hub.subscribe("retrievedProductsList", (data) => this.setProdList(data)); // callback for eventhub
+        
+        const mainPage = this.prepareForRender();
 
         // filtering
         // categoryBox is a container for the category filter buttons
-        const categoryBox = document.createElement("div");
-        categoryBox.classList.add("category-box");
-        categoryBox.classList.add("filters");
+        const categoryBox = this.renderCategoryFilters();
         mainPage.appendChild(categoryBox);
 
-        // categoryFilter is a label notifying the user that the following buttons allow them to sort by category
-        // it is a button so that it can have the same size and shape as the category buttons
-        const categoryFilter = document.createElement("button");
-        categoryFilter.classList.add("filter-label");
-        categoryFilter.innerText = "Categories:";
-        categoryBox.appendChild(categoryFilter);
-
-        // the 'All' category has its own special button. It is enabled by default and allows products from all categories to be displayed.
-        const allButton = document.createElement("button");
-        allButton.innerText = "All";
-        allButton.classList.add("filter-button");
-        allButton.classList.add("category-button");
-        allButton.id = "all-button";
-        // this event listener changes the current category to all, and refilters prodList accordingly.
-        // It then rerenders the marketplace and updates the styling of the other buttons to ensure no two buttons are enabled at the same time.
-        allButton.addEventListener("click", () => {
-            if (this.curCategory !== "All") {
-                this.curCategory = "All";
-                this.reloadFilters();
-                this.applySort();
-                this.renderMarketplace();
-                this.reStyleButtons("category-button");
-            }
-        });
-        categoryBox.appendChild(allButton);
-
-        // create a button for each category
-        for (let category in Category) {
-            const button = this.createFilterButton("category", Category[category]);
-            button.id = Category[category];
-            categoryBox.appendChild(button);
-        }
-
         // this div contains all the buttons for price filtering
-        const priceBox = document.createElement("div");
-        priceBox.classList.add("price-box");
-        priceBox.classList.add("filters");
+        const priceBox = this.renderBracketFilters();
         mainPage.appendChild(priceBox);
-
-        // this "button" is a label to indicate to the user that the following buttons filter the products.
-        const priceFilter = document.createElement("button");
-        priceFilter.classList.add("filter-label");
-        priceFilter.innerText = "Price:";
-        priceBox.appendChild(priceFilter);
-
-        // create buttons for each price bracket
-        for (let bracket in PriceBrackets) {
-            const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
-            bracketButton.id = PriceBrackets[bracket];
-            priceBox.appendChild(bracketButton);
-        }
 
         // search bar
         // this div contains the search bar
-        const searchBar = document.createElement("div");
-        searchBar.classList.add("search-bar");
-        
-        // image from bootstrap indicating the input is a search bar
-        const searchIcon = document.createElement("img");
-        searchIcon.src = "/assets/search-icon.png";
-        searchIcon.classList.add("search-icon");
-        searchBar.appendChild(searchIcon);
-
-        // the actual search input element
-        const searchInput = document.createElement("input");
-        searchInput.classList.add("search-input");
-        searchInput.type = "text";
-        searchInput.placeholder = "Search"
-        // this event listener filters prodList based on whatever string the user enters using regex searching.
-        // it then re-renders the marketplace.
-        searchInput.addEventListener("keyup", () => {
-            this.regex = new RegExp(searchInput.value, "ig");
-            this.reloadFilters();
-            this.applySort();
-            this.renderMarketplace();
-        });
-        searchBar.appendChild(searchInput);
+        const searchBar = this.renderSearchBar();
         mainPage.appendChild(searchBar);
 
         // sort
@@ -218,21 +144,134 @@ export class MarketplacePage extends BaseComponent {
         return this.container;
     }
 
+    /**
+     * Fetches the prodList, subscribes to hub events, creates bg and main page containers
+     * @returns the main page div
+     */
+    prepareForRender() {
+        this.container.innerHTML = "";
+
+        // bg is just an empty div that sits underneath the navigation bar.
+        // this prevents the navigation bar from overlapping the screen.
+        const bg = document.createElement("div");
+        this.container.appendChild(bg);
+
+        // this div contains all content in the actual page.
+        const mainPage = document.createElement("div");
+        mainPage.classList.add("main-page");
+        this.container.appendChild(mainPage);
+
+        return mainPage;
+    }
+
+    /**
+     * Creates the category filter buttons.
+     * @returns Div containing all category filter buttons
+     */
     renderCategoryFilters() {
-        //TODO
+        // categoryBox is a container for the category filter buttons
+        const categoryBox = document.createElement("div");
+        categoryBox.classList.add("category-box");
+        categoryBox.classList.add("filters");
+
+        // categoryFilter is a label notifying the user that the following buttons allow them to sort by category
+        // it is a button so that it can have the same size and shape as the category buttons
+        const categoryFilter = document.createElement("button");
+        categoryFilter.classList.add("filter-label");
+        categoryFilter.innerText = "Categories:";
+        categoryBox.appendChild(categoryFilter);
+
+        // the 'All' category has its own special button. It is enabled by default and allows products from all categories to be displayed.
+        const allButton = document.createElement("button");
+        allButton.innerText = "All";
+        allButton.classList.add("filter-button");
+        allButton.classList.add("category-button");
+        allButton.id = "all-button";
+        // this event listener changes the current category to all, and refilters prodList accordingly.
+        // It then rerenders the marketplace and updates the styling of the other buttons to ensure no two buttons are enabled at the same time.
+        allButton.addEventListener("click", () => {
+            if (this.curCategory !== "All") {
+                this.curCategory = "All";
+                this.reloadFilters();
+                this.applySort();
+                this.renderMarketplace();
+                this.reStyleButtons("category-button");
+            }
+        });
+        categoryBox.appendChild(allButton);
+
+        // create a button for each category
+        for (let category in Category) {
+            const button = this.createFilterButton("category", Category[category]);
+            button.id = Category[category];
+            categoryBox.appendChild(button);
+        }
+
+        return categoryBox;
     }
 
+    /**
+     * Creates the price bracket filter buttons.
+     * @returns Div containing all bracket filter buttons
+     */
     renderBracketFilters() {
-        //TODO
+        // this div contains all the buttons for price filtering
+        const priceBox = document.createElement("div");
+        priceBox.classList.add("price-box");
+        priceBox.classList.add("filters");
+
+        // this "button" is a label to indicate to the user that the following buttons filter the products.
+        const priceFilter = document.createElement("button");
+        priceFilter.classList.add("filter-label");
+        priceFilter.innerText = "Price:";
+        priceBox.appendChild(priceFilter);
+
+        // create buttons for each price bracket
+        for (let bracket in PriceBrackets) {
+            const bracketButton = this.createFilterButton("bracket", PriceBrackets[bracket]);
+            bracketButton.id = PriceBrackets[bracket];
+            priceBox.appendChild(bracketButton);
+        }
+
+        return priceBox;
     }
 
+    /**
+     * Creates the search bar and related functionality.
+     * @returns Div containing search bar
+     */
     renderSearchBar() {
-        //TODO
+        // this div contains the search bar
+        const searchBar = document.createElement("div");
+        searchBar.classList.add("search-bar");
+        
+        // image from bootstrap indicating the input is a search bar
+        const searchIcon = document.createElement("img");
+        searchIcon.src = "/assets/search-icon.png";
+        searchIcon.classList.add("search-icon");
+        searchBar.appendChild(searchIcon);
+
+        // the actual search input element
+        const searchInput = document.createElement("input");
+        searchInput.classList.add("search-input");
+        searchInput.type = "text";
+        searchInput.placeholder = "Search"
+        // this event listener filters prodList based on whatever string the user enters using regex searching.
+        // it then re-renders the marketplace.
+        searchInput.addEventListener("keyup", () => {
+            this.regex = new RegExp(searchInput.value, "ig");
+            console.log(this.regex);
+            this.reloadFilters();
+            this.applySort();
+            this.renderMarketplace();
+        });
+        searchBar.appendChild(searchInput);
+        return searchBar;
     }
 
     /**
      * Helper method that renders the marketplace. Creates product list and page buttons.
-     * Nothing is returned from this method.
+     * @returns marketplace div
      */
 
     renderMarketplace() {
@@ -415,13 +454,6 @@ export class MarketplacePage extends BaseComponent {
         const numReviews = prodListItem.Reviews?.length || 0;
 
         if (numReviews > 0) { // if there are reviews...
-            // determine the average rating across all reviews
-            let ratingSum = 0;
-            for (let i = 0; i < numReviews; i++) {
-                ratingSum += prodListItem.Reviews[i].rating;
-            }
-            const averageRating = ratingSum / numReviews;
-
             // this container is for the star rating
             const starIMGDiv = document.createElement("div");
             starIMGDiv.classList.add("stars-container");
@@ -490,7 +522,7 @@ export class MarketplacePage extends BaseComponent {
             this.applyFilter((e) => e.bracket === this.curBracket);
         }
         // apply filter based on the current value of the regex
-        this.applyFilter((e) => this.regex.test(e.description) || this.regex.test(e.name) || this.regex.test(e.sellername))
+        this.applyFilter((e) => this.regex.test(e.description) || this.regex.test(e.name) || this.regex.test(e.sellername));
 
         // go back to the first page of products
         this.start = 0;
