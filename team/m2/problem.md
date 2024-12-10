@@ -12,10 +12,6 @@ Our application, **Aquatica**, would provide a centralized marketplace for aquar
 
 - **Price Comparison**: The app will allow buyers to compare the prices of different sellers' products to help inform their purchase decisions. The app will also prioritize displaying discounted items to ensure that buyers can easily spot and buy items in a lower price during promitional periods.
 
-- **Direct Messages**: Buyers can message sellers directly to negotiate or ask questions about their products. Sellers can message buyers directly to ask feedback once buyer received their products. Sellers can also send direct messages about new items and discounted products to the buyers.
-
-- **Personalized Recommendations**: Buyers can receive recommendations of products that are tailored to their experience level, aquarium goals, and price range.
-
 - **Reviews and Ratings**: Buyers can review and rate products and sellers. This will allow users to provide feedback to sellers as well as to inform other buyers as to which products are worth their money.
 
 ## Why This Matters
