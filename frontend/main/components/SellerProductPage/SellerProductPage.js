@@ -55,6 +55,10 @@ export class SellerProductPage extends BaseComponent {
         // form to change product information
 
         // save button
+        const saveButton = document.createElement("img");
+        saveButton.src = "/frontend/assets/edit-icon.svg"; // TODO: change to save icon
+        saveButton.classList.add("save-button");
+        saveButton.addEventListener("click", () => this.saveProduct());
 
         return this.container;
     }
@@ -104,7 +108,7 @@ export class SellerProductPage extends BaseComponent {
         this.createMainPage();
     }
 
-    uploadImage() {
+    async uploadImages() {
         // TODO: implement
     }
 
@@ -112,7 +116,37 @@ export class SellerProductPage extends BaseComponent {
         this.product.Images = this.product.Images.filter((img) => img.url !== url);
     }
 
-    saveProduct() {
-        // TODO: implement
+    async saveProduct() {
+        // upload images if any
+        if (this.previewImages.length > 0) {
+            try {
+                const images = await this.uploadImages();
+                this.product.Images = this.product.Images.concat(images);
+            } catch (error) {
+                console.error("Error uploading image(s)." + error);
+            }
+        }
+
+        // save product data to the server
+        try {
+            const response = await fetch(`/api/products/${this.product.prodid}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(this.product)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to save product data: ${response.statusText}`);
+            }
+
+            // tell the user the product was saved
+            alert("Successfully saved product!");
+
+            // refresh page
+            this.createMainPage();
+        } catch (error) {
+            console.error("Error saving product data:" + error);
+            alert("Failed to save product data.");
+        }
     }
 }
