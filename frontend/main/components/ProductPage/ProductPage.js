@@ -231,7 +231,7 @@ export class ProductPage extends BaseComponent {
 
     const price = document.createElement('span');
     price.id = 'price';
-    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || '0.00';
+    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || 0.00;
     price.innerText = price.dataset.originalPrice;
     priceLabel.appendChild(price);
 
@@ -239,9 +239,8 @@ export class ProductPage extends BaseComponent {
     productTypes.appendChild(priceLabel);
 
     // Product Types Dropdown
-const dropdownContainer = document.createElement('div');
-dropdownContainer.className = 'dropdown-container';
-
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.className = 'dropdown-container';
     const typeDropdown = document.createElement('select');
     typeDropdown.className = 'type-dropdown';
 
@@ -259,8 +258,9 @@ dropdownContainer.className = 'dropdown-container';
     typeDropdown.value = reversedProductTypes[0]?.type || '';
 
     // Update price on dropdown change
+    let selectedType = reversedProductTypes[0];
     typeDropdown.addEventListener('change', (e) => {
-        const selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
+        selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
         const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
         price.dataset.originalPrice = selectedType.price;
         price.innerText = (selectedType.price * amount).toFixed(2);
@@ -330,12 +330,12 @@ dropdownContainer.className = 'dropdown-container';
       const buyNowBtn = document.createElement('button');
       buyNowBtn.className = 'buy-now';
       buyNowBtn.innerText = 'Buy Now';
-      buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+      buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
       
       const addToCartBtn = document.createElement('button');
       addToCartBtn.className = 'add-to-cart';
       addToCartBtn.innerText = 'Add to Cart';
-      addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+      addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
 
       buttonContainer.appendChild(addToCartBtn);
       buttonContainer.appendChild(buyNowBtn)

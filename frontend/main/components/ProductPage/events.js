@@ -27,15 +27,18 @@ function handleDecrease() {
     }
 }
 
-async function handleAddToCart(product, quantity) {
+async function handleAddToCart(product, quantity, selectedType) {
+    console.log(selectedType);
     const cartItem = {
       name: product.name,
       productId: product.prodid,
-      price: product.price, // Assuming a static price for demonstration; replace with actual data
+      price: selectedType.price, // Assuming a static price for demonstration; replace with actual data
       description: product.description, // Replace with actual product description
       quantity: quantity, 
       userId: "test-user-id", // Replace with the current user ID dynamically
-      isSaved: false
+      isSaved: false,
+      //selectedTypeId: selectedType.id,
+      //productType: selectedType.type,
     };
   
     try {
