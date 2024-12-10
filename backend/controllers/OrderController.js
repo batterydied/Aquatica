@@ -11,6 +11,7 @@
 
   - Method: getOrders(): Fetch all orders for a user.
   - Method: addOrder(): Add a new order to the database.
+  - Method: cancelOrder(): Cancel (remove) an existing order.
 */
 
 // Imports
@@ -40,12 +41,8 @@ class OrderController {
    */
   async getOrders(req, res) {
     try {
-      console.log("OrderController: getOrders called.");
-      const userId = req.user?.id || "test-user-id"; // Default userId for testing
-
-      // Fetch orders for the user
+      const userId = req.user?.id || "test-user-id";
       const orders = await OrderModel.getOrders(userId);
-
       res.json({ orders });
     } catch (error) {
       console.error("Error in getOrders:", error);
@@ -58,28 +55,44 @@ class OrderController {
    * @param {Object} req - Express request object containing order data.
    * @param {Object} res - Express response object.
    */
-async addOrder(req, res) {
-  try {
-    console.log("Request body:", req.body); // Log the incoming request body
-    const userId = req.user?.id || "test-user-id"; // Default userId for testing
+  async addOrder(req, res) {
+    try {
+      const userId = req.user?.id || "test-user-id";
+      const { orders } = req.body; // array of { productId, price, description, quantity }
 
-    const { orders } = req.body; // Expecting an array of order items
-    if (!orders || !Array.isArray(orders) || orders.length === 0) {
-      return res.status(400).json({ error: "Invalid or missing order data." });
+      if (!orders || !Array.isArray(orders) || orders.length === 0) {
+        return res.status(400).json({ error: "Invalid or missing order data." });
+      }
+
+      const orderPromises = orders.map(({ productId, price, description, quantity }) => {
+        return OrderModel.addOrderManually(productId, price, description, quantity, userId);
+      });
+
+      const newOrders = await Promise.all(orderPromises);
+      res.status(201).json(newOrders);
+    } catch (error) {
+      console.error("Error in addOrder:", error);
+      res.status(500).json({ error: "Failed to add order." });
     }
-
-    const orderPromises = orders.map(({ productId, price, description, quantity }) => {
-      return OrderModel.addOrderManually(productId, price, description, quantity, userId);
-    });
-
-    const newOrders = await Promise.all(orderPromises);
-    res.status(201).json(newOrders);
-  } catch (error) {
-    console.error("Error in addOrder:", error);
-    res.status(500).json({ error: "Failed to add order." });
   }
-}
 
+    /**
+   * Cancel (delete) an existing order.
+   * @param {Object} req - Express request object containing orderId in `req.params.id`.
+   * @param {Object} res - Express response object.
+   */
+  async cancelOrder(req, res) {
+    try {
+      const userId = req.user?.id || "test-user-id";
+      const { id } = req.params;
+
+      const result = await OrderModel.cancelOrder(id, userId);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Error in cancelOrder:", error);
+      res.status(500).json({ error: "Failed to cancel order." });
+    }
+  }
 }
 
 export default new OrderController();

@@ -82,40 +82,39 @@ export class VirtualCart extends BaseComponent {
   /**
    * Renders the virtual cart UI.
    */
-  render() {
-    if (!this.#container) {
-      this.#container = document.createElement("div");
-      this.#container.classList.add("cart-container");
-
-      this.#container.innerHTML = `
-        <div class="cart-left">
-          <a href="#" class="back-link">← Marketplace</a>
-          <h1>Your Cart</h1>
-          <div id="cart-items">
-            <p class="loading-message">Loading cart items...</p>
-          </div>
-          <h2>Save for Later</h2>
-          <div id="saved-items">
-            <p class="loading-message">Loading saved items...</p>
-          </div>
+render() {
+  if (!this.#container) {
+    this.#container = document.createElement("div");
+    this.#container.classList.add("cart-container");
+    this.#container.innerHTML = `
+      <div class="cart-left">
+        <a href="#" class="back-link">← Marketplace</a>
+        <h1>Your Cart</h1>
+        <div id="cart-items">
+          <p class="loading-message">Loading cart items...</p>
         </div>
-        <div class="cart-right">
-          <h2>Cart Total</h2>
-          <div class="cart-totals">
-            <hr class="total-divider" />
-            <p class="totals-row subtotal"><span class="text">Total:</span> <span id="total" class="prices">$0.00</span></p>
-          </div>
-          <button class="checkout-button">Proceed to Checkout</button>
+        <h2>Save for Later</h2>
+        <div id="saved-items">
+          <p class="loading-message">Loading saved items...</p>
         </div>
-      `;
-
-      this.#attachEventListeners();
-      CartEvents.fetchCart(); // Fetch cart data on render
-      CartEvents.fetchSavedItems(); // Fetch saved-for-later items on render
-    }
-
-    return this.#container;
+      </div>
+      <div class="cart-right">
+        <h2>Cart Totals</h2>
+        <p class="totals-row total"><span class="text">Total:</span> <span id="total" class="prices">$0.00</span></p>
+        <button class="checkout-button">Proceed to Checkout</button>
+      </div>
+    `;
+    this.#attachEventListeners();
   }
+
+  // IMPORTANT: Always fetch the cart and saved items, even if container already exists
+  CartEvents.fetchCart();
+  CartEvents.fetchSavedItems();
+
+  return this.#container;
+}
+
+
 
 
 
@@ -204,26 +203,27 @@ export class VirtualCart extends BaseComponent {
     return this.#cartItems
       .map(
         (item, index) => `
-        <div class="cart-item">
-          <div class="item-details">
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-            <p>Price: $${item.price.toFixed(2)}</p>
+          <div class="cart-item">
+            <div class="item-details">
+              <h4>${item.name} (${item.type || 'Default'})</h4>
+              <p>${item.description}</p>
+              <p>Price: $${item.price.toFixed(2)}</p>
+            </div>
+            <div class="item-quantity">
+              <button class="decrement" data-index="${index}">-</button>
+              <span>${item.quantity}</span>
+              <button class="increment" data-index="${index}">+</button>
+            </div>
+            <div class="item-actions">
+              <button class="save-later" data-index="${index}">Save for Later</button>
+              <button class="delete" data-index="${index}">Delete</button>
+            </div>
           </div>
-          <div class="item-quantity">
-            <button class="decrement" data-index="${index}">-</button>
-            <span>${item.quantity}</span>
-            <button class="increment" data-index="${index}">+</button>
-          </div>
-          <div class="item-actions">
-            <button class="save-later" data-index="${index}">Save for Later</button>
-            <button class="delete" data-index="${index}">Delete</button>
-          </div>
-        </div>
-      `
+        `
       )
       .join("");
   }
+
 
   /**
    * Generates the HTML for saved-for-later items.

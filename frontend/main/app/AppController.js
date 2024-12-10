@@ -64,6 +64,7 @@ export class AppController {
      if (!this.#views[viewName]) {
        throw new Error(`View "${viewName}" not found.`);
      }
+      this.currentViewParams = params; // store params publicly
       this.#currentView = this.#views[viewName];
      if(viewName === 'productPage'){
       this.render(params.prodid);

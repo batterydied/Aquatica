@@ -145,19 +145,31 @@ export class SecureCheckout extends BaseComponent {
 
   // Gets the info needed from cart to make a review, and order.
   async #fetchCartData() {
+    const appController = AppController.getInstance();
+    const currentViewParams = appController.currentViewParams || {};
+
+    if (currentViewParams.items && Array.isArray(currentViewParams.items)) {
+      const items = currentViewParams.items;
+      const totals = this.#calculateTotalsFromItems(items);
+      this.#updateCartReview(items, totals);
+      this.#cartItems = items; // Add this line
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:3000/api/cart");
       if (!response.ok) throw new Error("Failed to fetch cart data");
-
       const { items } = await response.json();
-      this.#cartItems = items;
       const totals = this.#calculateTotalsFromItems(items);
       this.#updateCartReview(items, totals);
+      this.#cartItems = items; // Add this line
     } catch (error) {
       console.error("Error fetching cart data:", error);
       alert("Failed to load cart data.");
     }
   }
+  
+
 
   // Finds the cart review numbers.
   #calculateTotalsFromItems(items) {

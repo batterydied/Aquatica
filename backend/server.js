@@ -43,40 +43,13 @@ class Server {
     this.app.use(express.static(path.join(root, 'frontend')));
   }
 
-  // Setup routes
   setupRoutes() {
     console.log("Registering routes...");
-    // this.app.use('/api', AuthRoutes);
-    this.app.use('/api/', (req, res, next) => {
-        console.log(`Route hit: ${req.method} ${req.url}`);
-        next();
-    }, ProductRoutes);
-    // this.app.use('/api', ProfileRoutes);
-    // Add /api/cart prefix to all CartRoutes
-    this.app.use('/api/cart', (req, res, next) => {
-        console.log(`Route hit: ${req.method} ${req.url}`);
-        next();
-    }, CartRoutes);
-    this.app.use('/api/order', (req, res, next) => {
-        console.log(`Route hit: ${req.method} ${req.url}`);
-        next();
-    }, OrderRoutes);
-
-    console.log("Routes successfully registered.");
-    // Global error handler
+    this.app.use('/api', ProductRoutes);
+    this.app.use('/api/cart', CartRoutes);
+    this.app.use('/api/order', OrderRoutes);
     this.app.use(handleGlobalError);
-
-    // Log all registered routes
-    const routes = [];
-    this.app._router.stack.forEach((middleware) => {
-        if (middleware.route) { // Route middleware
-            const methods = Object.keys(middleware.route.methods).join(', ').toUpperCase();
-            routes.push({ path: middleware.route.path, methods });
-        }
-    });
-    console.log('Registered Routes:', routes);
-}
-
+  }
 
   start(port = process.env.PORT || 3000) {
     this.app.listen(port, () => {
