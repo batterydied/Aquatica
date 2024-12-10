@@ -3,6 +3,7 @@
  */
 
 import { BaseComponent } from "../../app/BaseComponent.js";
+import { Category } from "../shared/Category.js";
 
 export class SellerProductPage extends BaseComponent {
     constructor() {
@@ -53,12 +54,32 @@ export class SellerProductPage extends BaseComponent {
         uploadInput.addEventListener("change", (event) => this.updatePreviewImages(event.target.files));
 
         // form to change product information
+        const productInfo = this.createProductInfo();
+        this.container.appendChild(productInfo);
+
+        // create category dropdown
+        const categorySelector = document.createElement("select");
+        categorySelector.id = "category-selector";
+        for (let category in Category) {
+            const option = document.createElement("option");
+            option.innerText = Category[category];
+            option.value = Category[category];
+            categorySelector.appendChild(option);
+        }
+        this.container.appendChild(categorySelector);
 
         // save button
         const saveButton = document.createElement("img");
         saveButton.src = "/frontend/assets/edit-icon.svg"; // TODO: change to save icon
         saveButton.classList.add("save-button");
-        saveButton.addEventListener("click", () => this.saveProduct());
+        saveButton.addEventListener("click", () => {
+            const valid = this.validateFields();
+
+            if (valid) {
+                this.saveProduct();
+            }
+        });
+        this.container.appendChild(saveButton);
 
         return this.container;
     }
@@ -90,6 +111,36 @@ export class SellerProductPage extends BaseComponent {
             imageGallery.appendChild(curImageContainer);
         }
         return imageGallery;
+    }
+
+    createProductInfo() {
+        const productInfo = document.createElement("form");
+
+        // create input fields
+        const textFields = [{name: "Name", id: "name", kind: "text", required: true}, {name: "Secondary Name", id: "secondaryname", kind: "text", required: false}, {name: "Description", id: "description", kind: "text", required: false}, {name: "Price", id: "price", kind: "number", required: true}, {name: "Quantity", id: "quantity", kind: "number", required: true}];
+        
+        for (let i = 0; i < textFields.length; i++) {
+            const curField = textFields[i];
+
+            const container = document.createElement("div");
+            container.classList.add("text-field");
+            
+            const label = document.createElement("label");
+            label.htmlFor = curField.id;
+            label.textContent = curField.name;
+            container.appendChild(label);
+
+            const input = document.createElement("input");
+            input.type = curField.kind;
+            input.id = curField.id;
+            input.placeholder = this.product[curField.id];
+            input.required = curField.required;
+            container.appendChild(input);
+
+            productInfo.appendChild(container);
+        }
+
+        return productInfo;
     }
 
     updatePreviewImages(files) {
@@ -148,5 +199,17 @@ export class SellerProductPage extends BaseComponent {
             console.error("Error saving product data:" + error);
             alert("Failed to save product data.");
         }
+    }
+
+    validateFields() {
+        const fields = document.querySelectorAll("text-field");
+        fields.forEach((field) => {
+            // TODO: validate input
+            this.product[field.id] = field.value;
+        });
+        const categorySelector = document.getElementById("category-selector");
+        this.product.category = categorySelector.value;
+
+        return true;
     }
 }
