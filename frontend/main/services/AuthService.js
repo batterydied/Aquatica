@@ -47,7 +47,7 @@ export class AuthService {
     getRole() {
         if (!this.user || !this.user.token) return null;
       try{
-        const payload = JSON.parse(atob(token.split(".")[1]));
+        const payload = JSON.parse(atob(this.user.token.split(".")[1]));
         return payload.roles || null;
       } catch (error) {
         console.error("Error receiving roles:", error);

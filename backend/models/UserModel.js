@@ -230,7 +230,7 @@ class _UserModel {
    * @returns {boolean} True if the user has the role as seller, false otherwise.
    */ 
   isSeller(user) {
-    return user.roles === "seller" ;
+    return user.roles === "seller";
   }
 }
 
