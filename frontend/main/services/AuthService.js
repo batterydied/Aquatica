@@ -40,13 +40,31 @@ export class AuthService {
     }
 
     getRole() {
-        if (!this.user || !this.user.token) return null;
+      if (!this.user || !this.user.token) return null;
       try{
-        const payload = JSON.parse(atob(token.split(".")[1]));
+        const payload = JSON.parse(atob(this.user.token.split(".")[1]));
+        console.log(payload);
         return payload.roles || null;
       } catch (error) {
         console.error("Error receiving roles:", error);
         return null;
+      }
+    }
+
+    getUserId() {
+      return this.user.userid;
+    }
+
+   async becomeSeller() {
+      const response = await fetch("/api/auth/become-seller", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${this.user.token}`},
+        body: JSON.stringify({newRole: "seller"}),
+        user: JSON.stringify({userId: this.user.userId})
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to become seller." + response.status);
       }
     }
 }
