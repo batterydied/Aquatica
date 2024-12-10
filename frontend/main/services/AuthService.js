@@ -14,6 +14,11 @@ export class AuthService {
         return !!this.user && !this.isTokenExpired(this.user.token); 
     }
 
+    getUser(){
+      // return userId for further identity check 
+      return this.user.userID;
+    }
+
     isTokenExpired(token) {
         //  Check if the token is expired
       try {

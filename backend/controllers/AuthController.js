@@ -112,7 +112,6 @@ export async function verifyEmail(req, res) {
   }
 } 
 
-
 /* 3. Log in a user: Verifies credentials, generates authentication tokens, and responds with user details.*/
 export async function login(req, res) {
   try {
