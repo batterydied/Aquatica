@@ -614,14 +614,13 @@ export class MarketplacePage extends BaseComponent {
             return "/assets/five-star.png";
         }
     }
-
+    
     calculateAverageRating(reviews) {
         const numReviews = reviews.length;
         let ratingSum = 0;
         for (let i = 0; i < numReviews; i++) {
             ratingSum += reviews[i].rating;
         }
-
         const averageRating = ratingSum / numReviews;
         return averageRating;
     }

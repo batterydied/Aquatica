@@ -56,6 +56,10 @@ const Product = sequelize.define("Product", {
     type: DataTypes.DECIMAL,
     allowNull: false,
   },
+  quantity: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    allowNull: true,
+  }
 });
 
 const Review = sequelize.define("Review", {
