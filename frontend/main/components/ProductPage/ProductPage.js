@@ -26,11 +26,10 @@ export class ProductPage extends BaseComponent {
   }
 
   // Render the ProductPage
-  async render(productId = 'abab6f2f-bc59-42b8-b433-13766b18953b') { //defaults to this Id
+  async render(productId) { 
     if (productId) {
       await this.fetchProductData(productId); // Fetch product data for the given ID
-    }
-    else{
+    }else{
       const text = document.createElement('h1');
       text.innerText = 'Invalid product ID';
       return text;
