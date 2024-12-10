@@ -42,30 +42,86 @@ export class SellerProductPage extends BaseComponent {
         // empty container
         this.container.innerHTML = "";
 
+        let imageGallery;
         // display images if there are any
         if (this.product.Images && this.product.Images.length > 0) {
-            const imageGallery = this.createImageGallery();
-            this.container.appendChild(imageGallery);
+            imageGallery = this.createImageGallery();
+        } else {
+            imageGallery = document.createElement("div");
         }
+        this.container.appendChild(imageGallery);
 
         // upload new image
         const uploadInput = document.createElement("input");
+        uploadInput.id = "upload";
         uploadInput.type = "file";
-        uploadInput.classList.add("upload-input");
+        // uploadInput.classList.add("upload-input");
+        uploadInput.style.display = "none";
         uploadInput.accept = "image/*";
         uploadInput.addEventListener("change", (event) => this.updatePreviewImages(event.target.files));
-        this.container.appendChild(uploadInput);
+        imageGallery.appendChild(uploadInput);
+
+        const uploadLabel = document.createElement("label");
+        uploadLabel.htmlFor = "upload";
+        uploadLabel.textContent = "Upload new image...";
+        uploadLabel.classList.add("upload-input");
+        imageGallery.appendChild(uploadLabel);
+
+        const productInfoContainer = document.createElement("div");
+        productInfoContainer.classList.add("product-info-container");
+
+        const buttonsContainer = document.createElement("div");
+        buttonsContainer.classList.add("button-container");
 
         // back button
+        const backButtonContainer = document.createElement("div");
+        backButtonContainer.classList.add("back-button-container");
+
         const backButton = document.createElement("button");
         backButton.classList.add("back-button");
         backButton.textContent = "Back to Dashboard";
         backButton.addEventListener("click", () => this.goBackToDashboard());
-        this.container.appendChild(backButton);
+        backButtonContainer.appendChild(backButton);
 
-        // form to change product information
-        const productInfo = this.createProductInfo();
-        this.container.appendChild(productInfo);
+        if (this.product.Reviews && this.product.Reviews.length > 0) {
+            const reviewsContainer = document.createElement("div");
+            reviewsContainer.classList.add("star-container");
+            reviewsContainer.addEventListener("click", () => this.goToReviews());
+
+            const reviews = document.createElement("img");
+            reviews.classList.add("star-img");
+            reviews.src = this.getStarIMG(this.product.Reviews);
+            reviewsContainer.appendChild(reviews);
+
+            const reviewsText = document.createElement("span");
+            reviewsText.classList.add("num-reviews");
+            reviewsText.textContent = `${this.product.Reviews.length} Reviews`;
+            reviewsContainer.appendChild(reviewsText);
+
+            backButtonContainer.appendChild(reviewsContainer);
+        }
+
+        buttonsContainer.appendChild(backButtonContainer);
+
+        // save button
+        const saveButtonContainer = document.createElement("div");
+        saveButtonContainer.classList.add("save-button-container");
+
+        const saveButton = document.createElement("img");
+        saveButton.src = "/assets/finish-icon.svg";
+        saveButton.classList.add("button");
+        saveButton.classList.add("save-button");
+        saveButton.addEventListener("click", () => {
+            const valid = this.validateFields();
+
+            if (valid) {
+                this.saveProduct();
+            }
+        });
+        saveButtonContainer.appendChild(saveButton);
+        buttonsContainer.appendChild(saveButtonContainer);
+
+        productInfoContainer.appendChild(buttonsContainer);
 
         // create category dropdown
         const categorySelector = document.createElement("select");
@@ -79,20 +135,13 @@ export class SellerProductPage extends BaseComponent {
             }
             categorySelector.appendChild(option);
         }
-        this.container.appendChild(categorySelector);
+        productInfoContainer.appendChild(categorySelector);
 
-        // save button
-        const saveButton = document.createElement("img");
-        saveButton.src = "/frontend/assets/edit-icon.svg"; // TODO: change to save icon
-        saveButton.classList.add("save-button");
-        saveButton.addEventListener("click", () => {
-            const valid = this.validateFields();
+        // form to change product information
+        const productInfo = this.createProductInfo();
+        productInfoContainer.appendChild(productInfo);
 
-            if (valid) {
-                this.saveProduct();
-            }
-        });
-        this.container.appendChild(saveButton);
+        this.container.appendChild(productInfoContainer);
 
         return this.container;
     }
@@ -112,8 +161,8 @@ export class SellerProductPage extends BaseComponent {
             curImageContainer.appendChild(curImage);
 
             const deleteButton = document.createElement("img");
-            deleteButton.src = "/frontend/assets/edit-icon.svg"; // TODO: change to delete icon
-            deleteButton.classList.add("delete-image-button");
+            deleteButton.src = "/assets/delete-icon.svg";
+            deleteButton.classList.add("button");
             deleteButton.addEventListener("click", () => this.deleteImage(images[i].url));
             curImageContainer.appendChild(deleteButton);
 
@@ -181,6 +230,7 @@ export class SellerProductPage extends BaseComponent {
 
     deleteImage(url) {
         this.product.Images = this.product.Images.filter((img) => img.url !== url);
+        this.createMainPage();
     }
 
     async saveProduct() {
@@ -252,5 +302,47 @@ export class SellerProductPage extends BaseComponent {
         console.log(`going to sell products page`);
         const appController = AppController.getInstance();
         appController.navigate("sellProductsPage");
+    }
+
+    getStarIMG(reviews) {
+        const numReviews = reviews.length;
+        let reviewsSum = 0;
+        reviews.forEach((review) => {
+            reviewsSum += review.rating;
+        });
+
+        const average = reviewsSum / numReviews;
+
+        if (average < 1 || average > 5) {
+            console.error("Invalid review average" + average);
+            return "";
+        }
+
+        if (average < 1.4) {
+            return "/assets/one-star.png";
+        } else if (average < 1.9) {
+            return "/assets/one-point-five-star.png";
+        } else if (average < 2.4) {
+            return "/assets/two-star.png";
+        } else if (average < 2.9) {
+            return "/assets/two-point-five-star.png";
+        } else if (average < 3.4) {
+            return "/assets/three-star.png";
+        } else if (average < 3.9) {
+            return "/assets/three-point-five-star.png";
+        } else if (average < 4.4) {
+            return "/assets/four-star.png";
+        } else if (average < 4.9) {
+            return "/assets/four-point-five-star.png";
+        } else {
+            return "/assets/five-star.png";
+        }
+    }
+
+    goToReviews() {
+        const prodid = this.product.prodid;
+        console.log(`going to product page for product ${prodid}`);
+        const appController = AppController.getInstance();
+        appController.navigate("productPage", {prodid});
     }
 }
