@@ -30,12 +30,18 @@ export class SellerProductPage extends BaseComponent {
             return this.container;
         }
 
+        this.previewImages = [];
+
+        return this.createMainPage();
+    }
+
+    createMainPage() {
         // empty container
         this.container.innerHTML = "";
 
         // display images if there are any
         if (this.product.Images && this.product.Images.length > 0) {
-            const imageGallery = this.createImageGallery(product.Images);
+            const imageGallery = this.createImageGallery();
             this.container.appendChild(imageGallery);
         }
 
@@ -44,6 +50,7 @@ export class SellerProductPage extends BaseComponent {
         uploadInput.type = "file";
         uploadInput.classList.add("upload-input");
         uploadInput.accept = "image/*";
+        uploadInput.addEventListener("change", (event) => this.updatePreviewImages(event.target.files));
 
         // form to change product information
 
@@ -52,7 +59,13 @@ export class SellerProductPage extends BaseComponent {
         return this.container;
     }
 
-    createImageGallery(images) {
+    createImageGallery() {
+        const images = this.product.Images.filter(img => img); // create copy of images
+
+        if (this.previewImages.length > 0) { // add in preview images
+            images = images.concat(this.previewImages);
+        }
+
         const imageGallery = document.createElement("div");
         imageGallery.classList.add("image-gallery");
 
@@ -73,6 +86,22 @@ export class SellerProductPage extends BaseComponent {
             imageGallery.appendChild(curImageContainer);
         }
         return imageGallery;
+    }
+
+    updatePreviewImages(files) {
+        for (let i = 0; i < files.length; i++) {
+            const curFile = files[i];
+            if (curFile) {
+                const previewImage = { url: "" };
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.url = e.target.result;
+                };
+                reader.readAsDataURL(curFile);
+                this.previewImages.push(previewImage);
+            }
+        }
+        this.createMainPage();
     }
 
     uploadImage() {
