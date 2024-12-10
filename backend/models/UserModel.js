@@ -23,7 +23,7 @@ const User = sequelize.define("User", {
     allowNull: false,               // Required field: password
     validate: {
       notEmpty: { msg: "Password field cannot be empty." },
-      len: { args: [8, 100], msg: "Password must be at least 8 characters long." },
+      len: { args: [6, 100], msg: "Password must be at least 6 characters long." },
     },
   },
   roles: {                          // To Filter seller: SELECT * FROM Users WHERE roles @> '"seller"';
@@ -38,14 +38,14 @@ const User = sequelize.define("User", {
   //   type: DataTypes.STRING,
   //   allowNull: true,                //  Token will be generated only
   // }, 
-  resetPasswordToken:{
-    type: DataTypes.STRING,
-    allowNull: true, 
-  }, 
-  resetPasswordExpired:{
-    type: DataTypes.DATE,
-    allowNull: true, 
-  }, 
+  // resetPasswordToken:{
+  //   type: DataTypes.STRING,
+  //   allowNull: true, 
+  // }, 
+  // resetPasswordExpired:{
+  //   type: DataTypes.DATE,
+  //   allowNull: true, 
+  // }, 
   tokenVersion:{
     type: DataTypes.INTEGER,
     defaultValue: 0,
@@ -69,7 +69,7 @@ class _UserModel {
     /** Initializes the database schema for AuthSystem. */
   async init() {
     try {
-      await sequelize.authenticate();
+      // await sequelize.authenticate();
       await sequelize.sync();
       console.log("Database synced successfully.");
     } catch (error) {
@@ -78,9 +78,9 @@ class _UserModel {
     }
   }
 
-  constructor() {   // TODO delete or init()
-    this.model = User;
-  }
+  // constructor() {   // TODO delete or init()
+  //   this.model = User;
+  // }
 
   /**  Create a new user with validations and password hashing.
    * @param {Object} userData - { email, password, roles }

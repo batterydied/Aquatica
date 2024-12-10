@@ -12,7 +12,7 @@
   - Hash Passwords for secure storage
   - Manage Tokens for user sessions. 
 */
-import bcrypt from "bcrypt";
+
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import UserModel  from "../models/UserModel.js";
