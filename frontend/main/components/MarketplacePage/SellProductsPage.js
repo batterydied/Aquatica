@@ -1,6 +1,7 @@
 import { MarketplacePage } from "./MarketplacePage.js";
 import { hub } from "../../eventhub/EventHub.js";
 import { Category } from "../shared/Category.js";
+import { AppController } from "../../app/AppController.js";
 
 export class SellProductsPage extends MarketplacePage {
     constructor() {
@@ -129,8 +130,7 @@ export class SellProductsPage extends MarketplacePage {
      */
     goToProductPage(prodid) {
         console.log(`going to seller product page for product ${prodid}`);
-        // const appController = AppController.getInstance();
-        // appController.navigate("productPage", {prodid});
-        // TODO: go to seller product page
+        const appController = AppController.getInstance();
+        appController.navigate("sellerProductPage", {prodid});
     }
 }

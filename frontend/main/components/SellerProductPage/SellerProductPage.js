@@ -4,6 +4,7 @@
 
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
+import { AppController } from "../../app/AppController.js";
 
 export class SellerProductPage extends BaseComponent {
     constructor() {
@@ -15,7 +16,7 @@ export class SellerProductPage extends BaseComponent {
 
     async render(prodid) {
         // fetch product data from backend
-        const response = await fetch(`/api/product/${prodid}`, {
+        const response = await fetch(`/api/products/${prodid}`, {
             method: "GET",
         });
 
@@ -46,6 +47,13 @@ export class SellerProductPage extends BaseComponent {
             this.container.appendChild(imageGallery);
         }
 
+        // back button
+        const backButton = document.createElement("button");
+        backButton.classList.add("back-button");
+        backButton.textContent = "Back to Dashboard";
+        backButton.addEventListener("click", () => this.goBackToDashboard());
+        this.container.appendChild(backButton);
+
         // upload new image
         const uploadInput = document.createElement("input");
         uploadInput.type = "file";
@@ -60,10 +68,13 @@ export class SellerProductPage extends BaseComponent {
         // create category dropdown
         const categorySelector = document.createElement("select");
         categorySelector.id = "category-selector";
-        for (let category in Category) {
+        for (let curCategory in Category) {
             const option = document.createElement("option");
-            option.innerText = Category[category];
-            option.value = Category[category];
+            option.innerText = Category[curCategory];
+            option.value = Category[curCategory];
+            if (this.product.category === curCategory) {
+                option.selected = "selected";
+            }
             categorySelector.appendChild(option);
         }
         this.container.appendChild(categorySelector);
@@ -114,10 +125,10 @@ export class SellerProductPage extends BaseComponent {
     }
 
     createProductInfo() {
-        const productInfo = document.createElement("form");
+        const productInfo = document.createElement("div");
 
         // create input fields
-        const textFields = [{name: "Name", id: "name", kind: "text", required: true}, {name: "Secondary Name", id: "secondaryname", kind: "text", required: false}, {name: "Description", id: "description", kind: "text", required: false}, {name: "Price", id: "price", kind: "number", required: true}, {name: "Quantity", id: "quantity", kind: "number", required: true}];
+        const textFields = [{name: "Name", id: "name", kind: "text", required: true}, {name: "Secondary Name", id: "secondaryname", kind: "text", required: false}, {name: "Description", id: "description", kind: "text", required: false}, {name: "Price", id: "price", kind: "number", required: true}/*, {name: "Quantity", id: "quantity", kind: "number", required: true}*/];
         
         for (let i = 0; i < textFields.length; i++) {
             const curField = textFields[i];
@@ -131,9 +142,10 @@ export class SellerProductPage extends BaseComponent {
             container.appendChild(label);
 
             const input = document.createElement("input");
+            input.classList.add("field-input");
             input.type = curField.kind;
             input.id = curField.id;
-            input.placeholder = this.product[curField.id];
+            input.value = this.product[curField.id];
             input.required = curField.required;
             container.appendChild(input);
 
@@ -172,16 +184,20 @@ export class SellerProductPage extends BaseComponent {
         if (this.previewImages.length > 0) {
             try {
                 const images = await this.uploadImages();
+                if (!images) {
+                    throw new Error("Failed to upload image(s).");
+                }
                 this.product.Images = this.product.Images.concat(images);
+                this.previewImages = [];
             } catch (error) {
-                console.error("Error uploading image(s)." + error);
+                console.log("Error uploading image(s)." + error);
             }
         }
 
         // save product data to the server
         try {
             const response = await fetch(`/api/products/${this.product.prodid}`, {
-                method: "POST",
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(this.product)
             });
@@ -202,14 +218,36 @@ export class SellerProductPage extends BaseComponent {
     }
 
     validateFields() {
-        const fields = document.querySelectorAll("text-field");
+        const fields = document.querySelectorAll(".text-field");
+        let errors = [];
+        let sawError = false;
         fields.forEach((field) => {
-            // TODO: validate input
-            this.product[field.id] = field.value;
+            const input = field.childNodes[1];
+            const label = field.childNodes[0];
+            if (input.required && input.value.trim() === "") {
+                errors.push(`${label.textContent} is required.`);
+                sawError = true;
+            }
+            if (!sawError) {
+                this.product[input.id] = input.value;
+            }
         });
+
+        if (sawError) {
+            const alertText = errors.join("\n");
+            alert(alertText);
+            return false;
+        }
+
         const categorySelector = document.getElementById("category-selector");
         this.product.category = categorySelector.value;
 
         return true;
+    }
+
+    goBackToDashboard() {
+        console.log(`going to sell products page`);
+        const appController = AppController.getInstance();
+        appController.navigate("sellProductsPage");
     }
 }
