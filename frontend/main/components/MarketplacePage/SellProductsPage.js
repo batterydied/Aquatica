@@ -2,16 +2,20 @@ import { MarketplacePage } from "./MarketplacePage.js";
 import { hub } from "../../eventhub/EventHub.js";
 import { Category } from "../shared/Category.js";
 import { AppController } from "../../app/AppController.js";
+import { authService } from "../../services/AuthService.js";
 
 export class SellProductsPage extends MarketplacePage {
     constructor() {
         super();
-        this.curSeller = "1234-5678"; // TODO: get curSeller from auth
-        this.curSellerName = "Ocean Wonders";
         this.pageLength = 4, this.end = this.start + this.pageLength;
     }
 
     render() {
+        // get current seller
+        this.curSeller = authService.getUserId();
+        console.log("current seller: " + this.curSeller);
+        this.curSellerName = "seller"; //TODO: change this
+
         this.getProdList(); // call to ProductService
         hub.subscribe("retrievedProductsList", (data) => this.setProdList(data)); // callback for eventhub
 

@@ -52,7 +52,7 @@ export class AuthService {
     }
 
     getUserId() {
-      return this.user.userid;
+      return this.user.userId;
     }
 
    async becomeSeller() {
