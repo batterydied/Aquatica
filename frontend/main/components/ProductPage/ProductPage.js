@@ -82,14 +82,11 @@ export class ProductPage extends BaseComponent {
     const description = this.#createDescription(); // Description section
     const specifications = this.#createSpecifications(); // Specifications section
     const productSelection = this.#createProductSelection(); // Type and quantity selection
-    const shippingInfo = this.#createShippingInfo(); // Shipping details
-
     const productInfoPanel = document.createElement('div');
     productInfoPanel.classList.add('product-info-panel');
 
     productInfoPanel.appendChild(titles);
     productInfoPanel.appendChild(productSelection);
-    productInfoPanel.appendChild(shippingInfo);
     productInfoPanel.appendChild(description);
     productInfoPanel.appendChild(specifications);
 
@@ -462,13 +459,5 @@ dropdownContainer.className = 'dropdown-container';
     container.appendChild(addReviewSection);
 
     return container;
-  }
-
-  // Create shipping info
-  #createShippingInfo() {
-    const shippingInfo = document.createElement('p');
-    shippingInfo.className = 'shipping-info';
-    shippingInfo.innerText = `Shipping: ${this.#productData.shippingInfo?.shippingCost || 'N/A'}, Delivery: ${this.#productData.shippingInfo?.deliveryTime || 'N/A'}`;
-    return shippingInfo;
   }
 }

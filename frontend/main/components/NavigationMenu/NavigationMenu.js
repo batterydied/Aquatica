@@ -12,8 +12,11 @@ export class NavigationMenu extends BaseComponent {
 
 
   createHeader() {
+    const container = document.createElement("div");
+    container.classList.add("container");
     const header = document.createElement("div");
     header.classList.add("navigation-menu");
+    container.appendChild(header);
 
 
     // Logo Section
@@ -36,10 +39,10 @@ export class NavigationMenu extends BaseComponent {
 
 
     const links = [
-      { text: "Marketplace", iconName: "fa-shop", className: "marketplace-button", target: "marketplace" },
-      { text: "Seller Page", iconName: "fa-money-bill", className: "sell-button", target: "sellProductsPage" },
-      { text: "Virtual Cart", iconName: "fa-cart-shopping", className: "cart-button", target: "virtualCart" },
-      { text: "User Center", iconName: "fa-user", className: "profile-button", target: "profilePage" },
+      { text: "Marketplace", iconName: "fa-shop", className: "marketplace", target: "marketplace" },
+      { text: "Seller Page", iconName: "fa-money-bill", className: "sellProductsPage", target: "sellProductsPage" },
+      { text: "Virtual Cart", iconName: "fa-cart-shopping", className: "virtualCart", target: "virtualCart" },
+      { text: "User Center", iconName: "fa-user", className: "profilePage", target: "profilePage" },
     ];
 
 
@@ -67,7 +70,7 @@ export class NavigationMenu extends BaseComponent {
     // Append Logo and Navigation Buttons to the Header
     header.appendChild(logoButton);
     header.appendChild(navButtonsContainer);
-    this.container.appendChild(header);
+    this.container.appendChild(container);
   }
 
   attachEventListeners() {
