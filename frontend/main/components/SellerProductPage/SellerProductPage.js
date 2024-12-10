@@ -12,6 +12,7 @@ export class SellerProductPage extends BaseComponent {
         // TODO: initialize needed fields
         this.curSeller = "1234-5678";
         this.loadCSS("SellerProductPage");
+        this.container.classList.add("seller-product-page");
     }
 
     async render(prodid) {
@@ -32,7 +33,7 @@ export class SellerProductPage extends BaseComponent {
             return this.container;
         }
 
-        this.previewImages = [];
+        this.previewImage = false;
 
         return this.createMainPage();
     }
@@ -47,19 +48,20 @@ export class SellerProductPage extends BaseComponent {
             this.container.appendChild(imageGallery);
         }
 
-        // back button
-        const backButton = document.createElement("button");
-        backButton.classList.add("back-button");
-        backButton.textContent = "Back to Dashboard";
-        backButton.addEventListener("click", () => this.goBackToDashboard());
-        this.container.appendChild(backButton);
-
         // upload new image
         const uploadInput = document.createElement("input");
         uploadInput.type = "file";
         uploadInput.classList.add("upload-input");
         uploadInput.accept = "image/*";
         uploadInput.addEventListener("change", (event) => this.updatePreviewImages(event.target.files));
+        this.container.appendChild(uploadInput);
+
+        // back button
+        const backButton = document.createElement("button");
+        backButton.classList.add("back-button");
+        backButton.textContent = "Back to Dashboard";
+        backButton.addEventListener("click", () => this.goBackToDashboard());
+        this.container.appendChild(backButton);
 
         // form to change product information
         const productInfo = this.createProductInfo();
@@ -98,10 +100,6 @@ export class SellerProductPage extends BaseComponent {
     createImageGallery() {
         const images = this.product.Images.filter(img => img); // create copy of images
 
-        if (this.previewImages.length > 0) { // add in preview images
-            images = images.concat(this.previewImages);
-        }
-
         const imageGallery = document.createElement("div");
         imageGallery.classList.add("image-gallery");
 
@@ -121,6 +119,14 @@ export class SellerProductPage extends BaseComponent {
 
             imageGallery.appendChild(curImageContainer);
         }
+
+        const previewImage = document.createElement("img");
+        previewImage.src = "";
+        previewImage.classList.add("product-image");
+        previewImage.id = "preview-image";
+        previewImage.style.display = "none";
+        imageGallery.appendChild(previewImage);
+
         return imageGallery;
     }
 
@@ -156,22 +162,20 @@ export class SellerProductPage extends BaseComponent {
     }
 
     updatePreviewImages(files) {
-        for (let i = 0; i < files.length; i++) {
-            const curFile = files[i];
-            if (curFile) {
-                const previewImage = { url: "" };
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.url = e.target.result;
-                };
-                reader.readAsDataURL(curFile);
-                this.previewImages.push(previewImage);
-            }
+        const curFile = files[0];
+        if (curFile) {
+            const previewImage = document.getElementById("preview-image");
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = "block";
+            };
+            reader.readAsDataURL(curFile);
+            this.previewImage = true;
         }
-        this.createMainPage();
     }
 
-    async uploadImages() {
+    async uploadImage() {
         // TODO: implement
     }
 
@@ -181,14 +185,13 @@ export class SellerProductPage extends BaseComponent {
 
     async saveProduct() {
         // upload images if any
-        if (this.previewImages.length > 0) {
+        if (this.previewImages) {
             try {
-                const images = await this.uploadImages();
-                if (!images) {
+                const image = await this.uploadImage();
+                if (!image) {
                     throw new Error("Failed to upload image(s).");
                 }
-                this.product.Images = this.product.Images.concat(images);
-                this.previewImages = [];
+                this.product.Images = this.product.Images.concat(image);
             } catch (error) {
                 console.log("Error uploading image(s)." + error);
             }
