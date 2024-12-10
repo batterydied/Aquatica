@@ -206,6 +206,19 @@ export class ProductPage extends BaseComponent {
     const productSelection = document.createElement('div');
     productSelection.className = 'product-selection';
 
+    const alertMessage = document.createElement('p');
+    alertMessage.classList.add('alert-msg');
+    if(!this.#productData.quantity){
+      alertMessage.innerText = 'Out of stock'
+    }else if(this.#productData.quantity <= 15){
+      alertMessage.classList.add('alert-msg');
+      alertMessage.innerText = `Only ${this.#productData.quantity} left!`
+    }else{
+      alertMessage.style.color = 'green';
+      alertMessage.innerText = 'In stock'
+    }
+    productSelection.appendChild(alertMessage);
+
     // Product Types Container
     const productTypes = document.createElement('div');
     productTypes.className = 'product-types';
@@ -270,11 +283,11 @@ dropdownContainer.className = 'dropdown-container';
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'number';
-    quantityInput.value = '1';
-    quantityInput.min = '1';
+    quantityInput.value = 1;
+    quantityInput.min = 1;
     quantityInput.classList.add('quantity-input');
     quantityInput.id = 'quantity-input';
-    quantityInput.addEventListener('input', updatePrice);
+    quantityInput.addEventListener('input', ()=>updatePrice(this.#productData.quantity));
 
     // Quantity Increase Button
     const quantityIncrease = document.createElement('input');
@@ -282,7 +295,7 @@ dropdownContainer.className = 'dropdown-container';
     quantityIncrease.value = '+';
     quantityIncrease.className = 'quantity-increase';
     quantityIncrease.addEventListener('click', () => {
-        handleIncrease();
+        handleIncrease(quantityInput.max = this.#productData.quantity);
         updatePrice();
     });
 
@@ -308,22 +321,28 @@ dropdownContainer.className = 'dropdown-container';
     // Add to Cart Button
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'btn-container';
+    if(!this.#productData.quantity || this.#productData.quantity < 1){
+      const unavailableMessage = document.createElement('p');
+      unavailableMessage.classList.add('unavailable-msg');
+      unavailableMessage.innerText = 'This product is currently unavilable.';
+      buttonContainer.appendChild(unavailableMessage);
+    }else{
+      const buyNowBtn = document.createElement('button');
+      buyNowBtn.className = 'buy-now';
+      buyNowBtn.innerText = 'Buy Now';
+      buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+      
+      const addToCartBtn = document.createElement('button');
+      addToCartBtn.className = 'add-to-cart';
+      addToCartBtn.innerText = 'Add to Cart';
+      addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
 
-    const buyNowBtn = document.createElement('button');
-    buyNowBtn.className = 'buy-now';
-    buyNowBtn.innerText = 'Buy Now';
-    buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+      buttonContainer.appendChild(addToCartBtn);
+      buttonContainer.appendChild(buyNowBtn)
+    }
     
-    const addToCartBtn = document.createElement('button');
-    addToCartBtn.className = 'add-to-cart';
-    addToCartBtn.innerText = 'Add to Cart';
-    addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
-
-    buttonContainer.appendChild(addToCartBtn);
-    buttonContainer.appendChild(buyNowBtn)
     // Append Add to Cart Button to product selection
     productSelection.appendChild(buttonContainer);
-
     return productSelection;
 }
 
