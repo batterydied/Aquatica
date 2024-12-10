@@ -102,3 +102,21 @@
 .num-reviews {
     color:#FFA41E;
 }
+
+.add-type-button {
+    height: 2.5em;
+    margin-top: 1em;
+    background-color:#5B91C8;
+    color:#FFFFFF;
+    border-radius: 5px;
+    border:none;
+}
+
+.type-top-container {
+    display:flex;
+}
+
+.delete-type-button {
+    margin: 1em;
+    margin-top:1.5em;
+}

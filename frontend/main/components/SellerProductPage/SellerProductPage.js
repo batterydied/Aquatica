@@ -207,7 +207,88 @@ export class SellerProductPage extends BaseComponent {
             productInfo.appendChild(container);
         }
 
+        if (this.product.ProductTypes && this.product.ProductTypes.length > 0) {
+            const productTypes = this.createProductTypes();
+            productInfo.appendChild(productTypes);
+        }
+
+        const addTypeButton = document.createElement("button");
+        addTypeButton.innerText = "Add new type";
+        addTypeButton.classList.add("add-type-button");
+        addTypeButton.addEventListener("click", () => this.addType());
+        productInfo.appendChild(addTypeButton);
+
         return productInfo;
+    }
+
+    createProductTypes() {
+        const productTypesContainer = document.createElement("div");
+
+        this.product.ProductTypes.forEach((type, i) => {
+            const container = document.createElement("div");
+            container.id = `type-${type.id}`;
+
+            const topContainer = document.createElement("div");
+            topContainer.classList.add("type-top-container");
+
+            const typeLabel = document.createElement("h1");
+            typeLabel.classList.add("type-label");
+            typeLabel.innerText = `Type ${i+1}`;
+            topContainer.appendChild(typeLabel);
+
+            const deleteButton = document.createElement("img");
+            deleteButton.src = "/assets/delete-icon.svg";
+            deleteButton.classList.add("button");
+            deleteButton.classList.add("delete-type-button");
+            deleteButton.addEventListener("click", () => this.deleteType(type.id));
+            topContainer.appendChild(deleteButton);
+
+            container.appendChild(topContainer);
+
+            const nameLabel = document.createElement("label");
+            nameLabel.htmlFor = `type-${type.id}-name`;
+            nameLabel.textContent = "Name";
+            container.appendChild(nameLabel);
+            
+            const nameInput = document.createElement("input");
+            nameInput.classList.add("type-input");
+            nameInput.type = "text";
+            nameInput.id = `type-${type.id}-name`;
+            nameInput.value = type.type;
+            nameInput.required = true;
+            container.appendChild(nameInput);
+
+            const priceLabel = document.createElement("label");
+            priceLabel.htmlFor = `type-${type.id}-price`;
+            priceLabel.textContent = "Price";
+            container.appendChild(priceLabel);
+            
+            const priceInput = document.createElement("input");
+            priceInput.classList.add("type-input");
+            priceInput.type = "number";
+            priceInput.id = `type-${type.id}-price`;
+            priceInput.value = type.price;
+            priceInput.required = true;
+            container.appendChild(priceInput);
+
+            productTypesContainer.appendChild(container);
+        });
+
+        return productTypesContainer;
+    }
+
+    addType() {
+        const newTypeId = (this.product.ProductTypes[this.product.ProductTypes.length-1].id) + 1;
+        const newTypeName = "New Type";
+        const newTypePrice = 1;
+        const newType = {id: newTypeId, type: newTypeName, price: newTypePrice, productId: this.product.prodid};
+        this.product.ProductTypes.push(newType);
+        this.createMainPage();
+    }
+
+    deleteType(id) {
+        this.product.ProductTypes = this.product.ProductTypes.filter((type) => type.id !== id);
+        this.createMainPage();
     }
 
     updatePreviewImages(files) {
@@ -271,14 +352,38 @@ export class SellerProductPage extends BaseComponent {
     }
 
     validateFields() {
-        const fields = document.querySelectorAll(".text-field");
         let errors = [];
         let sawError = false;
+
+        for (let i = 0; i < this.product.ProductTypes.length; i++) {
+            const type = this.product.ProductTypes[i];
+
+            const newName = document.getElementById(`type-${type.id}-name`).value;
+            const newPrice = document.getElementById(`type-${type.id}-price`).value;
+            if (!newName) {
+                sawError = true;
+                errors.push(`Type ${type.id} name is required.`);
+            }
+            if (!newPrice || newPrice <= 0) {
+                sawError = true;
+                errors.push(`Type ${type.id} price must be greater than zero.`);
+            }
+            this.product.ProductTypes[i].type = newName;
+            this.product.ProductTypes[i].price = newPrice;
+        }
+
+        this.product.producttypes = this.product.ProductTypes;
+
+        const fields = document.querySelectorAll(".text-field");
         fields.forEach((field) => {
             const input = field.childNodes[1];
             const label = field.childNodes[0];
             if (input.required && input.value.trim() === "") {
                 errors.push(`${label.textContent} is required.`);
+                sawError = true;
+            }
+            if (input.id === "price" && input.value <= 0) {
+                errors.push("Price musts be greater than zero.");
                 sawError = true;
             }
             if (!sawError) {
