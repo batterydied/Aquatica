@@ -82,14 +82,11 @@ export class ProductPage extends BaseComponent {
     const description = this.#createDescription(); // Description section
     const specifications = this.#createSpecifications(); // Specifications section
     const productSelection = this.#createProductSelection(); // Type and quantity selection
-    const shippingInfo = this.#createShippingInfo(); // Shipping details
-
     const productInfoPanel = document.createElement('div');
     productInfoPanel.classList.add('product-info-panel');
 
     productInfoPanel.appendChild(titles);
     productInfoPanel.appendChild(productSelection);
-    productInfoPanel.appendChild(shippingInfo);
     productInfoPanel.appendChild(description);
     productInfoPanel.appendChild(specifications);
 
@@ -209,6 +206,19 @@ export class ProductPage extends BaseComponent {
     const productSelection = document.createElement('div');
     productSelection.className = 'product-selection';
 
+    const alertMessage = document.createElement('p');
+    alertMessage.classList.add('alert-msg');
+    if(!this.#productData.quantity){
+      alertMessage.innerText = 'Out of stock'
+    }else if(this.#productData.quantity <= 15){
+      alertMessage.classList.add('alert-msg');
+      alertMessage.innerText = `Only ${this.#productData.quantity} left!`
+    }else{
+      alertMessage.style.color = 'green';
+      alertMessage.innerText = 'In stock'
+    }
+    productSelection.appendChild(alertMessage);
+
     // Product Types Container
     const productTypes = document.createElement('div');
     productTypes.className = 'product-types';
@@ -221,7 +231,7 @@ export class ProductPage extends BaseComponent {
 
     const price = document.createElement('span');
     price.id = 'price';
-    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || '0.00';
+    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || 0.00;
     price.innerText = price.dataset.originalPrice;
     priceLabel.appendChild(price);
 
@@ -229,9 +239,8 @@ export class ProductPage extends BaseComponent {
     productTypes.appendChild(priceLabel);
 
     // Product Types Dropdown
-const dropdownContainer = document.createElement('div');
-dropdownContainer.className = 'dropdown-container';
-
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.className = 'dropdown-container';
     const typeDropdown = document.createElement('select');
     typeDropdown.className = 'type-dropdown';
 
@@ -249,8 +258,9 @@ dropdownContainer.className = 'dropdown-container';
     typeDropdown.value = reversedProductTypes[0]?.type || '';
 
     // Update price on dropdown change
+    let selectedType = reversedProductTypes[0];
     typeDropdown.addEventListener('change', (e) => {
-        const selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
+        selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
         const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
         price.dataset.originalPrice = selectedType.price;
         price.innerText = (selectedType.price * amount).toFixed(2);
@@ -273,11 +283,11 @@ dropdownContainer.className = 'dropdown-container';
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'number';
-    quantityInput.value = '1';
-    quantityInput.min = '1';
+    quantityInput.value = 1;
+    quantityInput.min = 1;
     quantityInput.classList.add('quantity-input');
     quantityInput.id = 'quantity-input';
-    quantityInput.addEventListener('input', updatePrice);
+    quantityInput.addEventListener('input', ()=>updatePrice(this.#productData.quantity));
 
     // Quantity Increase Button
     const quantityIncrease = document.createElement('input');
@@ -285,7 +295,7 @@ dropdownContainer.className = 'dropdown-container';
     quantityIncrease.value = '+';
     quantityIncrease.className = 'quantity-increase';
     quantityIncrease.addEventListener('click', () => {
-        handleIncrease();
+        handleIncrease(quantityInput.max = this.#productData.quantity);
         updatePrice();
     });
 
@@ -311,22 +321,28 @@ dropdownContainer.className = 'dropdown-container';
     // Add to Cart Button
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'btn-container';
+    if(!this.#productData.quantity || this.#productData.quantity < 1){
+      const unavailableMessage = document.createElement('p');
+      unavailableMessage.classList.add('unavailable-msg');
+      unavailableMessage.innerText = 'This product is currently unavilable.';
+      buttonContainer.appendChild(unavailableMessage);
+    }else{
+      const buyNowBtn = document.createElement('button');
+      buyNowBtn.className = 'buy-now';
+      buyNowBtn.innerText = 'Buy Now';
+      buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
+      
+      const addToCartBtn = document.createElement('button');
+      addToCartBtn.className = 'add-to-cart';
+      addToCartBtn.innerText = 'Add to Cart';
+      addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
 
-    const buyNowBtn = document.createElement('button');
-    buyNowBtn.className = 'buy-now';
-    buyNowBtn.innerText = 'Buy Now';
-    buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+      buttonContainer.appendChild(addToCartBtn);
+      buttonContainer.appendChild(buyNowBtn)
+    }
     
-    const addToCartBtn = document.createElement('button');
-    addToCartBtn.className = 'add-to-cart';
-    addToCartBtn.innerText = 'Add to Cart';
-    addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
-
-    buttonContainer.appendChild(addToCartBtn);
-    buttonContainer.appendChild(buyNowBtn)
     // Append Add to Cart Button to product selection
     productSelection.appendChild(buttonContainer);
-
     return productSelection;
 }
 
@@ -462,13 +478,5 @@ dropdownContainer.className = 'dropdown-container';
     container.appendChild(addReviewSection);
 
     return container;
-  }
-
-  // Create shipping info
-  #createShippingInfo() {
-    const shippingInfo = document.createElement('p');
-    shippingInfo.className = 'shipping-info';
-    shippingInfo.innerText = `Shipping: ${this.#productData.shippingInfo?.shippingCost || 'N/A'}, Delivery: ${this.#productData.shippingInfo?.deliveryTime || 'N/A'}`;
-    return shippingInfo;
   }
 }
