@@ -1,6 +1,7 @@
 import { MarketplacePage } from "./MarketplacePage.js";
 import { hub } from "../../eventhub/EventHub.js";
 import { Category } from "../shared/Category.js";
+import { AppController } from "../../app/AppController.js";
 
 export class SellProductsPage extends MarketplacePage {
     constructor() {
@@ -90,6 +91,13 @@ export class SellProductsPage extends MarketplacePage {
         editButton.src = "/assets/edit-icon.svg";
         editButton.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
         product.childNodes[1].appendChild(editButton);
+
+        const deleteButton = document.createElement("img");
+        deleteButton.classList.add("edit-button");
+        deleteButton.src = "/assets/edit-icon.svg"; //TODO: change to delete icon
+        deleteButton.addEventListener("click", () => this.deleteProduct(prodListItem.prodid));
+        product.childNodes[1].appendChild(deleteButton);
+
         return product;
     }
 
@@ -108,18 +116,43 @@ export class SellProductsPage extends MarketplacePage {
             "images": [],
         };
 
-        const response = await fetch("/api/products", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newProduct),
-        });
+        try {
+            const response = await fetch("/api/products", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newProduct),
+            });
 
-        if (!response.ok) {
-            throw new Error("Failed to add product.");
-        } else {
+            if (!response.ok) {
+                throw new Error("Failed to add product.");
+            }
             const product = await response.json();
             const prodid = product.prodid;
             this.goToProductPage(prodid);
+        } catch (error) {
+            console.log("Error adding product" + error);
+            alert("Failed to add product.");
+        }
+    }
+
+    /**
+     * Deletes the product with the given id from the database, and reloads the page.
+     * @param {string} prodid 
+     * No return value.
+     */
+    async deleteProduct(prodid) {
+        try {
+            const response = await fetch(`/api/products/${prodid}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete product.");
+            }
+            this.render();
+        } catch (error) {
+            console.log("Error deleting product" + error);
+            alert("Failed to delete product.");
         }
     }
 
@@ -132,5 +165,15 @@ export class SellProductsPage extends MarketplacePage {
         // const appController = AppController.getInstance();
         // appController.navigate("productPage", {prodid});
         // TODO: go to seller product page
+    }
+
+    /**
+     * Display reviews for the specified product.
+     * Goes to product page to show reviews.
+     * @param {string} prodid 
+     */
+    goToReviews(prodid) {
+        const appController = AppController.getInstance();
+        appController.navigate("productPage", {prodid});
     }
 }

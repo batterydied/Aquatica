@@ -476,7 +476,7 @@ export class MarketplacePage extends BaseComponent {
             numReviewsText.classList.add("reviews-text");
             numReviewsText.classList.add("prodlink");
             // if you click on the number of reviews, it will direct you to the product page to read the reviews.
-            numReviewsText.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
+            numReviewsText.addEventListener("click", () => this.goToReviews(prodListItem.prodid));
 
             const reviews = numReviews === 1 ? "Review" : "Reviews"; // ensure correct grammar
             numReviewsText.innerText = ` ${numReviews} ${reviews}\n`;
@@ -658,6 +658,15 @@ export class MarketplacePage extends BaseComponent {
         console.log(`going to product page for product ${prodid}`);
         const appController = AppController.getInstance();
         appController.navigate("productPage", {prodid});
+    }
+
+    /**
+     * Display reviews for the specified product.
+     * Goes to product page to show reviews.
+     * @param {string} prodid 
+     */
+    goToReviews(prodid) {
+        this.goToProductPage(prodid);
     }
 
     /**
