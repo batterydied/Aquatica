@@ -22,12 +22,12 @@
   - The server returns the generated token, which is then stored for future authenticated requests.  
 */
 
-/* 3. Logout Button: allows users to log out by invalidating their authentication token.
+/* 3. NOT_IMPLEMENTED_ON_PROFILE_PAGE_Logout Button: allows users to log out by invalidating their authentication token.
   - When the user clicks the button, the frontend will make a POST request to the /logout route in AuthRoutes.
   - The AuthController invalidates the token and the user is successfully logged out.
 */
 
-/* 4. Password Reset Button: allows users to reset password by submitting new password after verification request.
+/* 4. NOT_IMPLEMENTED_ON_PROFILE_PAGE_Password Reset Button: allows users to reset password by submitting new password after verification request.
   *__FIX_ME__Using email validation: using the code sent to email for validate, or 
   *                                   making the separate reset page accessible through email.
   - When the user clicks the Password Reset button, the frontend page displays a form to request a password reset.
