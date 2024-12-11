@@ -1,8 +1,26 @@
+// UserModel : Haiyi
+// **Description**:  Design the `UserModel` in Sequelize, integrated with `database.sqlite` for user management.
+//   attributes: userId, email, hashedPassword, roles, & timestamps (createdAt, updatedAt). 
+//   Add model-level validation for required fields and email format.
+// **Tag**: #72
+// **Owner**: Haiyi
+// **Expected Outcome**: A functioning Sequelize model stored in SQLite, with appropriate validations. 
+
+/* Integration:
+  *- AuthController.js:     For authentication, user registration, and login/logout functionalities.
+  *- AuthMiddleware.js:     For token validation and user access control.
+  *- RoleMiddleware.js:     For enforcing role-based access permissions.
+  *- ProfileController.js:  For fetching and updating user profile information.
+  *- OrderController.js:    For associating user data with orders.
+  *- Password Reset.js:  For managing password recovery and secure updates.
+*/
+
 import sequelize from '../database.js';
 import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 
-
+// Define the User model. Design the database schema for user management:
+  // *1 {Fields} userId, email, hashedPassword, roles, timestamps.
 const User = sequelize.define("User", {
   userId: {                         
     type: DataTypes.UUID,           
@@ -26,11 +44,11 @@ const User = sequelize.define("User", {
       len: { args: [6, 100], msg: "Password must be at least 6 characters long." },
     },
   },
-  roles: {                          // To Filter seller: SELECT * FROM Users WHERE roles @> '"seller"';
-    type: DataTypes.JSONB,          // Added flexibility: multi-roles, permission allowed for fix
+  roles: {
+    type: DataTypes.JSONB,          // Added flexibility: multi-roles, permission allowed for development
     defaultValue: "user",           // Default role is 'user' once registered
   },    
-  // verified: {  // TODO User need to get verified by email after using email verification for register/login
+  // verified: {  // Cancel: User need to get verified by email after using email verification for register/login
   //   type: DataTypes.BOOLEAN,
   //   defaultValue: false,            
   // },
@@ -46,7 +64,7 @@ const User = sequelize.define("User", {
   //   type: DataTypes.DATE,
   //   allowNull: true, 
   // }, 
-  tokenVersion:{
+  tokenVersion:{                    // Cancel: Used for log out
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
@@ -69,7 +87,6 @@ class _UserModel {
     /** Initializes the database schema for AuthSystem. */
   async init() {
     try {
-      // await sequelize.authenticate();
       await sequelize.sync();
       console.log("Database synced successfully.");
     } catch (error) {
@@ -78,7 +95,7 @@ class _UserModel {
     }
   }
 
-  constructor() {   // TODO delete or init()
+  constructor() {
      this.model = User;
   }
 
@@ -86,10 +103,10 @@ class _UserModel {
    * @param {Object} userData - { email, password, roles }
    * @returns {Object} - Created user.
    */
-  async createUser(userData) {    // TODO with Controller.register()
+  async createUser(userData) { 
     try{
-      const { email, password, roles = "user" } = userData; // TODO Destructure outside try{}?
-        // , verified = false, verificationToken = null  // TODO after email verification
+      const { email, password, roles = "user" } = userData;
+        // {, verified = false, verificationToken = null}  // Cancel: after email verification
 
       // Check for duplicate email
       console.log("UserModel.createUser() check duplicate email:", email);
@@ -130,7 +147,7 @@ class _UserModel {
 
   /** Retrieve a user by email.
    * @param {string} email - User email.
-   * @returns {Promise<User|null>} User object or null if not found.
+   * @returns {Promise<Object|null>} User object or null if not found.
    */
   async getUserByEmail(email) {
     try {
@@ -140,6 +157,16 @@ class _UserModel {
       throw error;
     }
   }
+  
+  /** Check if a user has a specific role.
+   * @param {Object} user - User object.
+   * @returns {boolean} True if the user has the role as seller, false otherwise.
+   */ 
+  isSeller(user) {
+    return user.roles === "seller";
+  }
+
+  // <<-- CANCELED functions below -->>
   
   /** Retrieve a user by resetToken.
    * @param {string} resetToken - resetToken sent to email for password reset.
@@ -154,7 +181,7 @@ class _UserModel {
     }
   }
   
-  /** Validate credentials when logging in: email and password */
+  /** Validate credentials when logging in: email and password. */
   async validateCredentials(email, password) { 
     try {
       const user = await this.getUserByEmail(email);  // Retrieve the user by email
@@ -167,7 +194,7 @@ class _UserModel {
     }
   }
   
-  /** Increment the token version when logging out*/ 
+  /** Increment the token version when logging out. */ 
   async incrementTokenVersion(userId) {
     try {
       const user = await this.getUserById(userId);
@@ -194,6 +221,7 @@ class _UserModel {
     }
   }
 
+  /** Used for Profile Page: Password reset. */
   async updatePassword(userId, newPassword) {
     try {
       const user = await this.getUserById(userId); // Find the user by ID
@@ -207,13 +235,13 @@ class _UserModel {
         throw error;
     }
   }
-
-  /** Update a user's information.
+    
+  /** Used for Profile Page: Update a user's information.
    * @param {string} userId - User ID.
    * @param {Object} updates - Data to update.
    * @returns {Object} Updated user.
    */
-  async updateUser(userId, updates) { // TODO check user data
+  async updateUser(userId, updates) {
     try {
       const user = await this.getUserById(userId);
       if (!user) throw new Error("User not found");
@@ -224,16 +252,17 @@ class _UserModel {
       throw error;
     }
   }
-
-  /** Check if a user has a specific role.
-   * @param {Object} user - User object.
-   * @returns {boolean} True if the user has the role as seller, false otherwise.
-   */ 
-  isSeller(user) {
-    return user.roles === "seller";
-  }
 }
 
 const UserModel = new _UserModel();
 export default UserModel;
 export { User };
+
+/* Coder Note 
+  *1* Start with the Database Schema: UserModel
+    The UserModel is the foundation of the authentication system. 
+    All authentication logic and middleware depend on the structure and data of the UserModel.
+  *Logic:
+    - Define fields like username, email, passwordHash, role, and timestamps.
+    - Add methods like validatePassword() or hooks for password hashing.
+    - Output: A schema that integrates with the database and supports authentication workflows.
