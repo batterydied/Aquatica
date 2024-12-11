@@ -193,7 +193,7 @@ class _UserModel {
       throw error;
     }
   }
-  
+
   /** PROFILE_PAGE_UNIMPLEMENTED: Increment the token version when logging out. */ 
   async incrementTokenVersion(userId) {
     try {
