@@ -90,17 +90,22 @@ export class SellProductsPage extends MarketplacePage {
      */
     createProduct(prodListItem) {
         const product = super.createProduct(prodListItem);
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("product-buttons-box");
+
         const editButton = document.createElement('img');
         editButton.classList.add("edit-button");
         editButton.src = "/assets/edit-icon.svg";
         editButton.addEventListener("click", () => this.goToProductPage(prodListItem.prodid));
-        product.childNodes[1].appendChild(editButton);
+        buttonContainer.appendChild(editButton);
 
         const deleteButton = document.createElement("img");
         deleteButton.classList.add("edit-button");
-        deleteButton.src = "/assets/edit-icon.svg"; //TODO: change to delete icon
+        deleteButton.src = "/assets/delete-icon-dark.svg";
         deleteButton.addEventListener("click", () => this.deleteProduct(prodListItem.prodid));
-        product.childNodes[1].appendChild(deleteButton);
+        buttonContainer.appendChild(deleteButton);
+
+        product.childNodes[1].appendChild(buttonContainer);
 
         return product;
     }
