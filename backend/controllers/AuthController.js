@@ -143,7 +143,8 @@ export async function login(req, res) {
     // Valid credentials: generates a JWT to authenticate the user for future requests.
     const tokenPayload = { 
       userId: validCredentials.userId, 
-      tokenVersion: validCredentials.tokenVersion 
+      tokenVersion: validCredentials.tokenVersion,
+      roles: validCredentials.roles
     };
       // Sign JWT with tokenVersion for easy logout
     const token = jwt.sign(

@@ -5,8 +5,10 @@ import { ProductPage } from '../components/ProductPage/ProductPage.js';
 import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
+import { SellerProductPage } from '../components/SellerProductPage/SellerProductPage.js';
 import { AuthPage } from '../components/AuthPage/AuthPage.js';
 import { authService } from '../services/AuthService.js'; // Handles user authentication state
+import { BecomeSellerPage } from '../components/BecomeSellerPage/BecomeSellerPage.js';
 
 export class AppController {
    #container = null;       // Main container
@@ -28,6 +30,8 @@ export class AppController {
        productPage: new ProductPage(), // ProductPage is dynamically initialized when needed
        profilePage: new ProfilePage(),
        sellProductsPage: new SellProductsPage(),
+       sellerProductPage: new SellerProductPage(),
+       becomeSellerPage: new BecomeSellerPage()
      };
 
      // Set the initial view to AuthPage if not logged in, else default page is the marketplace
@@ -89,15 +93,17 @@ export class AppController {
      // Restrict access to certain views based on authentication
     if(!authService.isLoggedIn() && (viewName !== 'auth' && viewName !== 'marketplace' )){
       console.warn(`Access denied to "${viewName}". Login for more!`);
+      this.currentViewParams = params; // store params publicly
       this.#currentView = this.#views.auth;
-    } else if (viewName === 'sellProductsPage' && !authService.isSeller()){ // TODO Profile update seller identity
+    } else if (viewName === 'sellProductsPage' && authService.getRole() !== "seller"){ // TODO Profile update seller identity
+      console.log("role: " + authService.getRole());
       console.warn(`Access denied to "${viewName}". Only sellers can access this page. Apply in User Center to become a seller!`);
-      this.#currentView = this.#views.marketplace;
+      this.#currentView = this.#views.becomeSellerPage;
      } else {
         this.#currentView = this.#views[viewName];
      }
 
-    if (viewName === 'productPage') {
+    if (viewName === 'productPage' || viewName === 'sellerProductPage') {
       console.log(params.prodid);
       await this.render(params.prodid);
     } else {

@@ -11,6 +11,7 @@ Interface with database.sqlite to manage fetching and storing order data in the 
   - Method: getOrders(): Fetch all orders matching a userId, with optional filters.
   - Method: addOrder(): Adds a new order to the database with details from productModel.
   - Method: addOrderManually(): Adds a new order to the database manually, for testing purposes.
+  - Method: cancelOrder(orderId, userId): Cancels (deletes) an existing order by orderId and userId.
 */
 
 // Imports
@@ -124,7 +125,24 @@ class OrderModel {
       userId,
     });
   }
+
+  /**
+   * Cancel (remove) an existing order.
+   * Ensures the order belongs to the given userId before deleting.
+   * @param {string} orderId - The ID of the order to cancel.
+   * @param {string} userId - The ID of the user attempting to cancel the order.
+   * @returns {Promise<Object>} - A message confirming the deletion.
+   * @throws {Error} - If the order does not exist or does not belong to the user.
+   */
+  static async cancelOrder(orderId, userId) {
+    const deletedRows = await Order.destroy({ where: { id: orderId, userId } });
+    if (deletedRows === 0) {
+      throw new Error("Order not found or does not belong to the user.");
+    }
+    return { message: "Order canceled successfully." };
+  }
 }
+
 
 export default OrderModel;
 export { Order };

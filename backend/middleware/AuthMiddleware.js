@@ -44,7 +44,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Attach user info to request object for next middleware or route
-    req.user = { userId: user.userId };   
+    req.user = { userId: user.userId, roles: user.roles };   
     next();
   } catch (error) {
     console.error("Authentication Error:", error);

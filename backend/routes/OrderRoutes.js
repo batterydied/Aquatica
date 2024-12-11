@@ -40,6 +40,12 @@ class OrderRoutes {
       console.log("POST /api/order called.");
       OrderController.addOrder(req, res); // Add a new order
     });
+
+    // Cancel (delete) an existing order
+    this.router.delete("/:id", (req, res) => {
+      console.log(`DELETE /api/order/${req.params.id} called.`);
+      OrderController.cancelOrder(req, res); // Cancel the specified order
+    });
   }
 
   /**
