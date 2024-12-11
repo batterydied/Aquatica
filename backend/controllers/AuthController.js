@@ -15,87 +15,87 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import User from "../models/UserModel.js";
+import UserModel  from "../models/UserModel.js";
 import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 
-//TODO Use an env var in production.
+// Environment Variables
 const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 
 // Includes logic for managing user authentication, including:
-/* 1. Registering users: 
- *    Handles user registration with validations for required fields and password security. 
- */
+/* 1. Registering a new user:  Handles user registration with required fields validations & password security. */
 export async function registerUser(req, res) {
-  try{
-    const { email, password} = req.body;
+  try {
+    const { email, password } = req.body;
 
+    console.log("Incoming registration request:", { email, password });
     // Validates the required input fields
-    if(!email || !password){
-      return res.status(400).json({error: "Email and password are required."});
-    }
-    // Check if the user already exists
-    const existingUser = await User.findOne({ where: {email} });
-    if(existingUser) {
-      return res.status(409).json({error: "Email is already in use."})
+    if (!email || !password) {
+      console.log("Missing email or password.");
+      return res.status(400).json({ error: "Email and password are required." });
     }
 
-    // Hashes the password using bcrypt before storing it in the database.
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const versionToken = uuidv4();
 
-    // Create the user with a 'verified' status set to false
-    const newUser = await User.create({
+    // Cancel: Email Verification on HOLD: Create the user with a 'verified' status set to false
+    console.log("Creating new user...");
+    // Duplicate email is checked in model.
+    const newUser = await UserModel.createUser({
       email,
-      hashedPassword,
-      roles: ["user"],                // set default role as `user`
-      verificationToken: uuidv4(),    // TODO Generate a verification token
+      password,
+      versionToken,    // Override-- default: null
+    });
+    console.log("New user created:", {
+      userId: newUser.userId,
+      email: newUser.email,
+      roles: newUser.roles,
     });
 
-    //Send verification email
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',               // Example using Gmail, is adjustable.
-      auth:{
-        user: process.env.EMAIL_USER, // Email address (must be set in .env)
-        pass: process.env.EMAIL_PASS, // Email password (must be set in .env)
-      },
-    });
+    // Cancel: Send verification email
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',               // Example using Gmail, is adjustable.
+    //   auth:{
+    //     user: process.env.EMAIL_USER, // Email address (must be set in .env)
+    //     pass: process.env.EMAIL_PASS, // Email password (must be set in .env)
+    //   },
+    // });
 
-    const verificationLink = `${process.env.BASE_URL}/verify-email?token=${newUser.verificationToken}`;
+    // const verificationLink = `${process.env.BASE_URL}/verify-email?token=${newUser.verificationToken}`;
     
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: newUser.email,
-      subject: '><> Aquatica Registration',
-      text: `Please verify your email by clicking on this link: ${verificationLink}`
-    };
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: newUser.email,
+    //   subject: '><> Aquatica Registration',
+    //   text: `Please verify your email by clicking on this link: ${verificationLink}`
+    // };
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
 
     res.status(201).json({
-      message: "><> User registered successfully. Please check your email to verify your account. <><",
-      token,
-      user: {userId: newUser.userId, email: newUser.email},
+      message: "><> User registered successfully. <><",
+      // Cancel: change after email verification
+      // message: "><> User registered successfully. Please verify through email. <><",
+      // token,
+      user: { userId: newUser.userId, email: newUser.email },
     });
-  } catch (error){
+  } catch (error) {
     console.error("Error during registration:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
-/* 2. Email verification: 
- *    Verifies authentication tokens and save only verified user. 
- */
+/* Cancel: 2. Email verification: Verifies authentication tokens and save only verified user. */
 export async function verifyEmail(req, res) {
-  try{
+  try {
     const { token } = req.query;
 
-    if(!token){
-      return res.status(400).json({error: "Verification token is required."});
+    if (!token) {
+      return res.status(400).json({ error: "Verification token is required." });
     }
     // Find the user with the provided token.
-    const user = await User.findOne({ where: {verificationToken: token} });
-    if(!user) {
-      return res.status(404).json({error: "Invalid or expired token."});
+    const user = await UserModel.getUserByVerificationToken(token);
+    if (!user) {
+      return res.status(404).json({ error: "Invalid or expired token." });
     }
 
     // Update the user's status to verified and clear the verification token
@@ -103,203 +103,202 @@ export async function verifyEmail(req, res) {
     user.verificationToken = null;      // Remove the token after verification
     await user.save();
 
-    res.status(200).json({ message: " ><> Email verified successfully <><" });
+    res.status(200).json({ message: " ><> Email verified successfully. <><" });
   } catch (error) {
     console.error("Error during email verification:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(500).json({ error: "Internal server error."} );
   }
-}
+} 
 
-/* 3. Logging in users: 
- *    Verifies credentials, generates authentication tokens, and responds with user details. 
- */
+
+/* 3. Log in a user: Verifies credentials, generates authentication tokens, and responds with user details.*/
 export async function login(req, res) {
-  try{
-    const {email, password} = req.body;
-    
+  try {
+    const { email, password } = req.body;
+    console.log("Incoming login request:", { email, password });
     // Validates the required input fields
-    if(!email || !password){
+    if (!email || !password) {
+      console.log("Missing email or password.");
       return res.status(400).json({error: "Email and password are required."});
     }
 
-    // Queries the UserModel.js to find the user by email.
-    const user = await User.findOne({ where: {email} });
-    if(!user) {
-      return res.status(401).json({error: "Invalid email."});
+    // Cancel: Check if the email is verified
+    // if(!user.verified){
+    //   return res.status(403).json({message: "Please verify your email first."});
+    // }
+
+    console.log("Validating credentials...");
+    // Queries the UserModel.js to validate email and password.
+    const validCredentials = await UserModel.validateCredentials(email, password);
+    console.log("Log in user:", validCredentials);
+    // isValid = user, null;
+
+    if (validCredentials === null) {
+      console.log("Invalid email or password.");
+      return res.status(401).json({ error: "Invalid email or password." });
     }
 
-    // Check if the email is verified
-    if(!user.verified){
-      return res.status(403).json({message: "Please verify your email first."});
-    }
-
-    // Compares the hashed password stored in the database with the one entered by the user.
-    const validPassword = await bcrypt.compare(password, user.hashedPassword);
-    if(!validPassword){
-      return res.status(401).json({error: "Invalid email or password."});
-    }
-
+    console.log("Credential validated. Generating JWT now...");
     // Valid credentials: generates a JWT to authenticate the user for future requests.
+    const tokenPayload = { 
+      userId: validCredentials.userId, 
+      tokenVersion: validCredentials.tokenVersion,
+      roles: validCredentials.roles
+    };
+      // Sign JWT with tokenVersion for easy logout
     const token = jwt.sign(
-      { userId: user.userId, roles: user.roles },
-      JWT_SECRET,
-      { expiresIn: "1h"}
+      tokenPayload, 
+      JWT_SECRET, 
+      { expiresIn: "1h" }
     );
-
-    user.currentToken = token;
-    await user.save();
+    console.log("JWT generated successfully:", token);
 
     res.status(200).json({
-      message: " ><> User login successfully <><",
+      message: " ><> Login successful. <><",
       token,
+      userId: validCredentials.userId
     });
   } catch (error) {
     // Handles invalid login attempts with appropriate error messages.
     console.error("Error during login:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
-/* 4. Logging out users: 
- *    Invalidates tokens to ensure users can securely log out.
- */
+/* Cancel: 4. Log out a user: Invalidates tokens to ensure users can securely log out. */
 export async function logout(req, res) {
-  // TODO EXTRA: Involve token invalidation on multiple devices.
-  try{
+  try {
     const { userId } = req.user;
+    console.log("Incoming logout request:", userId);
 
-    // Find the user and clear the currentToken
-    const user = await User.findByPk(userId);
+    // Find the user by id
+    const user = await UserModel.getUserById(userId);
+    console.log("Searching for user with Id...");
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
+
     // Invalid current token
     await UserModel.incrementTokenVersion(userId); 
+    console.log("Token incremented.");
 
-    res.status(200).json({ message: " ><> User logout successfully <><" });
+    res.status(200).json({ message: " ><> Logout successful. <><" });
   } catch (error) {
     // Handles invalid login attempts with appropriate error messages.
     console.error("Error during logout:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
-/* 5. Resetting Password: 
- *    Allows users to reset their password securely with a email verification.
- */
+/* Cancel: 5. Password reset: Allows user to reset password securely with a email verification. */
 export async function requestPasswordReset(req, res)  {
   // Temporary reset token for email validation
-  try{
+  try {
     // Find the user by email
     const { email } = req.body;
-    if(!email){
-      return res.status(400).json({error: 'Email is required.'});
+    if (!email){
+      console.log("Email is missing.");
+      return res.status(400).json({ error: "Email is required." });
     }
 
-    const user = await User.findOne({ where: {email} });
-    if(!user) {
-      return res.status(404).json({error: `User not found.`})
+    const user = await UserModel.getUserByEmail(email);
+    console.log("Finding user by email...");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found." })
     }
 
-    // TODO Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    const tokenExpires = Date.now() + 3600000;          // 1h
+    console.log("Generating resetPassToken...");
+    const resetPassToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = new Date(Date.now() + 3600000);  // 1h
     await user.save();
+    console.log("Reset Password Token generated");
 
     // Send reset email for verification
     const transporter = nodemailer.createTransport({
-      service: 'gmail',               // TODO Example using Gmail, is adjustable.
-      auth:{
-        user: process.env.EMAIL_USER, //  Email address (must be set in .env)
-        pass: process.env.EMAIL_PASS, //  Email password (must be set in .env)
+      service: "gmail",               // TODO Example using Gmail, is adjustable.
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
+    console.log("Transporter created.");
 
-    const resetLink = `${process.env.BASE_URL}/reset-password?token=${resetToken}`;
-    
+    const resetLink = `${process.env.BASE_URL}/reset-password?token=${resetPassToken}`;
+    console.log("reset link created.");
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
-      subject: '><> Password Reset Request',
-      text: `You requested a password reset. Click the link to reset your password at Aquatica: ${resetLink}. This link will expire in 1 hour.`
+      subject: "><> Password Reset Request",
+      text: `Click the link to reset your password: ${resetLink}. This link will expire in 1 hour.`,
     };
+    console.log("Mail options created.");
 
+    console.log("Sending email through transporter...");
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: " ><> Password reset email sent successfully <><" });
+    res.status(200).json({ message: " ><> Password reset email sent. <><" });
   } catch (error) {
     // Handles invalid login attempts with appropriate error messages.
     console.error("Error during password reset request:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(500).json({ error: "Internal server error." });
   }
 }
-
-// TODO Consider Instead of email: The AuthController verifies the old password and update the new.
 export async function resetPassword(req, res) {
-  try{
+  try {
     // The user provides the old password and the new password.
-    const { token, newPassword} = req.body;
+    const { resetPassToken, newPassword } = req.body;
+    console.log("Receiving password reset request:", { resetPassToken, newPassword });
 
-    if(!token || !newPassword){
-      return res.status(400).json({error: "Token and new password are required."});
+    if (!resetPassToken || !newPassword) {
+      console.log("Reset token or newPassword is missing.");     
+      return res.status(400).json({ error: "Reset token and new password are required." });
     }
 
+    console.log("Finding user by reset token...");     
     //Find the user with the provided token
-    const user = await User.findOne({ 
-      where: {
-        resetPasswordToken: token,
-        resetPasswordExpires: {[sequelize.Op.gt]: new Date()},  // Ensure the token is not expired
-      },
-    });
-    
-    if(!user) {
-      return res.status(400).json({error: "Invalid or expired token."})
+    const user = await UserModel.getUserByResetPassToken(resetPassToken);
+    if (!user) {
+      return res.status(400).json({ error: "Invalid or expired token." })
     }
 
-    // Hash the new password.
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
+    console.log("Updating new password:", newPassword);     
     // Update the user's password and clear the reset token
-    user.hashedPassword = hashedPassword;
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
-    await user.save();
+    await UserModel.updatePassword(user.userId, newPassword);
 
-    res.status(200).json({ message: "><> Password reset successfully <><" });
-  } catch (error){
-    console.error("Error during registration:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(200).json({ message: "><> Password reset successful. <><" });
+  } catch (error) {
+    console.error("Error during password reset:", error);
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
-// TODO Validates the new role: Replace || Add ?
-/* 6.  Updating user Role as seller:
- *    Requires authentication and sufficient permissions.
- */
+/* 6.  Become a seller: Requires authentication and sufficient permissions. */
 export async function becomeSeller(req, res) {
-  try{
+  try {
     const { userId }  = req.user; 
     const { newRole } = req.body;
 
     const validRoles = ["user", "seller"];
     if(!validRoles.includes(newRole)){
-      return res.status(401).json({error: 'Invalid role.'});
+      return res.status(401).json({ error: "Invalid role." });
     }
 
     // Find the user
-    const user = await User.findByPk(userId);
-    if(!user) {
-      return res.status(404).json({error: `User not found.`})
+    const user = await UserModel.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
     }
 
     // Update the user's role (as seller)
-    user.roles = [newRole];
+    user.roles = newRole;
     await user.save();
 
-    res.status(200).json({message: " ><> Hello, Seller <><", roles: user.roles});
+    res.status(200).json({ message: " ><> Hello, Seller <><", roles: user.roles });
   } catch (error){
     console.error("Error updating role:", error);
-    res.status(500).json({error: "Internal server error."});
+    res.status(500).json({ error: "Internal server error." });
   }
 }
 
