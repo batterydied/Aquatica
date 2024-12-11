@@ -10,8 +10,6 @@ export class NavigationMenu extends BaseComponent {
     this.attachEventListeners();
   }
 
-
-
   createHeader() {
     const container = document.createElement("div");
     container.classList.add("container");
@@ -48,10 +46,12 @@ export class NavigationMenu extends BaseComponent {
     links.forEach((link) => {
       const button = document.createElement("div");
       button.classList.add("nav-button", link.className);
-      // default page is active 
+
+      // Make default page active once entered app
       if (link.className === "marketplace") {
         button.classList.add("active");
       }
+
       // Set the data-target attribute
       button.dataset.target = link.target;
 
@@ -95,7 +95,6 @@ export class NavigationMenu extends BaseComponent {
   }
 
   render() {
-
     return this.container;
   }
 }

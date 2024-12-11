@@ -24,26 +24,26 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 
 // Includes logic for managing user authentication, including:
 /* 1. Registering a new user:  Handles user registration with required fields validations & password security. */
-export async function registerUser(req, res) {  // TODO Change name as register()
+export async function registerUser(req, res) {
   try {
     const { email, password } = req.body;
 
     console.log("Incoming registration request:", { email, password });
     // Validates the required input fields
-    if(!email || !password){
+    if (!email || !password) {
       console.log("Missing email or password.");
-      return res.status(400).json({error: "Email and password are required."});
+      return res.status(400).json({ error: "Email and password are required." });
     }
 
     const versionToken = uuidv4();
 
-    // TODO Email Verification on HOLD: Create the user with a 'verified' status set to false
+    // Cancel: Email Verification on HOLD: Create the user with a 'verified' status set to false
     console.log("Creating new user...");
     // Duplicate email is checked in model.
     const newUser = await UserModel.createUser({
       email,
       password,
-      versionToken,    // Override default: null
+      versionToken,    // Override-- default: null
     });
     console.log("New user created:", {
       userId: newUser.userId,
@@ -51,7 +51,7 @@ export async function registerUser(req, res) {  // TODO Change name as register(
       roles: newUser.roles,
     });
 
-    // TODO Send verification email
+    // Cancel: Send verification email
     // const transporter = nodemailer.createTransport({
     //   service: 'gmail',               // Example using Gmail, is adjustable.
     //   auth:{
@@ -73,12 +73,10 @@ export async function registerUser(req, res) {  // TODO Change name as register(
 
     res.status(201).json({
       message: "><> User registered successfully. <><",
-      // TODO change after email verification
+      // Cancel: change after email verification
       // message: "><> User registered successfully. Please verify through email. <><",
       // token,
-      user: { userId: newUser.userId, email: newUser.email
-        // roles: "user",       // TODO if UserModel.isSeller() is not working
-       },
+      user: { userId: newUser.userId, email: newUser.email },
     });
   } catch (error) {
     console.error("Error during registration:", error);
@@ -86,7 +84,7 @@ export async function registerUser(req, res) {  // TODO Change name as register(
   }
 }
 
-/* 2. Email verification: Verifies authentication tokens and save only verified user. */
+/* Cancel: 2. Email verification: Verifies authentication tokens and save only verified user. */
 export async function verifyEmail(req, res) {
   try {
     const { token } = req.query;
@@ -94,16 +92,16 @@ export async function verifyEmail(req, res) {
     if (!token) {
       return res.status(400).json({ error: "Verification token is required." });
     }
-    // // Find the user with the provided token.
-    // const user = await UserModel.getUserByVerificationToken(token); // TODO Implement getUserByVerificationToken() in UserModel
-    // if (!user) {
-    //   return res.status(404).json({ error: "Invalid or expired token." });
-    // }
+    // Find the user with the provided token.
+    const user = await UserModel.getUserByVerificationToken(token);
+    if (!user) {
+      return res.status(404).json({ error: "Invalid or expired token." });
+    }
 
-    // // Update the user's status to verified and clear the verification token
-    // user.verified = true;
-    // user.verificationToken = null;      // Remove the token after verification
-    // await user.save();
+    // Update the user's status to verified and clear the verification token
+    user.verified = true;
+    user.verificationToken = null;      // Remove the token after verification
+    await user.save();
 
     res.status(200).json({ message: " ><> Email verified successfully. <><" });
   } catch (error) {
@@ -124,7 +122,7 @@ export async function login(req, res) {
       return res.status(400).json({error: "Email and password are required."});
     }
 
-    // Check if the email is verified
+    // Cancel: Check if the email is verified
     // if(!user.verified){
     //   return res.status(403).json({message: "Please verify your email first."});
     // }
@@ -167,9 +165,8 @@ export async function login(req, res) {
   }
 }
 
-/* 4. Log out a user: Invalidates tokens to ensure users can securely log out. */
+/* Cancel: 4. Log out a user: Invalidates tokens to ensure users can securely log out. */
 export async function logout(req, res) {
-  // TODO EXTRA: Involve token invalidation on multiple devices.
   try {
     const { userId } = req.user;
     console.log("Incoming logout request:", userId);
@@ -193,7 +190,7 @@ export async function logout(req, res) {
   }
 }
 
-/* 5. Password reset: Allows user to reset password securely with a email verification. */
+/* Cancel: 5. Password reset: Allows user to reset password securely with a email verification. */
 export async function requestPasswordReset(req, res)  {
   // Temporary reset token for email validation
   try {
@@ -248,7 +245,6 @@ export async function requestPasswordReset(req, res)  {
     res.status(500).json({ error: "Internal server error." });
   }
 }
-
 export async function resetPassword(req, res) {
   try {
     // The user provides the old password and the new password.
@@ -272,7 +268,7 @@ export async function resetPassword(req, res) {
     await UserModel.updatePassword(user.userId, newPassword);
 
     res.status(200).json({ message: "><> Password reset successful. <><" });
-  } catch (error){
+  } catch (error) {
     console.error("Error during password reset:", error);
     res.status(500).json({ error: "Internal server error." });
   }
@@ -284,7 +280,6 @@ export async function becomeSeller(req, res) {
     const { userId }  = req.user; 
     const { newRole } = req.body;
 
-    // TODO Can delete if decided to update role rather than add on
     const validRoles = ["user", "seller"];
     if(!validRoles.includes(newRole)){
       return res.status(401).json({ error: "Invalid role." });
