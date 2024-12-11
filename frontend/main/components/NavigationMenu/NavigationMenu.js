@@ -48,7 +48,10 @@ export class NavigationMenu extends BaseComponent {
     links.forEach((link) => {
       const button = document.createElement("div");
       button.classList.add("nav-button", link.className);
-
+      // default page is active 
+      if (link.className === "marketplace") {
+        button.classList.add("active");
+      }
       // Set the data-target attribute
       button.dataset.target = link.target;
 
@@ -92,6 +95,7 @@ export class NavigationMenu extends BaseComponent {
   }
 
   render() {
+
     return this.container;
   }
 }
