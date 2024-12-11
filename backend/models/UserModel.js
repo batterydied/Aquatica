@@ -78,9 +78,9 @@ class _UserModel {
     }
   }
 
-  // constructor() {   // TODO delete or init()
-  //   this.model = User;
-  // }
+  constructor() {   // TODO delete or init()
+     this.model = User;
+  }
 
   /**  Create a new user with validations and password hashing.
    * @param {Object} userData - { email, password, roles }
