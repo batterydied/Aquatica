@@ -1,6 +1,5 @@
 import { AppController } from '../../app/AppController.js';
 import { BaseComponent } from '../../app/BaseComponent.js';
-import { icons } from './icons.js';
 
 export class NavigationMenu extends BaseComponent {
   constructor() {
@@ -23,10 +22,8 @@ export class NavigationMenu extends BaseComponent {
 
     // Logo Section
     const logoButton = document.createElement("div");
-    // Logo Unique CSS
-    logoButton.classList.add("logo-button");
-    // Link for Marketplace
-    logoButton.classList.add("nav-button");
+    // Logo Unique CSS, while link for Marketplace
+    logoButton.classList.add("logo-button", "nav-button");
     logoButton.dataset.target = "marketplace";
 
     const logoImage = document.createElement("img");
@@ -80,6 +77,14 @@ export class NavigationMenu extends BaseComponent {
       const button = event.target.closest(".nav-button");
       if (button) {
         const targetView = button.dataset.target;
+
+        // Remove active class from all buttons
+        const navButtons = this.container.querySelectorAll(".nav-button");
+        navButtons.forEach((btn) => btn.classList.remove("active"));
+        // Add active class to clicked button
+        button.classList.add("active");
+
+        // Navigate to target view
         const appController = AppController.getInstance();
         appController.navigate(targetView);
       }
