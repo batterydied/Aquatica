@@ -24,7 +24,7 @@ export function verifyRole(requiredRole){
 */
       const userRole = req.user.roles;  // Extract role from authenticated user.
     // Check if the user has the required role
-      if ( userRole !== requiredRole ) {
+      if (userRole !== requiredRole) {
         return res.status(403).json({ error: "Access forbidden: unauthorized." });
       }  
       next();  
@@ -37,3 +37,13 @@ export function verifyRole(requiredRole){
     }
   };
 }
+
+/* Coder Note 
+  *2* Develop the Middleware: AuthMiddleware and RoleMiddleware
+    Middleware ensures route security. It’s critical to verify user authentication and roles
+    before granting access to controllers and protected routes.
+  *Logic:
+  - AuthMiddleware: Checks if a valid token/session exists before proceeding to protected routes.
+  - RoleMiddleware: Checks the user’s role (`user`, `seller`) to allow or restrict access to role-specific routes.
+  - Dependencies: The middleware will use the UserModel to validate tokens and roles.
+*/

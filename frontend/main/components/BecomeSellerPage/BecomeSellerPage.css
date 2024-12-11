@@ -1,0 +1,15 @@
+/* Become seller page styling */
+
+.become-seller-page {
+    text-align: center;
+}
+
+.become-seller-button {
+    font-size: 2em;
+    padding:0.5em;
+    margin-top: 1em;
+    background-color:#5B91C8;
+    color:#FFFFFF;
+    border-radius: 5px;
+    border:none;
+}
