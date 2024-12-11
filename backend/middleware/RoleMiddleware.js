@@ -14,18 +14,18 @@
 // Enforce role-based access control to ensure users can only perform actions or access resources allowed for their role.
 export function verifyRole(requiredRole){
   return (req, res, next) => {
-    try{
-      if(!req.user){                  // Ensure AuthMiddleware has attached a user object to the request.
-        return res.status(401).json({error: 'No user found, access denied.'});
+    try {
+      if (!req.user) {                  // Ensure AuthMiddleware has attached a user object to the request.
+        return res.status(401).json({ error: "No user found, access denied." });
       }
 /* 1. Role Verification:
   - Checks the roles attribute in the user object attached by AuthMiddleware.js.
   - Confirms the user has the required role(s) for the route.
 */
-      const userRole = req.user.roles;      // Extract role from authenticated user.
+      const userRole = req.user.roles;  // Extract role from authenticated user.
     // Check if the user has the required role
-      if(userRole !== requiredRole){  // TODO Consider implement of 'both' or 'admin'. 
-        return res.status(403).json({error: 'Access forbidden: unauthorized.'});
+      if (userRole !== requiredRole) {
+        return res.status(403).json({ error: "Access forbidden: unauthorized." });
       }  
       next();  
     } catch (error){
@@ -33,7 +33,7 @@ export function verifyRole(requiredRole){
   - Responds with a 403 (Forbidden) error if the user lacks the necessary permissions.
 */
       console.error("Error in RoleMiddleware:", error);
-      res.status(500).json({error:"An unexpected error occurred while verifying roles."});
+      res.status(500).json({ error: "An unexpected error occurred while verifying roles." });
     }
   };
 }

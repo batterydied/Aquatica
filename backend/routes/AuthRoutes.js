@@ -25,8 +25,11 @@ import { verifyRole } from "../middleware/roleMiddleware.js";
 const router = express.Router();
 
 /* 1. POST/ auth/register:
- * Route to register a new user:
+  - Create a new user account with email, password, and optional profile data.
+  - Ensure email uniqueness and secure password hashing. 
+  - Create user in the database and generate a JWT to authenticate the user on subsequent requests.
 */
+// Route to register a new user:
 router.post("/register", registerUser);
 
 /* 2. POST/ auth/login:
@@ -36,18 +39,19 @@ router.post("/register", registerUser);
   - Generate a token for successful login.
   - Return a response with the token for client-side storage (e.g., in cookies or localStorage).
 */
-// TODO Route to verify the email address of a user after they register:
-// router.get("/verify-email", verifyEmail);
+// Cancel: Route to verify the email address of a user after they register:
+router.get("/verify-email", verifyEmail);
 
 // Route for users to log in:
 router.post("/login", login);
 
-/* 3. POST/ auth/logout:
- * Route to log out the user (invalidates the versionToken):
+/* PROFILE_PAGE_UNIMPLEMENTED: 3. POST/ auth/logout:
+  - Invalidate the token to log the user out.
 */
+// Route to log out the user (invalidates the session on the client side):
 router.post("/logout", authMiddleware, logout);
 
-/* 4. POST/ auth/request-password-reset:
+/* PROFILE_PAGE_UNIMPLEMENTED: 4. POST/ auth/request-password-reset:
   - The route accepts a POST request containing the user's email address or user ID (or both).
   - Verify the user: The system checks if the provided email or user ID exists in the database (via **_UserModel.js_**).
   - Error Handling.
@@ -61,11 +65,9 @@ router.post("/logout", authMiddleware, logout);
 router.post("/request-password-reset", requestPasswordReset);
 // Route to reset the user's password:
 router.post("/reset-password", resetPassword);
-// TODO Route to /refresh-token (1h) for seamless experience or increase expire time (3~4 hrs)
-
 
 /* 5. POST/ auth/become-seller:
-  - Authorize the user as seller.
+  - Authorize the user as "seller" for seller dashboard.
 */
 // Route to update the user's role to 'seller':
 router.post("/become-seller", authMiddleware, verifyRole("user"), becomeSeller); 

@@ -117,11 +117,11 @@ class _UserModel {
         throw new Error("A user with this email already exists.");
       }
 
-      const newUser = await this.model.create({ // TODO Change this.model all into User later
+      const newUser = await this.model.create({
         email,
         hashedPassword: password,   // Pass raw password for hook to hash before saving
         roles,
-        // verified,   // TODO After Email Verification
+        // verified,   // Cancel: After Email Verification
         // verificationToken,
       });
       console.log("UserModel.createUser(): New user created");
@@ -193,8 +193,8 @@ class _UserModel {
       throw error;
     }
   }
-  
-  /** Increment the token version when logging out. */ 
+
+  /** PROFILE_PAGE_UNIMPLEMENTED: Increment the token version when logging out. */ 
   async incrementTokenVersion(userId) {
     try {
       const user = await this.getUserById(userId);
@@ -209,7 +209,7 @@ class _UserModel {
     }
   }
 
-  /** Validate token against the stored token version for logout. */ 
+  /** PROFILE_PAGE_UNIMPLEMENTED: Validate token against the stored token version for logout. */ 
   async validateTokenVersion(userId, tokenVersion) {
     try {
       const user = await this.getUserById(userId);
@@ -221,7 +221,7 @@ class _UserModel {
     }
   }
 
-  /** Used for Profile Page: Password reset. */
+  /** PROFILE_PAGE_UNIMPLEMENTED: Password reset. */
   async updatePassword(userId, newPassword) {
     try {
       const user = await this.getUserById(userId); // Find the user by ID
@@ -236,7 +236,7 @@ class _UserModel {
     }
   }
     
-  /** Used for Profile Page: Update a user's information.
+  /** PROFILE_PAGE_UNIMPLEMENTED: Update a user's information.
    * @param {string} userId - User ID.
    * @param {Object} updates - Data to update.
    * @returns {Object} Updated user.
