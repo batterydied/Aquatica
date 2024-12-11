@@ -23,7 +23,6 @@ export function verifyRole(requiredRole){
   - Confirms the user has the required role(s) for the route.
 */
       const userRole = req.user.roles;      // Extract role from authenticated user.
-      console.log("role:" + userRole);
     // Check if the user has the required role
       if(userRole !== requiredRole){  // TODO Consider implement of 'both' or 'admin'. 
         return res.status(403).json({error: 'Access forbidden: unauthorized.'});
