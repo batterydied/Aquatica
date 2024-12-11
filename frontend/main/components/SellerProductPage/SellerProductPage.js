@@ -5,17 +5,19 @@
 import { BaseComponent } from "../../app/BaseComponent.js";
 import { Category } from "../shared/Category.js";
 import { AppController } from "../../app/AppController.js";
+import { authService, AuthService } from "../../services/AuthService.js";
 
 export class SellerProductPage extends BaseComponent {
     constructor() {
         super();
-        // TODO: initialize needed fields
-        this.curSeller = "1234-5678";
         this.loadCSS("SellerProductPage");
         this.container.classList.add("seller-product-page");
     }
 
     async render(prodid) {
+        // find seller
+        this.curSeller = authService.getUserId();
+        
         // fetch product data from backend
         const response = await fetch(`/api/products/${prodid}`, {
             method: "GET",
