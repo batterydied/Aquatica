@@ -16,7 +16,6 @@
 .topContainer{
     display: flex;
     flex-direction: row;
-    margin-top: 35px;
 }
 .product-secondary-title {
     color: black;
@@ -36,11 +35,12 @@
     margin-left: 3rem;
 }
 .thumbnail-img{
-    width: 3rem;
-    height: 3rem;
+    width: 3.7rem;
+    height: 3.7rem;
     border-radius: 0.5rem;
     object-fit: cover;
     cursor: pointer;
+    transition: border 0.3s ease
 }
 .quantity-input{
     width: 5rem;
@@ -72,6 +72,11 @@
     text-align: center;
     margin: 0;
 }
+input{
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
 .quantity-decrease, .quantity-increase{
     background-color: white;
     cursor: pointer;
@@ -80,28 +85,29 @@
     margin: 0;
     padding: 0;
 }
-
-.add-to-cart{
-    background-color: #5B91C8;
+button{
     text-align: center;
-    padding: 7px 60px;
-    color: white;
-    border: #5B91C8;
     border-radius: 4px;
     cursor: pointer;
     transition: filter 0.3s ease;
 }
+.add-to-cart{
+    background-color: #5B91C8;
+    padding: 7px 60px;
+    color: white;
+    border: #5B91C8;
+}
 
-.add-to-cart:hover{
+.add-to-cart:hover, .buy-now:hover{
     filter: brightness(0.90);
 }
 
-.add-to-cart:active{
+.add-to-cart:active, .buy-now:active{
     filter: brightness(0.80);
 }
 
 .image-border{
-    border: 0.5rem solid black;
+    border: 0.3rem solid #232c3c;
 }
 .product-selection {
     display: flex;
@@ -117,7 +123,16 @@
     height: auto;
     gap: 0.5rem;
     cursor: pointer;
-}
+  }
+  
+  /* Neutralize :focus and :active without removing base styles */
+  .type-dropdown:focus,
+  .type-dropdown:active {
+    outline: none;  /* Remove focus outline */
+    box-shadow: none;  /* Remove any box shadow */
+  }
+  
+   
 .image-gallery{
     display: flex;
     width: 55%;
@@ -126,7 +141,20 @@
     margin-left: 5rem;
 }
 .product-description{
+    margin: 10px;
     width: 30rem;
+}
+.alert-msg{
+    color: #d00739;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+.buy-now{
+    background-color: #FFA41E;
+    border: #FFA41E;
+    padding: 7px 25px;
+    color: black;
 }
 .reviewsAndRatingsContainer {
     margin: 5rem;
@@ -227,6 +255,16 @@
     font-size: 1rem;
     margin-top: 10px;
     font-weight: bold;
+}
+a{
+    color: #5B91C8;
+    text-decoration: none;
+    cursor: pointer;
+}
+hr{
+    border: 0.5px solid rgb(189, 189, 189);
+    width: 100%;
+    margin: 10px 0;
 }
 @media (max-width: 1360px){
     .product-page{

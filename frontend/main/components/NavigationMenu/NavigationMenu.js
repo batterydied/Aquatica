@@ -6,7 +6,6 @@ export class NavigationMenu extends BaseComponent {
   constructor() {
     super();
     this.container = document.createElement("div");
-    this.container.classList.add("navigation-menu");
     this.loadCSS("NavigationMenu");
     this.createHeader();
     this.attachEventListeners();
@@ -15,8 +14,11 @@ export class NavigationMenu extends BaseComponent {
 
 
   createHeader() {
+    const container = document.createElement("div");
+    container.classList.add("container");
     const header = document.createElement("div");
     header.classList.add("navigation-menu");
+    container.appendChild(header);
 
 
     // Logo Section
@@ -28,7 +30,7 @@ export class NavigationMenu extends BaseComponent {
     logoButton.dataset.target = "marketplace";
 
     const logoImage = document.createElement("img");
-    logoImage.src = icons[1];
+    logoImage.src = "../../../assets/navigation-menu/new-logo.svg";
     logoImage.alt = "Logo";
     logoImage.classList.add("logo-image");
     logoButton.appendChild(logoImage);
@@ -38,13 +40,11 @@ export class NavigationMenu extends BaseComponent {
     navButtonsContainer.classList.add("nav-buttons-container");
 
 
-    const links = [ // TODO Add Save-for-later feature for better user experience if extra time.
-      { text: "Seller Page", src: icons[2], className: "sell-button", target: "sellProductsPage" },
-      { text: "Marketplace", src: icons[4], className: "marketplace-button", target: "marketplace" },
-      { text: "Virtual Cart", src: icons[8], className: "cart-button", target: "virtualCart" },
-      { text: "User Center", src: icons[10], className: "profile-button", target: "profilePage" },
-      // TODO links[3].text will be initialized as "Log In" after AuthPage implemented.
-  
+    const links = [
+      { text: "Marketplace", iconName: "fa-shop", className: "marketplace", target: "marketplace" },
+      { text: "Seller Page", iconName: "fa-money-bill", className: "sellProductsPage", target: "sellProductsPage" },
+      { text: "Virtual Cart", iconName: "fa-cart-shopping", className: "virtualCart", target: "virtualCart" },
+      { text: "User Center", iconName: "fa-user", className: "profilePage", target: "profilePage" },
     ];
 
 
@@ -62,10 +62,8 @@ export class NavigationMenu extends BaseComponent {
       button.appendChild(textElement);
 
       // Add icon second
-      const icon = document.createElement("img");
-      icon.src = link.src;
-      icon.alt = `${link.text} icon`;
-      icon.classList.add("nav-icon");
+      const icon = document.createElement("i");
+      icon.classList.add("fa-solid", link.iconName, "fa-lg");
       button.appendChild(icon);
 
       navButtonsContainer.appendChild(button);
@@ -74,7 +72,7 @@ export class NavigationMenu extends BaseComponent {
     // Append Logo and Navigation Buttons to the Header
     header.appendChild(logoButton);
     header.appendChild(navButtonsContainer);
-    this.container.appendChild(header);
+    this.container.appendChild(container);
   }
 
   attachEventListeners() {

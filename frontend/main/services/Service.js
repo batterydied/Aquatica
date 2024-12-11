@@ -5,8 +5,9 @@ export class Service {
         this.addSubscriptions();
     }
 
+
     addSubscriptions() {
-        throw new error("addSubscriptions not implemented");
+        throw new Error("addSubscriptions not implemented");
     }
 
     subscribe(event, listener) {
