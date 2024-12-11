@@ -93,6 +93,7 @@ export class AppController {
      // Restrict access to certain views based on authentication
     if(!authService.isLoggedIn() && (viewName !== 'auth' && viewName !== 'marketplace' )){
       console.warn(`Access denied to "${viewName}". Login for more!`);
+      this.currentViewParams = params; // store params publicly
       this.#currentView = this.#views.auth;
     } else if (viewName === 'sellProductsPage' && authService.getRole() !== "seller"){ // TODO Profile update seller identity
       console.log("role: " + authService.getRole());

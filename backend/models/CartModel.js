@@ -30,22 +30,12 @@ const Cart = sequelize.define("Cart", {
   name: { type: DataTypes.STRING, allowNull: false },
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
   productId: { type: DataTypes.UUID, allowNull: false },
-  // This will be uncommented when productModel is implemented.
-  /*
-  productId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: "Products", // Matches Product table name
-      key: "prodid", // Foreign key in Product table
-    },
-  },
-  */
   quantity: { type: DataTypes.INTEGER, defaultValue: 1 },
   isSaved: { type: DataTypes.BOOLEAN, defaultValue: false },
   userId: { type: DataTypes.UUID, allowNull: false },
-  price: { type: DataTypes.FLOAT, allowNull: false },   
-  description: { type: DataTypes.STRING, allowNull: false }, 
+  price: { type: DataTypes.FLOAT, allowNull: false },
+  description: { type: DataTypes.STRING, allowNull: false },
+  type: { type: DataTypes.STRING, allowNull: true },
 });
 
 // Define relationships
@@ -61,7 +51,7 @@ class CartModel {
    * Initialize the database schema for Cart.
    */
   static async init() {
-    await sequelize.sync();
+    await sequelize.sync(); // Add { force: true } when adding or removing a column.
     console.log("Cart and Product tables synced successfully.");
   }
 
@@ -74,17 +64,7 @@ class CartModel {
   static async getItems(userId, isSaved) {
     return await Cart.findAll({
       where: { userId, isSaved },
-      attributes: ["name", "id", "productId", "price", "description", "quantity", "isSaved", "userId"],
-
-      // This will be uncommented when productModel is implemented.
-      /*
-      include: [
-        {
-          model: Product,
-          attributes: ["prodid", "price", "description"], // Include product details
-        },
-      ],
-      */
+      attributes: ["name", "id", "productId", "price", "description", "quantity", "isSaved", "userId", "type"],
     });
   }
 
@@ -97,35 +77,17 @@ class CartModel {
   }
   
 
-  // This will be uncommented when productModel is implemented.
   /**
    * Add a new item to the cart.
    * @param {string} productId - The product's ID.
    * @param {number} quantity - Quantity of the product.
    * @param {string} userId - The ID of the user adding the item.
    * @returns {Promise<Object>} - The created cart item.
-   
-  static async addCartItem(productId, quantity, userId) {
-    const product = await Product.findByPk(productId, {
-      attributes: ["price", "description"],
-    });
-
-    if (!product) {
-      throw new Error(`Product with ID ${productId} not found.`);
-    }
-
-    return await Cart.create({
-      productId,
-      quantity,
-      userId,
-    });
-  }
-  */
 
   /**
    * For testing: Add a cart item without Product reference.
    */
-  static async addCartItemManually(name, productId, price, description, quantity, userId) {
+  static async addCartItemManually(name, productId, price, description, quantity, userId, type) {
     return await Cart.create({
       name,
       productId,
@@ -133,6 +95,7 @@ class CartModel {
       description,
       quantity,
       userId,
+      type
     });
   }
 

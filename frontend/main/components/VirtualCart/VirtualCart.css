@@ -28,11 +28,13 @@
 }
 
 .cart-right h2 {
-  margin-bottom: 44px;
+  margin-bottom: 10px;
+
 }
 
 .subtotal {
-  margin-bottom: 44px;
+  margin-top: 34px;
+  margin-bottom: 34px;
 }
 
 .cart-item {

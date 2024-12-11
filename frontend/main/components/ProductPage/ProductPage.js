@@ -210,15 +210,15 @@ export class ProductPage extends BaseComponent {
     alertMessage.classList.add('alert-msg');
     if(!this.#productData.quantity){
       alertMessage.innerText = 'Out of stock'
-    }else if(this.#productData.quantity <= 15){
+    } else if(this.#productData.quantity <= 15){
       alertMessage.classList.add('alert-msg');
       alertMessage.innerText = `Only ${this.#productData.quantity} left!`
-    }else{
+    } else {
       alertMessage.style.color = 'green';
       alertMessage.innerText = 'In stock'
     }
     productSelection.appendChild(alertMessage);
-
+  
     // Product Types Container
     const productTypes = document.createElement('div');
     productTypes.className = 'product-types';
@@ -248,10 +248,10 @@ export class ProductPage extends BaseComponent {
     const reversedProductTypes = [...this.#productData.ProductTypes].reverse();
 
     reversedProductTypes.forEach((type) => {
-        const option = document.createElement('option');
-        option.value = type.type;
-        option.innerText = `${type.type} - $${type.price.toFixed(2)}`;
-        typeDropdown.appendChild(option);
+      const option = document.createElement('option');
+      option.value = type.type;
+      option.innerText = `${type.type} - $${type.price.toFixed(2)}`;
+      typeDropdown.appendChild(option);
     });
 
     // Set default value
@@ -260,15 +260,14 @@ export class ProductPage extends BaseComponent {
     // Update price on dropdown change
     let selectedType = reversedProductTypes[0];
     typeDropdown.addEventListener('change', (e) => {
-        selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
-        const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
-        price.dataset.originalPrice = selectedType.price;
-        price.innerText = (selectedType.price * amount).toFixed(2);
+      selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
+      const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
+      price.dataset.originalPrice = selectedType.price;
+      price.innerText = (selectedType.price * amount).toFixed(2);
     });
 
     dropdownContainer.appendChild(typeDropdown);
     productTypes.appendChild(dropdownContainer);
-
 
     // Append product types to product selection
     productSelection.appendChild(productTypes);
@@ -295,8 +294,8 @@ export class ProductPage extends BaseComponent {
     quantityIncrease.value = '+';
     quantityIncrease.className = 'quantity-increase';
     quantityIncrease.addEventListener('click', () => {
-        handleIncrease(quantityInput.max = this.#productData.quantity);
-        updatePrice();
+      handleIncrease(quantityInput.max = this.#productData.quantity);
+      updatePrice();
     });
 
     // Quantity Decrease Button
@@ -305,8 +304,8 @@ export class ProductPage extends BaseComponent {
     quantityDecrease.value = '-';
     quantityDecrease.className = 'quantity-decrease';
     quantityDecrease.addEventListener('click', () => {
-        handleDecrease();
-        updatePrice();
+      handleDecrease();
+      updatePrice();
     });
 
     // Combine Quantity Controls
@@ -318,34 +317,60 @@ export class ProductPage extends BaseComponent {
     productSelection.appendChild(quantityLabel);
     productSelection.appendChild(quantityForm);
 
-    // Add to Cart Button
+    // Add to Cart / Buy Now Buttons
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'btn-container';
+
     if(!this.#productData.quantity || this.#productData.quantity < 1){
       const unavailableMessage = document.createElement('p');
       unavailableMessage.classList.add('unavailable-msg');
-      unavailableMessage.innerText = 'This product is currently unavilable.';
+      unavailableMessage.innerText = 'This product is currently unavailable.';
       buttonContainer.appendChild(unavailableMessage);
-    }else{
+    } else {
+     // Buy Now button changed to navigate directly to checkout
       const buyNowBtn = document.createElement('button');
       buyNowBtn.className = 'buy-now';
       buyNowBtn.innerText = 'Buy Now';
-      buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
-      
+      buyNowBtn.addEventListener('click', () => {
+        const chosenQuantity = parseInt(quantityInput.value, 10);
+
+        // Validate quantity
+        if (!this.#productData || !this.#productData.quantity || chosenQuantity > this.#productData.  quantity) {
+          alert("The requested quantity is not available. Please reduce the quantity.");
+          return;
+        }
+
+        const appController = AppController.getInstance();
+        const item = {
+          name: this.#productData.name,
+          productId: this.#productData.prodid,
+          price: selectedType.price,
+          description: this.#productData.description,
+          quantity: chosenQuantity,
+          type: selectedType.type
+        };
+
+        // Navigate directly to the checkout with this single item
+        appController.navigate('secureCheckout', { items: [item] });
+      });
+
       const addToCartBtn = document.createElement('button');
       addToCartBtn.className = 'add-to-cart';
       addToCartBtn.innerText = 'Add to Cart';
-      addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
+      addToCartBtn.addEventListener('click', () => {
+        handleAddToCart(this.#productData, quantityInput.value, selectedType);
+      });
 
       buttonContainer.appendChild(addToCartBtn);
-      buttonContainer.appendChild(buyNowBtn)
+      buttonContainer.appendChild(buyNowBtn);
     }
-    
-    // Append Add to Cart Button to product selection
-    productSelection.appendChild(buttonContainer);
-    return productSelection;
-}
 
+    // Append Add to Cart Button Container to product selection
+    productSelection.appendChild(buttonContainer);
+
+    return productSelection;
+  }
+  
   // Create reviews and ratings
   #createReviewsAndRatings() {
     const container = document.createElement('div');
