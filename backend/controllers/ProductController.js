@@ -1,3 +1,16 @@
+/*
+ ProductRoutes: Benson
+ Description: This file defines the API endpoints for managing product-related 
+              operations. It maps HTTP requests to the corresponding methods 
+              in the `ProductController`, enabling interaction between the frontend 
+              and backend for product functionality.
+ Issue: #90, #104, #105, #106, #107
+ Owner: Benson
+ Expected Outcome: A fully functional and modular routing system that 
+                   handles product-related requests such as fetching, adding, 
+                   updating, and deleting products.
+ */
+
 import ProductModel from "../models/ProductModel.js";
 import { Product, Image, Review, ProductType } from "../models/ProductModel.js";
 
@@ -37,7 +50,7 @@ class ProductController {
   // Add a new product to the database
   async addProduct(req, res) {
     try {
-      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
+      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes, quantity } = req.body;
   
       // Validate input
       if (!name || !sellerid || !sellername || !category || !price) {
@@ -53,6 +66,7 @@ class ProductController {
         category,
         description,
         price,
+        quantity,
       });
   
       // Check if images are provided and associate them with the product
@@ -98,71 +112,94 @@ class ProductController {
     }
   }
 
-  // Update an existing product
   async updateProduct(req, res) {
     try {
-      const { prodid }  = req.params;  // Get the product prodid from the request
-      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
-  
-      // Step 1: Validate required fields
-      if (!name || !sellerid || !sellername || !category || !price) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
-  
-      // Step 2: Fetch the product by its prodid
-      const productToUpdate = await Product.findOne({ where: { prodid } });
-  
-      if (!productToUpdate) {
-        return res.status(404).json({ error: "Product not found" });
-      }
-  
-      // Step 3: Update main product fields
-      await productToUpdate.update({
+      const { prodid } = req.params;
+      const {
         name,
         secondaryname,
         sellerid,
         sellername,
         category,
         description,
-        price
-      });
+        price,
+        images,
+        reviews,
+        producttypes,
+        quantity,
+      } = req.body;
+  
+      // Step 1: Fetch the product by its prodid
+      const productToUpdate = await Product.findOne({ where: { prodid } });
+  
+      if (!productToUpdate) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+  
+      // Step 2: Build an object with only the fields that are provided in the request
+      const updatedFields = {};
+      if (name !== undefined) updatedFields.name = name;
+      if (secondaryname !== undefined) updatedFields.secondaryname = secondaryname;
+      if (sellerid !== undefined) updatedFields.sellerid = sellerid;
+      if (sellername !== undefined) updatedFields.sellername = sellername;
+      if (category !== undefined) updatedFields.category = category;
+      if (description !== undefined) updatedFields.description = description;
+      if (price !== undefined) updatedFields.price = price;
+      if (quantity !== undefined) updatedFields.quantity = quantity;
+  
+      // Step 3: Update main product fields only if they are provided
+      if (Object.keys(updatedFields).length > 0) {
+        await productToUpdate.update(updatedFields);
+      }
   
       // Step 4: Update related images if provided
       if (images && Array.isArray(images)) {
-        // First, delete old images
         await Image.destroy({ where: { productId: prodid } });
-  
-        // Create new images
         const imagePromises = images.map(imageUrl =>
           Image.create({ url: imageUrl, productId: prodid })
         );
         await Promise.all(imagePromises);
       }
   
-      // Step 5: Update related reviews if provided
+      // Step 5: Partial update for related reviews if provided
       if (reviews && Array.isArray(reviews)) {
-        // First, delete old reviews
-        await Review.destroy({ where: { productId: prodid } });
-  
-        // Create new reviews
-        const reviewPromises = reviews.map(review =>
-          Review.create({
-            user: review.user,
-            rating: review.rating,
-            comment: review.comment,
-            date: new Date(),  // Use current date for new reviews
-            productId: prodid
-          })
-        );
-        await Promise.all(reviewPromises);
+        for (const review of reviews) {
+          if (review.id) {
+            // If the review has an ID, try to update it
+            const existingReview = await Review.findOne({ where: { id: review.id, productId: prodid } });
+            if (existingReview) {
+              await existingReview.update({
+                user: review.user !== undefined ? review.user : existingReview.user,
+                rating: review.rating !== undefined ? review.rating : existingReview.rating,
+                comment: review.comment !== undefined ? review.comment : existingReview.comment,
+                date: review.date || existingReview.date
+              });
+            } else {
+              // If review with given ID doesn't exist, create it
+              await Review.create({
+                user: review.user,
+                rating: review.rating,
+                comment: review.comment,
+                date: review.date || new Date(),
+                productId: prodid
+              });
+            }
+          } else {
+            // If no ID, create a new review
+            await Review.create({
+              user: review.user,
+              rating: review.rating,
+              comment: review.comment,
+              date: review.date || new Date(),
+              productId: prodid
+            });
+          }
+        }
       }
   
       // Step 6: Update related product types if provided
       if (producttypes && Array.isArray(producttypes)) {
-        // First, delete old product types
         await ProductType.destroy({ where: { productId: prodid } });
-  
-        // Create new product types
         const productTypePromises = producttypes.map(type =>
           ProductType.create({
             type: type.type,
@@ -176,11 +213,14 @@ class ProductController {
       // Step 7: Fetch the updated product with related entities
       const updatedProduct = await Product.findOne({
         where: { prodid },
-        include: ["Images", "Reviews", "ProductTypes"]  // Include associated data
+        include: ["Images", "Reviews", "ProductTypes"]
       });
   
       // Step 8: Respond with the updated product
-      res.status(200).json({ status: "Product updated successfully", updatedProduct });
+      res.status(200).json({
+        status: "Product updated successfully",
+        updatedProduct
+      });
   
     } catch (error) {
       console.error("Error updating product:", error);

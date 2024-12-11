@@ -13,7 +13,7 @@ export class ProductPage extends BaseComponent {
 
   // Fetch product data from the backend API
   async fetchProductData(productId) {
-    console.log("I am here, productID is:" + productId);
+    console.log("ProductID is: " + productId);
     try {
       const response = await fetch(`/api/products/${productId}`);
       if (!response.ok) {
@@ -82,14 +82,11 @@ export class ProductPage extends BaseComponent {
     const description = this.#createDescription(); // Description section
     const specifications = this.#createSpecifications(); // Specifications section
     const productSelection = this.#createProductSelection(); // Type and quantity selection
-    const shippingInfo = this.#createShippingInfo(); // Shipping details
-
     const productInfoPanel = document.createElement('div');
     productInfoPanel.classList.add('product-info-panel');
 
     productInfoPanel.appendChild(titles);
     productInfoPanel.appendChild(productSelection);
-    productInfoPanel.appendChild(shippingInfo);
     productInfoPanel.appendChild(description);
     productInfoPanel.appendChild(specifications);
 
@@ -209,6 +206,19 @@ export class ProductPage extends BaseComponent {
     const productSelection = document.createElement('div');
     productSelection.className = 'product-selection';
 
+    const alertMessage = document.createElement('p');
+    alertMessage.classList.add('alert-msg');
+    if(!this.#productData.quantity){
+      alertMessage.innerText = 'Out of stock'
+    }else if(this.#productData.quantity <= 15){
+      alertMessage.classList.add('alert-msg');
+      alertMessage.innerText = `Only ${this.#productData.quantity} left!`
+    }else{
+      alertMessage.style.color = 'green';
+      alertMessage.innerText = 'In stock'
+    }
+    productSelection.appendChild(alertMessage);
+
     // Product Types Container
     const productTypes = document.createElement('div');
     productTypes.className = 'product-types';
@@ -221,7 +231,7 @@ export class ProductPage extends BaseComponent {
 
     const price = document.createElement('span');
     price.id = 'price';
-    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || '0.00';
+    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || 0.00;
     price.innerText = price.dataset.originalPrice;
     priceLabel.appendChild(price);
 
@@ -229,10 +239,8 @@ export class ProductPage extends BaseComponent {
     productTypes.appendChild(priceLabel);
 
     // Product Types Dropdown
-const dropdownContainer = document.createElement('div');
-dropdownContainer.className = 'dropdown-container';
-
-if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0) {
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.className = 'dropdown-container';
     const typeDropdown = document.createElement('select');
     typeDropdown.className = 'type-dropdown';
 
@@ -250,8 +258,9 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
     typeDropdown.value = reversedProductTypes[0]?.type || '';
 
     // Update price on dropdown change
+    let selectedType = reversedProductTypes[0];
     typeDropdown.addEventListener('change', (e) => {
-        const selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
+        selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
         const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
         price.dataset.originalPrice = selectedType.price;
         price.innerText = (selectedType.price * amount).toFixed(2);
@@ -259,7 +268,6 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
 
     dropdownContainer.appendChild(typeDropdown);
     productTypes.appendChild(dropdownContainer);
-}
 
 
     // Append product types to product selection
@@ -275,11 +283,11 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'number';
-    quantityInput.value = '1';
-    quantityInput.min = '1';
+    quantityInput.value = 1;
+    quantityInput.min = 1;
     quantityInput.classList.add('quantity-input');
     quantityInput.id = 'quantity-input';
-    quantityInput.addEventListener('input', updatePrice);
+    quantityInput.addEventListener('input', ()=>updatePrice(this.#productData.quantity));
 
     // Quantity Increase Button
     const quantityIncrease = document.createElement('input');
@@ -287,7 +295,7 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
     quantityIncrease.value = '+';
     quantityIncrease.className = 'quantity-increase';
     quantityIncrease.addEventListener('click', () => {
-        handleIncrease();
+        handleIncrease(quantityInput.max = this.#productData.quantity);
         updatePrice();
     });
 
@@ -311,14 +319,30 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
     productSelection.appendChild(quantityForm);
 
     // Add to Cart Button
-    const addToCartBtn = document.createElement('button');
-    addToCartBtn.className = 'add-to-cart';
-    addToCartBtn.innerText = 'Add to Cart';
-    addToCartBtn.addEventListener('click', handleAddToCart);
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'btn-container';
+    if(!this.#productData.quantity || this.#productData.quantity < 1){
+      const unavailableMessage = document.createElement('p');
+      unavailableMessage.classList.add('unavailable-msg');
+      unavailableMessage.innerText = 'This product is currently unavilable.';
+      buttonContainer.appendChild(unavailableMessage);
+    }else{
+      const buyNowBtn = document.createElement('button');
+      buyNowBtn.className = 'buy-now';
+      buyNowBtn.innerText = 'Buy Now';
+      buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
+      
+      const addToCartBtn = document.createElement('button');
+      addToCartBtn.className = 'add-to-cart';
+      addToCartBtn.innerText = 'Add to Cart';
+      addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value, selectedType));
 
+      buttonContainer.appendChild(addToCartBtn);
+      buttonContainer.appendChild(buyNowBtn)
+    }
+    
     // Append Add to Cart Button to product selection
-    productSelection.appendChild(addToCartBtn);
-
+    productSelection.appendChild(buttonContainer);
     return productSelection;
 }
 
@@ -454,13 +478,5 @@ if (this.#productData.ProductTypes && this.#productData.ProductTypes.length > 0)
     container.appendChild(addReviewSection);
 
     return container;
-  }
-
-  // Create shipping info
-  #createShippingInfo() {
-    const shippingInfo = document.createElement('p');
-    shippingInfo.className = 'shipping-info';
-    shippingInfo.innerText = `Shipping: ${this.#productData.shippingInfo?.shippingCost || 'N/A'}, Delivery: ${this.#productData.shippingInfo?.deliveryTime || 'N/A'}`;
-    return shippingInfo;
   }
 }

@@ -1,5 +1,4 @@
 import { MarketplacePage } from '../components/MarketplacePage/MarketplacePage.js';
-import { ProductService } from '../services/ProductService.js';
 import { SecureCheckout } from '../components/SecureCheckout/SecureCheckout.js';
 import { VirtualCart } from '../components/VirtualCart/VirtualCart.js';
 import { ProductPage } from '../components/ProductPage/ProductPage.js';
