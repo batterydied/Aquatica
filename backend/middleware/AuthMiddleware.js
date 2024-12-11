@@ -19,7 +19,6 @@ const authMiddleware = async (req, res, next) => {
   - Decodes and validates the token to ensure it is valid, not expired, and issued by the server.
   */
   try {
-    // const token = req.headers.authorization; // TODO Assuming the token is sent in the Authorization header as "Bearer <token>"
         const token = req.header("authorization")?.split(" ")[1];
     if (!token) {
         return res.status(401).json({ error: "Unauthenticated: No token provided, access denied." });
@@ -53,6 +52,7 @@ const authMiddleware = async (req, res, next) => {
 };
 
 export default authMiddleware;
+
 /* Coder Note 
   *2* Develop the Middleware: AuthMiddleware and RoleMiddleware
     Middleware ensures route security. It’s critical to verify user authentication and roles
