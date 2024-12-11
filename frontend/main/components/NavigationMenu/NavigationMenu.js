@@ -48,7 +48,7 @@ export class NavigationMenu extends BaseComponent {
     links.forEach((link) => {
       const button = document.createElement("div");
       button.classList.add("nav-button", link.className);
-      // default page is active 
+      // default page Marketplace is active once entered
       if (link.className === "marketplace") {
         button.classList.add("active");
       }

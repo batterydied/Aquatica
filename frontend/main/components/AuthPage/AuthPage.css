@@ -2,19 +2,14 @@
   *- Authentication Forms:
   - Registration Form
   - Login Form
-  - Password-reset Form
 
     *- Form Elements:
-    - Input fields (username, password, email).
-    - Buttons (login, register, reset password).
+    - Input fields (password, email).
+    - Buttons (login, register).
     - Labels and error messages.
-
-  *- Interact Buttons:
-  - Logout Button
-  - Password-reset Request Button
   
   *- Feedback Elements:
   - Error messages for invalid credentials or form validation.
-  - Success messages for registration or password reset requests.
+  - Success messages for registration or log in.
   
 */
