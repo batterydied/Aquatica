@@ -46,11 +46,7 @@ export class SellerProductPage extends BaseComponent {
 
         let imageGallery;
         // display images if there are any
-        if (this.product.Images && this.product.Images.length > 0) {
-            imageGallery = this.createImageGallery();
-        } else {
-            imageGallery = document.createElement("div");
-        }
+        imageGallery = this.createImageGallery();
         this.container.appendChild(imageGallery);
 
         // upload new image
