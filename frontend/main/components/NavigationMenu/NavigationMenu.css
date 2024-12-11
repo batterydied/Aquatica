@@ -1,16 +1,12 @@
-
 /* Main Navigation Container */
 .navigation-menu {
   background-color: #232c3c; /* Dark Blue background: theme color #232c3c */
   display: flex;
   align-items: center; /* Align items vertically in the center */
   justify-content: space-between; /* Separate logo and buttons to opposite ends */
-  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  z-index: 1000;
-  padding: 10px 40px; /* Add padding to push content inward */
+  width: 100vw;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
 }
 
@@ -19,7 +15,6 @@
   display: flex;
   align-items: center;
   flex: 0; /* Prevents the logo from growing */
-  margin-right: 20px; /* Add space between the logo and the navbar content */
 }
 
 .logo-image {
@@ -30,7 +25,7 @@
 /* Navigation Buttons Container */
 .nav-buttons-container {
   display: flex;
-  margin-right: 50px;
+  margin-right: 15px;
   flex-direction: row; /* Keep buttons in a horizontal line */
   align-items: center; /* Align buttons vertically in the center */
   gap: 30px; /* Increase spacing between nav buttons */
@@ -57,11 +52,19 @@
   border-radius: 5px;
 }
 
+/* Active Navigation Button */
+.nav-button.active {
+  background-color: #ffa41e;
+  color:#232c3c;
+  font-weight: 600;
+  border-radius: 5 px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .nav-icon {
   width: 30px; /* Icon size */
   height: 30px;
   margin: 0; /* Remove margin to avoid unwanted spacing */
-  /* flex-shrink: 0;    */
 }
 
 .nav-text {
@@ -72,25 +75,44 @@
   color: #ffffff;
 }
 
-@media (max-width:768px) {
-  .navigation-menu{
-    padding: 10px 20px; /* Scale down for smaller screens */
+/* Media Queries for Responsiveness */
+
+/* For Tablet Screens (768px to 1024px) */
+@media (max-width: 1024px) {
+  .navigation-menu {
+    flex-direction: column;
   }
-  .logo-button{
-    margin-right: 10px; /* Reduce space for smaller screens */
+  .logo-button {
+    margin-right: 0
   }
-  .logo-image{
-    height: 40px; /* Scale down for smaller screens */
+  .logo-image {
+    height: 45px; /* Scale down logo */
   }
-  .nav-buttons-container{
-    flex-direction: column; /* Stack buttons for smaller screen */
-    margin-right: 0;
-    gap: 15px;
+  .nav-buttons-container {
+    gap: 20px; /* Slightly reduce the gap */
+    margin: 0;
   }
-  .nav-button{
-    flex-direction: column; /* Stack icon and text for smaller screen */
-  }
-  .nav-text{
-    font-size: 12px; /* Readable size for smaller screens */
+  .nav-button {
+    font-size: 14px; /* Slightly smaller font for tablet screens */
   }
 }
+
+/* For Mobile Screens (768px and below) */
+@media (max-width: 768px) {
+  
+  .nav-buttons-container {
+    flex-direction: row; /* Keep the buttons in a row even on small screens */
+    margin-right: 0;
+    gap: 15px; /* Reduce gap between buttons */
+    padding-bottom: 1rem;
+  }
+  .nav-button {
+    flex-direction: row; /* Keep icon and text in a row */
+  }
+
+  /* Hide nav text on small screens */
+  .nav-text {
+    display: none;
+  }
+}
+
