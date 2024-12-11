@@ -141,7 +141,14 @@ button{
     margin-left: 5rem;
 }
 .product-description{
+    margin: 10px;
     width: 30rem;
+}
+.alert-msg{
+    color: #d00739;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
 }
 .buy-now{
     background-color: #FFA41E;

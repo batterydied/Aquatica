@@ -86,30 +86,29 @@ class CartController {
   /**
    * Add a new item to the cart.
    */
-  async addCartItem(req, res) {
-    try {
-      const userId = req.user?.id || "test-user-id"; // Use a default userId for testing
-      /* 
-      const userId = req.user.id;
-      const { productId, quantity } = req.body;
-      const newItem = await CartModel.addCartItem(productId, quantity, userId);
-      */
-      const { productId, price, description, quantity } = req.body;
+    async addCartItem(req, res) {
+      try {
+        const userId = req.user?.id || "test-user-id"; // deafault for testing (for if auth is late)
+        // Include `type` in the destructuring:
+        const { name, productId, price, description, quantity, type } = req.body;
 
-      const newItem = await CartModel.addCartItemManually(
-        productId,
-        price,
-        description,
-        quantity,
-        userId
+        const newItem = await CartModel.addCartItemManually(
+          name,
+          productId,
+          price,
+          description,
+          quantity,
+          userId,
+          type
       );
 
-      res.status(201).json(newItem);
-    } catch (error) {
-      console.error("Error in addCartItem:", error);
-      res.status(500).json({ error: "Failed to add item to cart" });
+        res.status(201).json(newItem);
+      } catch (error) {
+        console.error("Error in addCartItem:", error);
+        res.status(500).json({ error: "Failed to add item to cart" });
+      }
     }
-  }
+
 
   /**
    * Remove an item from the cart.

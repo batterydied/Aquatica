@@ -82,14 +82,11 @@ export class ProductPage extends BaseComponent {
     const description = this.#createDescription(); // Description section
     const specifications = this.#createSpecifications(); // Specifications section
     const productSelection = this.#createProductSelection(); // Type and quantity selection
-    const shippingInfo = this.#createShippingInfo(); // Shipping details
-
     const productInfoPanel = document.createElement('div');
     productInfoPanel.classList.add('product-info-panel');
 
     productInfoPanel.appendChild(titles);
     productInfoPanel.appendChild(productSelection);
-    productInfoPanel.appendChild(shippingInfo);
     productInfoPanel.appendChild(description);
     productInfoPanel.appendChild(specifications);
 
@@ -209,6 +206,19 @@ export class ProductPage extends BaseComponent {
     const productSelection = document.createElement('div');
     productSelection.className = 'product-selection';
 
+    const alertMessage = document.createElement('p');
+    alertMessage.classList.add('alert-msg');
+    if(!this.#productData.quantity){
+      alertMessage.innerText = 'Out of stock'
+    } else if(this.#productData.quantity <= 15){
+      alertMessage.classList.add('alert-msg');
+      alertMessage.innerText = `Only ${this.#productData.quantity} left!`
+    } else {
+      alertMessage.style.color = 'green';
+      alertMessage.innerText = 'In stock'
+    }
+    productSelection.appendChild(alertMessage);
+  
     // Product Types Container
     const productTypes = document.createElement('div');
     productTypes.className = 'product-types';
@@ -221,7 +231,7 @@ export class ProductPage extends BaseComponent {
 
     const price = document.createElement('span');
     price.id = 'price';
-    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || '0.00';
+    price.dataset.originalPrice = this.#productData.price?.toFixed(2) || 0.00;
     price.innerText = price.dataset.originalPrice;
     priceLabel.appendChild(price);
 
@@ -229,9 +239,8 @@ export class ProductPage extends BaseComponent {
     productTypes.appendChild(priceLabel);
 
     // Product Types Dropdown
-const dropdownContainer = document.createElement('div');
-dropdownContainer.className = 'dropdown-container';
-
+    const dropdownContainer = document.createElement('div');
+    dropdownContainer.className = 'dropdown-container';
     const typeDropdown = document.createElement('select');
     typeDropdown.className = 'type-dropdown';
 
@@ -239,26 +248,26 @@ dropdownContainer.className = 'dropdown-container';
     const reversedProductTypes = [...this.#productData.ProductTypes].reverse();
 
     reversedProductTypes.forEach((type) => {
-        const option = document.createElement('option');
-        option.value = type.type;
-        option.innerText = `${type.type} - $${type.price.toFixed(2)}`;
-        typeDropdown.appendChild(option);
+      const option = document.createElement('option');
+      option.value = type.type;
+      option.innerText = `${type.type} - $${type.price.toFixed(2)}`;
+      typeDropdown.appendChild(option);
     });
 
     // Set default value
     typeDropdown.value = reversedProductTypes[0]?.type || '';
 
     // Update price on dropdown change
+    let selectedType = reversedProductTypes[0];
     typeDropdown.addEventListener('change', (e) => {
-        const selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
-        const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
-        price.dataset.originalPrice = selectedType.price;
-        price.innerText = (selectedType.price * amount).toFixed(2);
+      selectedType = reversedProductTypes.find((type) => type.type === e.target.value);
+      const amount = parseInt(document.getElementById('quantity-input').value, 10) || 1;
+      price.dataset.originalPrice = selectedType.price;
+      price.innerText = (selectedType.price * amount).toFixed(2);
     });
 
     dropdownContainer.appendChild(typeDropdown);
     productTypes.appendChild(dropdownContainer);
-
 
     // Append product types to product selection
     productSelection.appendChild(productTypes);
@@ -273,11 +282,11 @@ dropdownContainer.className = 'dropdown-container';
 
     const quantityInput = document.createElement('input');
     quantityInput.type = 'number';
-    quantityInput.value = '1';
-    quantityInput.min = '1';
+    quantityInput.value = 1;
+    quantityInput.min = 1;
     quantityInput.classList.add('quantity-input');
     quantityInput.id = 'quantity-input';
-    quantityInput.addEventListener('input', updatePrice);
+    quantityInput.addEventListener('input', ()=>updatePrice(this.#productData.quantity));
 
     // Quantity Increase Button
     const quantityIncrease = document.createElement('input');
@@ -285,8 +294,8 @@ dropdownContainer.className = 'dropdown-container';
     quantityIncrease.value = '+';
     quantityIncrease.className = 'quantity-increase';
     quantityIncrease.addEventListener('click', () => {
-        handleIncrease();
-        updatePrice();
+      handleIncrease(quantityInput.max = this.#productData.quantity);
+      updatePrice();
     });
 
     // Quantity Decrease Button
@@ -295,8 +304,8 @@ dropdownContainer.className = 'dropdown-container';
     quantityDecrease.value = '-';
     quantityDecrease.className = 'quantity-decrease';
     quantityDecrease.addEventListener('click', () => {
-        handleDecrease();
-        updatePrice();
+      handleDecrease();
+      updatePrice();
     });
 
     // Combine Quantity Controls
@@ -308,28 +317,60 @@ dropdownContainer.className = 'dropdown-container';
     productSelection.appendChild(quantityLabel);
     productSelection.appendChild(quantityForm);
 
-    // Add to Cart Button
+    // Add to Cart / Buy Now Buttons
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'btn-container';
 
-    const buyNowBtn = document.createElement('button');
-    buyNowBtn.className = 'buy-now';
-    buyNowBtn.innerText = 'Buy Now';
-    buyNowBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
-    
-    const addToCartBtn = document.createElement('button');
-    addToCartBtn.className = 'add-to-cart';
-    addToCartBtn.innerText = 'Add to Cart';
-    addToCartBtn.addEventListener('click', ()=>handleAddToCart(this.#productData, quantityInput.value));
+    if(!this.#productData.quantity || this.#productData.quantity < 1){
+      const unavailableMessage = document.createElement('p');
+      unavailableMessage.classList.add('unavailable-msg');
+      unavailableMessage.innerText = 'This product is currently unavailable.';
+      buttonContainer.appendChild(unavailableMessage);
+    } else {
+     // Buy Now button changed to navigate directly to checkout
+      const buyNowBtn = document.createElement('button');
+      buyNowBtn.className = 'buy-now';
+      buyNowBtn.innerText = 'Buy Now';
+      buyNowBtn.addEventListener('click', () => {
+        const chosenQuantity = parseInt(quantityInput.value, 10);
 
-    buttonContainer.appendChild(addToCartBtn);
-    buttonContainer.appendChild(buyNowBtn)
-    // Append Add to Cart Button to product selection
+        // Validate quantity
+        if (!this.#productData || !this.#productData.quantity || chosenQuantity > this.#productData.  quantity) {
+          alert("The requested quantity is not available. Please reduce the quantity.");
+          return;
+        }
+
+        const appController = AppController.getInstance();
+        const item = {
+          name: this.#productData.name,
+          productId: this.#productData.prodid,
+          price: selectedType.price,
+          description: this.#productData.description,
+          quantity: chosenQuantity,
+          type: selectedType.type
+        };
+
+        // Navigate directly to the checkout with this single item
+        appController.navigate('secureCheckout', { items: [item] });
+      });
+
+      const addToCartBtn = document.createElement('button');
+      addToCartBtn.className = 'add-to-cart';
+      addToCartBtn.innerText = 'Add to Cart';
+      addToCartBtn.addEventListener('click', () => {
+        handleAddToCart(this.#productData, quantityInput.value, selectedType);
+      });
+
+      buttonContainer.appendChild(addToCartBtn);
+      buttonContainer.appendChild(buyNowBtn);
+    }
+
+    // Append Add to Cart Button Container to product selection
     productSelection.appendChild(buttonContainer);
 
     return productSelection;
-}
-
+  }
+  
   // Create reviews and ratings
   #createReviewsAndRatings() {
     const container = document.createElement('div');
@@ -492,13 +533,5 @@ dropdownContainer.className = 'dropdown-container';
     container.appendChild(addReviewSection);
 
     return container;
-  }
-
-  // Create shipping info
-  #createShippingInfo() {
-    const shippingInfo = document.createElement('p');
-    shippingInfo.className = 'shipping-info';
-    shippingInfo.innerText = `Shipping: ${this.#productData.shippingInfo?.shippingCost || 'N/A'}, Delivery: ${this.#productData.shippingInfo?.deliveryTime || 'N/A'}`;
-    return shippingInfo;
   }
 }

@@ -50,7 +50,7 @@ class ProductController {
   // Add a new product to the database
   async addProduct(req, res) {
     try {
-      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes } = req.body;
+      const { name, secondaryname, sellerid, sellername, category, description, price, images, reviews, producttypes, quantity } = req.body;
   
       // Validate input
       if (!name || !sellerid || !sellername || !category || !price) {
@@ -66,6 +66,7 @@ class ProductController {
         category,
         description,
         price,
+        quantity,
       });
   
       // Check if images are provided and associate them with the product
@@ -125,7 +126,8 @@ class ProductController {
         price,
         images,
         reviews,
-        producttypes
+        producttypes,
+        quantity,
       } = req.body;
   
       // Step 1: Fetch the product by its prodid
@@ -144,6 +146,7 @@ class ProductController {
       if (category !== undefined) updatedFields.category = category;
       if (description !== undefined) updatedFields.description = description;
       if (price !== undefined) updatedFields.price = price;
+      if (quantity !== undefined) updatedFields.quantity = quantity;
   
       // Step 3: Update main product fields only if they are provided
       if (Object.keys(updatedFields).length > 0) {
