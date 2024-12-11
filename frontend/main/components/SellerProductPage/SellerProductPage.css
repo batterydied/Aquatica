@@ -1,0 +1,122 @@
+/*Seller Product Page Styling*/
+
+.seller-product-page {
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    margin: 5rem;
+}
+
+.image-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.product-image {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 5%;
+    margin-right: 0.5em;
+    object-fit: cover;
+}
+
+.upload-input {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 5%;
+    margin-right: 0.5em;
+    background-color: rgba(0,0,0,0);
+    border: 3px solid #5B91C8;
+    color: #5B91C8;
+    cursor: pointer;
+    text-align: center;
+    line-height: 5rem;
+}
+
+.product-info-container {
+    display:block;
+}
+
+#category-selector {
+    background-color: #FFA41E;
+    padding:5px;
+    border: none;
+    color: #232C3C;
+    font-family: montserrat;
+    font-size:90%;
+    border-radius: 2% / 10%;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1px;
+    height: 2em;
+    cursor:pointer;
+    margin-top: 0.5em;
+}
+
+.button-container {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.save-button-container {
+    text-align:right;
+}
+
+.back-button-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.button {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.back-button {
+    width:fit-content;
+    background-color: rgba(0,0,0,0);
+    border-style: none;
+    margin-bottom: 1em;
+}
+
+.back-button:hover {
+    text-decoration: underline;
+    text-decoration-color: #232C3C;
+}
+
+.star-container {
+    width: 100px;
+    cursor:pointer;
+}
+
+.star-container:hover {
+    text-decoration: underline;
+    text-decoration-color: #FFA41E;
+}
+
+.star-img {
+    object-fit:fill;
+    width: 100%;
+}
+
+.num-reviews {
+    color:#FFA41E;
+}
+
+.add-type-button {
+    height: 2.5em;
+    margin-top: 1em;
+    background-color:#5B91C8;
+    color:#FFFFFF;
+    border-radius: 5px;
+    border:none;
+}
+
+.type-top-container {
+    display:flex;
+}
+
+.delete-type-button {
+    margin: 1em;
+    margin-top:1.5em;
+}
