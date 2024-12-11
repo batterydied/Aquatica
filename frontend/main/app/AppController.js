@@ -5,6 +5,7 @@ import { ProductPage } from '../components/ProductPage/ProductPage.js';
 import { NavigationMenu } from '../components/NavigationMenu/NavigationMenu.js';
 import { ProfilePage } from '../components/ProfilePage/ProfilePage.js';
 import { SellProductsPage } from '../components/MarketplacePage/SellProductsPage.js';
+import { SellerProductPage } from '../components/SellerProductPage/SellerProductPage.js';
 
 export class AppController {
    #container = null;
@@ -23,6 +24,7 @@ export class AppController {
        productPage: new ProductPage(), // ProductPage is dynamically initialized when needed
        profilePage: new ProfilePage(),
        sellProductsPage: new SellProductsPage(),
+       sellerProductPage: new SellerProductPage(),
      };
 
      // Set the default page as the marketplace
@@ -65,7 +67,7 @@ export class AppController {
        throw new Error(`View "${viewName}" not found.`);
      }
       this.#currentView = this.#views[viewName];
-     if(viewName === 'productPage'){
+     if(viewName === 'productPage' || viewName === 'sellerProductPage'){
       this.render(params.prodid);
      }else{
       this.render();
