@@ -1,6 +1,6 @@
 import { BaseComponent } from '../../app/BaseComponent.js';
 import { AppController } from '../../app/AppController.js';
-import { handleIncrease, updatePrice, handleDecrease, handleAddToCart } from './events.js';
+import { handleIncrease, updatePrice, handleDecrease, handleAddToCart, addReview} from './events.js';
 
 export class ProductPage extends BaseComponent {
   #container = null;
@@ -335,41 +335,67 @@ dropdownContainer.className = 'dropdown-container';
     const container = document.createElement('div');
     container.className = 'reviewsAndRatingsContainer';
 
+    const reviewsAndRatings = document.createElement('div');
+    reviewsAndRatings.className = 'reviewsAndRatings';
+    container.appendChild(reviewsAndRatings);
+
+    const reviewsAndRatingsBar = document.createElement('div')
+    reviewsAndRatingsBar.className = 'reviewsAndRatingsBar';
+    reviewsAndRatings.appendChild(reviewsAndRatingsBar);
     const reviewsTitle = document.createElement('h3');
-    reviewsTitle.innerText = `Reviews (${this.#productData.Reviews?.length || 0})`;
-    container.appendChild(reviewsTitle);
+    reviewsTitle.className = 'reviewsTitle';
+
+    let averageRating = this.#productData.average_rating || 0;
+    this.#productData.Reviews?.forEach(review => {
+      averageRating += review.rating;
+    });
+    averageRating = averageRating/this.#productData.Reviews?.length;
+
+    reviewsTitle.innerText = `Reviews (${this.#productData.Reviews?.length || 0}) ${averageRating}`;
+    reviewsAndRatingsBar.appendChild(reviewsTitle);
 
     // Create stars display for the overall rating
     const starsContainer = document.createElement('div');
     starsContainer.className = 'stars';
 
-    const averageRating = this.#productData.average_rating || 0;
     for (let i = 1; i <= 5; i++) {
       const star = document.createElement('i');
       star.className = i <= Math.floor(averageRating) ? 'fas fa-star' : 'far fa-star';
       starsContainer.appendChild(star);
     }
-    reviewsTitle.appendChild(starsContainer);
+    reviewsAndRatingsBar.appendChild(starsContainer);
 
     // Display all reviews
     this.#productData.Reviews?.forEach((review) => {
       const reviewContainer = document.createElement('div');
       reviewContainer.className = 'review';
 
+      const reviewBar = document.createElement('div');
+      reviewBar.className = 'reviewBar';
+
+      const userAndRating = document.createElement('div');
+
       const user = document.createElement('strong');
       user.innerText = review.user;
 
       const rating = document.createElement('span');
       rating.innerText = ` - Rating: ${review.rating}`;
+      
+      const date = document.createElement('span');
+      const dateObj = new Date(review.updatedAt);
+      date.innerText = `${dateObj.getMonth() + 1}-${dateObj.getDate()}-${dateObj.getFullYear()}`;
 
       const comment = document.createElement('p');
       comment.innerText = review.comment;
 
-      reviewContainer.appendChild(user);
-      reviewContainer.appendChild(rating);
+      userAndRating.appendChild(user);
+      userAndRating.appendChild(rating);
+      reviewBar.appendChild(userAndRating);
+      reviewBar.appendChild(date);
+      reviewContainer.appendChild(reviewBar);
       reviewContainer.appendChild(comment);
 
-      container.appendChild(reviewContainer);
+      reviewsAndRatings.appendChild(reviewContainer);
     });
 
     // Add the review input section at the bottom
@@ -442,6 +468,8 @@ dropdownContainer.className = 'dropdown-container';
     addReviewSection.appendChild(addReviewBox);
 
     // Add review button
+    const addReviewButtonDiv = document.createElement('div');
+    addReviewButtonDiv.className = 'addReviewButtonDiv';
     const addReviewButton = document.createElement('button');
     addReviewButton.textContent = ' + Add Review';
     addReviewButton.className = 'addReviewButton';
@@ -450,14 +478,16 @@ dropdownContainer.className = 'dropdown-container';
         rating: currentRating,
         comment: addReviewBox.value,
         user: 'Current User', // Replace with actual user name
+        prodData: this.#productData
       };
 
       if (reviewData.comment && currentRating > 0) {
         // Send the review data to the backend (you can integrate your API call here)
-        await this.addReview(reviewData); // Function to handle the review submission
+        await addReview(reviewData); // Function to handle the review submission
       }
     });
-    addReviewSection.appendChild(addReviewButton);
+    addReviewButtonDiv.appendChild(addReviewButton);
+    addReviewSection.appendChild(addReviewButtonDiv);
 
     container.appendChild(addReviewSection);
 

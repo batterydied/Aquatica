@@ -112,6 +112,7 @@ class ProductController {
   }
 
   async updateProduct(req, res) {
+    console.log("ProductController updateProduct running");
     try {
       const { prodid } = req.params;
       const {
