@@ -167,7 +167,7 @@ class _UserModel {
   }
 
   // <<-- CANCELED functions below -->>
-  
+
   /** Retrieve a user by resetToken.
    * @param {string} resetToken - resetToken sent to email for password reset.
    * @returns {Object|null} User object or null if not found.
@@ -265,4 +265,4 @@ export { User };
   *Logic:
     - Define fields like username, email, passwordHash, role, and timestamps.
     - Add methods like validatePassword() or hooks for password hashing.
-    - Output: A schema that integrates with the database and supports authentication workflows.
+    - Output: A schema that integrates with the database and supports authentication workflows. */
