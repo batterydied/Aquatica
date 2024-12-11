@@ -123,6 +123,8 @@ export class SellProductsPage extends MarketplacePage {
             "description": "Product Description",
             "price": 1,
             "images": [],
+            "producttypes": [{"id": 1, "type": "Type 1", "price": 1}],
+            "quantity": 1,
         };
 
         try {
