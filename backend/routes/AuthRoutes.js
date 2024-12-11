@@ -9,7 +9,7 @@
 
 /* Integration:
   *- Connect to AuthController.js to handle user authentication logic, including:
-      registration | login validation | password rest | logout 
+      registration | login validation |- password rest -|- logout -
   *- Enforce authentication and authorization through AuthMiddleware.js to ensure:
       secure access to sensitive routes, particularly for actions like registration and login,
       protect routes that require an authenticated user.
@@ -51,7 +51,13 @@ router.post("/login", login);
 // Route to log out the user (invalidates the session on the client side):
 router.post("/logout", authMiddleware, logout);
 
-/* 4. POST/ auth/request-password-reset:
+/* 4. POST/ auth/become-seller:
+  - Authorize the user as seller.
+*/
+// Route to update the user's role to 'seller':
+router.post("/become-seller", authMiddleware, roleMiddleware(["user"]), becomeSeller); 
+
+/* 5. Cancel: POST/ auth/request-password-reset:
   - The route accepts a POST request containing the user's email address or user ID (or both).
   - Verify the user: The system checks if the provided email or user ID exists in the database (via **_UserModel.js_**).
   - Error Handling.
@@ -61,18 +67,10 @@ router.post("/logout", authMiddleware, logout);
   - The system should ensure that each reset token is one-time use and expires after a set time (for security reasons).
   - Rate limiting.
 */
-// Route to request a password reset (via email):
+  // Route to request a password reset (via email):
 router.post("/request-password-reset", requestPasswordReset);
-
-// Route to reset the user's password:
+  // Route to reset the user's password:
 router.post("/reset-password", resetPassword);
-
-/* 5. POST/ auth/become-seller:
-  - Authorize the user as seller.
-*/
-// Route to update the user's role to 'seller':
-  // TODO Add more roles here for other access levels if needed.
-router.post("/become-seller", authMiddleware, roleMiddleware(["user"]), becomeSeller); 
 
 export default router;
 
