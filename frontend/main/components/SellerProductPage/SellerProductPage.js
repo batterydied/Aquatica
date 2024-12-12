@@ -181,7 +181,7 @@ export class SellerProductPage extends BaseComponent {
         const productInfo = document.createElement("div");
 
         // create input fields
-        const textFields = [{name: "Name", id: "name", kind: "text", required: true}, {name: "Secondary Name", id: "secondaryname", kind: "text", required: false}, {name: "Description", id: "description", kind: "text", required: false}, {name: "Price", id: "price", kind: "number", required: true}/*, {name: "Quantity", id: "quantity", kind: "number", required: true}*/];
+        const textFields = [{name: "Name", id: "name", kind: "text", required: true}, {name: "Secondary Name", id: "secondaryname", kind: "text", required: false}, {name: "Description", id: "description", kind: "text", required: false}, {name: "Price", id: "price", kind: "number", required: true}, {name: "Quantity", id: "quantity", kind: "number", required: true}];
         
         for (let i = 0; i < textFields.length; i++) {
             const curField = textFields[i];
@@ -382,6 +382,10 @@ export class SellerProductPage extends BaseComponent {
             }
             if (input.id === "price" && input.value <= 0) {
                 errors.push("Price musts be greater than zero.");
+                sawError = true;
+            }
+            if (input.id === "quantity" && input.value < 0) {
+                errors.push("Quantity must be at least zero.");
                 sawError = true;
             }
             if (!sawError) {
