@@ -32,9 +32,9 @@
 ## Haiyi Cai - Communication Lead & Note-taker
 - **Role**: Facilitates communication within the team. Haiyi is responsible for maintaining and managing the team’s Message workspace, ensuring that all members stay informed and engaged; Listening to the members' challenges and reaching out to experts. At the same time, Haiyi would be taking notes for all meetings and spread on Discord #notes for review. 
 - **Top 3 Commits**:
-  1. **November 6, 2024** [Create feature-sequence-diagram.md](https://github.com/batterydied/Aquatica/commit/9e9d4aaa7f4f890ededc6478ec7528d65049dcf9):Created sequence diagram file for navigation menu to update later. Reassured with manager Yuni to allocate the md file.
-  2. **November 17, 2024** [Create Navigation-Menu feature](https://github.com/batterydied/Aquatica/commit/1143f8e9c9b9add8189e89587c0f243f51efde80): Made basic design for navigation menu including a logo svg.Link and Responsive in progress.
-  3. **November 17, 2024** [Pull Request Review](https://github.com/batterydied/Aquatica/commit/3b700e1d0c6c32c97f370333cc57a5d15ba2a8fa): Review and merged PR from Marketplace (Winifred) for rating stars. 
+  1. **November 6, 2024:** [Create feature-sequence-diagram.md](https://github.com/batterydied/Aquatica/commit/9e9d4aaa7f4f890ededc6478ec7528d65049dcf9) Created sequence diagram file for navigation menu to update later. Reassured with manager Yuni to allocate the md file.
+  2. **November 17, 2024:** [Create Navigation-Menu feature](https://github.com/batterydied/Aquatica/commit/1143f8e9c9b9add8189e89587c0f243f51efde80) Made basic design for navigation menu including a logo svg.Link and Responsive in progress.
+  3. **November 17, 2024:** [Pull Request Review](https://github.com/batterydied/Aquatica/commit/3b700e1d0c6c32c97f370333cc57a5d15ba2a8fa) Review and merged PR from Marketplace (Winifred) for rating stars. 
 
 ## Yukun Yang - Timekeeper
 - **Role**: Manages the timing of all team activities. Ensures that meetings start and end on time, keeps track of deadlines, and reminds the team of upcoming due dates.
