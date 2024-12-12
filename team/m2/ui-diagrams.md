@@ -98,9 +98,6 @@ A user browsing the store selects a product to view detailed information. They h
 
 ---
 
-
----
-
 ## Cart Page Screen
 
 The **Cart Page** allows users to review the items they intend to purchase. It provides a clear overview of selected products, options to save items for later, and displays the total cost, ensuring users have all necessary information before proceeding to checkout.
