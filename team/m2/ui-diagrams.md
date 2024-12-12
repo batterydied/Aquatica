@@ -102,7 +102,7 @@ A user browsing the store selects a product to view detailed information. They h
 
 The **Cart Page** allows users to review the items they intend to purchase. It provides a clear overview of selected products, options to save items for later, and displays the total cost, ensuring users have all necessary information before proceeding to checkout.
 
-![Cart Page Layout](![image](https://github.com/user-attachments/assets/367e6bec-ed94-45be-be3e-ef021e54b610)
+![image](https://github.com/user-attachments/assets/367e6bec-ed94-45be-be3e-ef021e54b610)
 
 On this screen, users can interact with four main elements:
 
@@ -132,7 +132,7 @@ A user adds several fish and accessories to their cart while browsing the store.
 
 The **Checkout Page** is the final step in the purchasing process, where users provide necessary information to complete their order. It is divided into two main tabs: **Shipping** and **Payment**, ensuring a streamlined and organized checkout experience.
 
-![Checkout Page Layout](![image](https://github.com/user-attachments/assets/f27a3c96-be4a-4ec9-99d3-2280d60fc4a3)
+![image](https://github.com/user-attachments/assets/f27a3c96-be4a-4ec9-99d3-2280d60fc4a3)
 
 On this screen, users can interact with several main elements:
 
