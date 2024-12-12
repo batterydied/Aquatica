@@ -30,11 +30,11 @@
    3. **October 21, 2024**: [Update data.md](https://github.com/batterydied/Aquatica/compare/913e87a88901a5289041e08ec2847c4fdef5c66b...c6b2439a2e77fda953a336aa9facd8969e711f17) Refined the description of target users, focusing on their specific needs and how the app will address them. Added detailed user personas to ensure the team has a clear understanding of the intended application and its functionality.
 
 ## Haiyi Cai - Communication Lead & Note-taker
-- **Role**: Facilitates communication within the team. Haiyi is responsible for maintaining and managing the team’s Message workspace, ensuring that all members stay informed and engaged; Listening to the members' challenges and reaching out to experts;
+- **Role**: Facilitates communication within the team. Haiyi is responsible for maintaining and managing the team’s Message workspace, ensuring that all members stay informed and engaged; Listening to the members' challenges and reaching out to experts. At the same time, Haiyi would be taking notes for all meetings and spread on Discord #notes for review. 
 - **Top 3 Commits**:
-  1. [Commit 1](https://github.com/batterydied/Aquatica/commit/b017b82f73ff77ceb859ee9930123520cc09baa4): Brainstorm for project ideas with initial team members. Recorded and distributed project ideas brainstorm.
-  2. [Commit 2](https://github.com/batterydied/Aquatica/commit/e4cf472ee4a79a5381fc4cc4ba38639166b28007): Set up the team’s Message channel, organized communication threads, and created team’s Collaboration document.
-  3. [Commit 3](https://github.com/batterydied/Aquatica/commit/051851e7df44f80f36d4ba6678309e6130483d2f): Coordinated communication between team members during the second milestone and relayed critical information about deadlines.
+  1. **November 6, 2024** [Create feature-sequence-diagram.md](https://github.com/batterydied/Aquatica/commit/9e9d4aaa7f4f890ededc6478ec7528d65049dcf9):Created sequence diagram file for navigation menu to update later. Reassured with manager Yuni to allocate the md file.
+  2. **November 17, 2024** [Create Navigation-Menu feature](https://github.com/batterydied/Aquatica/commit/1143f8e9c9b9add8189e89587c0f243f51efde80): Made basic design for navigation menu including a logo svg.Link and Responsive in progress.
+  3. **November 17, 2024** [Pull Request Review](https://github.com/batterydied/Aquatica/commit/3b700e1d0c6c32c97f370333cc57a5d15ba2a8fa): Review and merged PR from Marketplace (Winifred) for rating stars. 
 
 ## Yukun Yang - Timekeeper
 - **Role**: Manages the timing of all team activities. Ensures that meetings start and end on time, keeps track of deadlines, and reminds the team of upcoming due dates.
