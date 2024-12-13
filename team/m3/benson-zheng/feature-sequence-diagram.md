@@ -23,8 +23,8 @@ UI-->>User: Display updated quantity
 
 User->>UI: Click "Add to Cart"
 UI->>JavaScript: Trigger "click" event
-JavaScript->>IndexedDB: Store cart data (product, quantity, price)
-IndexedDB-->>JavaScript: Confirm data saved
+JavaScript->>SQLite: Store cart data (product, quantity, price)
+SQLite-->>JavaScript: Confirm data saved
 JavaScript->>UI: Notify user (e.g., "Added to Cart")
 UI-->>User: Display confirmation message
 
