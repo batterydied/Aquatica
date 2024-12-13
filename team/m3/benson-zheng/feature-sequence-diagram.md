@@ -3,7 +3,7 @@ sequenceDiagram
 actor User
 participant Browser
 participant JavaScript
-participant IndexedDB
+participant SQLite
 participant UI
 
 User->>UI: Hover over a thumbnail
