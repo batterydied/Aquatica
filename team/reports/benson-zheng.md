@@ -30,3 +30,35 @@
 - **Details**: Updated README.md for the Aquatica application, providing an overview of the project and its objectives.
 - **Link to Commit**: https://github.com/batterydied/Aquatica/commit/a0beebac2a1c6827ff828c367b9a443465c3f5df
 
+### November 29, 2024:
+- **Task**: Set up database.js and made SQLite and Sequelize files, also set up models for product
+- **Details**: Configured `database.js` for connecting to SQLite and Sequelize, and set up the model for the product to interact with the database.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/9fa9bb37ad50c09f92dbb451f2bc07758031b8e2
+
+### December 29, 2024:
+- **Task**: Set up Nodemon and npm start as the command to start the backend server
+- **Details**: Configured `Nodemon` to automatically restart the backend server on changes and set `npm start` as the command to launch the server.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/fd1772407d5118bdad230e90baed2b2ea94bd929
+
+### November 30, 2024:
+- **Task**: Made all the API endpoints for the product page
+- **Details**: Implemented all necessary API endpoints for the product page to handle product data operations such as fetching, updating, and deleting products.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/cbaf95dc898a7975ae6893ca272fd50d07d68f7e
+
+
+### December 5, 2024:
+- **Task**: Replace icon with Font Awesome
+- **Details**: Replaced the existing icons in Nav Bar with Font Awesome icons for better scalability and customization.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/c29a285e4ff3e8e4177211e24fbe2ff5d87fa470
+
+
+### December 5, 2024:
+- **Task**: Make navbar responsive
+- **Details**: Made the navigation bar responsive to adjust properly across different screen sizes.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/a3ac0e30dd05568538e85bd245934fc460e90ccf
+
+### December 5, 2024:
+- **Task**: Implement partial update for product API endpoint (PUT /api/products)
+- **Details**: Implemented the partial update functionality for the product API endpoint. This allows updating certain fields of a product without affecting others.
+- **Link to Commit**: https://github.com/batterydied/Aquatica/commit/07655203a6252eb9a782fbf9dec95689141dcdc0
+
