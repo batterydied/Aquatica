@@ -98,4 +98,59 @@ A user browsing the store selects a product to view detailed information. They h
 
 ---
 
+## Cart Page Screen
 
+The **Cart Page** allows users to review the items they intend to purchase. It provides a clear overview of selected products, options to save items for later, and displays the total cost, ensuring users have all necessary information before proceeding to checkout.
+
+![image](https://github.com/user-attachments/assets/367e6bec-ed94-45be-be3e-ef021e54b610)
+
+On this screen, users can interact with four main elements:
+
+1. **Cart Items List**:
+   - Displays all items currently added to the cart with thumbnail images, product names, selected options (e.g., size, color), quantity selectors, and individual prices.
+   - Users can update the quantity or remove items directly from the list.
+
+2. **Save for Later Section**:
+   - Allows users to move items they are interested in but not ready to purchase into a separate "Save for Later" area.
+   - Items in this section can be easily moved back to the cart when the user decides to proceed with the purchase.
+
+3. **Order Summary**:
+   - Shows the total amount.
+   - Provides transparency on pricing, helping users understand the cost before checkout.
+
+4. **Action Buttons**:
+   - **Continue Shopping**: Redirects users back to the product browsing sections.
+   - **Proceed to Checkout**: Takes users to the Checkout Page to complete their purchase.
+
+**Use Case**:
+
+A user adds several fish and accessories to their cart while browsing the store. Before checking out, they review the Cart Page to ensure all desired items are included, adjust quantities if necessary, and move an accessory to the "Save for Later" section. Satisfied with their selections and aware of the total cost, they click "Proceed to Checkout" to finalize their purchase.
+
+---
+
+## Checkout Page Screen
+
+The **Checkout Page** is the final step in the purchasing process, where users provide necessary information to complete their order. It is divided into two main tabs: **Shipping** and **Payment**, ensuring a streamlined and organized checkout experience.
+
+![image](https://github.com/user-attachments/assets/f27a3c96-be4a-4ec9-99d3-2280d60fc4a3)
+
+On this screen, users can interact with several main elements:
+
+1. **Tabs Navigation**:
+   - **Shipping Tab**:
+     - **Shipping Information Form**: Users enter or select their shipping address, choose a shipping method, and view estimated delivery times.
+     - **Order Summary Breakdown**: Displays subtotal, tax, shipping costs, and the total amount, providing a clear financial overview.
+   - **Payment Tab**:
+     - **Payment Method Selection**: Users can enter their card details.
+     - **Payment Details Form**: Secure fields for entering payment information, including card number, expiration date, CVV, and billing address if different from the shipping address.
+     - **Review and Confirm**: Final summary of the order with all charges and the selected shipping and payment methods before confirming the purchase.
+
+2. **Action Buttons**:
+   - **Back to Cart**: Allows users to return to the Cart Page if they need to make further adjustments.
+   - **Place Order**: Finalizes the purchase and processes the payment upon confirmation.
+
+**Use Case**:
+
+After reviewing their cart, a user proceeds to the Checkout Page. They enter their shipping address, select a preferred shipping method, and review the cost breakdown. Moving to the Payment tab, they choose to pay with a credit card, enter their payment details, and confirm the order. The clear separation of shipping and payment information, along with the detailed cost breakdown, ensures a smooth and confident checkout experience.
+
+---
